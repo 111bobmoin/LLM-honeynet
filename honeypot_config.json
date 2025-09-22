@@ -1,0 +1,36 @@
+{
+  "bind_addr": "0.0.0.0",
+  "bind_port": 2222,
+  "telnet_port": 2323,
+  "telnet_banner": "Welcome to BusyBox v1.32.0 (telnet honeypot)\\r\\n",
+  "ssh_banner_version": "OpenSSH_8.4p1 Debian-5",
+  "prompt": "honeypot> ",
+  "default_user": "root",
+  "allow_file_write": true,
+  "allow_file_delete": false,
+  "suspicious_tokens": ["wget", "curl", "nc", "netcat", "python", "perl", "bash", "sh", "rm -rf"],
+  "max_cmd_output_len": 4096,
+  "fake_files": {
+    "/etc/passwd": {
+      "content": "root:x:0:0:root:/root:/bin/sh\n",
+      "mode": "0644",
+      "owner": "root"
+    },
+    "/root/secret.txt": {
+      "content": "TOP-SECRET\n",
+      "mode": "0600",
+      "owner": "root"
+    },
+    "/var/www/html/index.html": {
+      "content": "<html><body><h1>Welcome</h1></body></html>\n",
+      "mode": "0644",
+      "owner": "root"
+    },
+    "/home/ubuntu/.bash_history": {
+      "content": "",
+      "mode": "0600",
+      "owner": "ubuntu"
+    }
+  }
+}
+

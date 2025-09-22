@@ -1,0 +1,40 @@
+{
+  "bind_addr": "0.0.0.0",
+  "bind_port": 8080,
+  "server_name": "SimpleHTTP/1.0 (honeypot)",
+  "prompt": "honeypot-http> ",
+  "default_user": "www-data",
+  "fake_files": {
+    "/": {
+      "content": "<html><body><h1>Welcome</h1></body></html>",
+      "mime": "text/html",
+      "mode": "0644",
+      "owner": "root"
+    },
+    "/index.html": {
+      "content": "<html><body><h1>Index</h1></body></html>",
+      "mime": "text/html",
+      "mode": "0644",
+      "owner": "root"
+    },
+    "/admin/secret.txt": {
+      "content": "TOP-SECRET\n",
+      "mime": "text/plain",
+      "mode": "0600",
+      "owner": "root"
+    }
+  },
+  "routes": {
+    "/admin": {
+      "status": 401,
+      "body": "Unauthorized"
+    },
+    "/health": {
+      "status": 200,
+      "body": "OK"
+    }
+  },
+  "allow_file_write": true,
+  "allow_file_delete": false,
+  "max_body_len": 65536
+}

@@ -1,0 +1,36 @@
+{
+  "ssh_banner_version": "OpenSSH_8.9p1 Ubuntu-3ubuntu0.6",
+  "prompt": "ubuntu$ ",
+  "default_user": "root",
+
+  "fake_files": {
+    "/etc/passwd": {
+      "content": "root:x:0:0:root:/root:/bin/bash\nubuntu:x:1000:1000:Ubuntu:/home/ubuntu:/bin/bash\n",
+      "mode": "0644",
+      "owner": "root"
+    },
+    "/etc/hostname": { "content": "webserver\n", "mode": "0644", "owner": "root" },
+    "/root/secret.txt": { "content": "TOP-SECRET\n", "mode": "0600", "owner": "root" },
+    "/root/readme.txt": { "content": "Nothing to see here.\n", "mode": "0644", "owner": "root" },
+    "/var/www/html/index.html": {
+      "content": "<html><body><h1>Welcome</h1></body></html>\n",
+      "mode": "0644",
+      "owner": "root"
+    },
+    "/home/ubuntu/.bash_history": { "content": "", "mode": "0600", "owner": "ubuntu" }
+  },
+
+  "regex_responses": [
+    { "pattern": "^whoami$", "response": "root" },
+    { "pattern": "^id$", "response": "uid=0(root) gid=0(root) groups=0(root)" }
+  ],
+
+  "suspicious_tokens": ["wget", "curl", "nc", "netcat", "python", "perl", "bash", "sh", "ssh", "scp", "rm -rf"],
+
+  "simulate_uname": "Linux webserver 5.4.0-42-generic #46-Ubuntu SMP Fri Jul 10 00:24:02 UTC 2020 x86_64 GNU/Linux",
+
+  "allow_file_write": true,
+  "allow_file_delete": false,
+  "max_cmd_output_len": 4096
+}
+

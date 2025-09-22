@@ -1,0 +1,6 @@
+{
+  "obfuscation_ports": [2223, 8081, 3307, 5433],
+  "bind_addr": "0.0.0.0",
+  "banner": "Fake Service Ready\r\n"
+}
+

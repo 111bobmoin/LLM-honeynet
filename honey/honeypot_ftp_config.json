@@ -1,0 +1,35 @@
+{
+  "ftp_bind_addr": "0.0.0.0",
+  "ftp_port": 2121,
+  "ftp_banner": "220 FTP Server (honeypot) ready\r\n",
+
+  "default_user": "ftp",
+
+  "allow_file_write": true,
+  "allow_file_delete": false,
+
+  "pasv_port_min": 50000,
+  "pasv_port_max": 50100,
+
+  "fake_files": {
+    "/readme.txt": {
+      "content": "Welcome to the FTP honeypot.\nThis is a fake server for research.\n",
+      "mode": "0644",
+      "owner": "root",
+      "mime": "text/plain"
+    },
+    "/pub/index.html": {
+      "content": "<!doctype html><html><body><h1>Hello from FTP honeypot</h1></body></html>\n",
+      "mode": "0644",
+      "owner": "root",
+      "mime": "text/html"
+    },
+    "/private/secret.txt": {
+      "content": "TOP-SECRET\n",
+      "mode": "0600",
+      "owner": "root",
+      "mime": "text/plain"
+    }
+  }
+}
+

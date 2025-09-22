@@ -1,0 +1,3 @@
+timestamp,client_ip,client_port,username,password,event,session_id
+2025-09-19T06:11:16.777796Z,192.168.205.130,54068,,,connection,1758262276778
+2025-09-19T06:11:22.192147Z,192.168.205.130,54068,11,1,password_auth,1758262276778
