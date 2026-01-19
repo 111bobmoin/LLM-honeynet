@@ -1,0 +1,420 @@
+{
+  "results": [
+    {
+      "user_id": "enterprise",
+      "memory": "{\"type\": \"enterprise_asset\", \"filename\": \"enterprise_topology.json\", \"relative_path\": \"enterprise_topology.json\", \"content\": \"{\\n  \\\"metadata\\\": {\\n    \\\"name\\\": \\\"Enterprise Production Segment\\\",\\n    \\\"description\\\": \\\"Canonical enterprise network used to derive shadow honeynet topology\\\",\\n    \\\"version\\\": \\\"2024.10\\\"\\n  },\\n  \\\"switches\\\": [\\n    {\\\"id\\\": \\\"core-sw\\\"},\\n    {\\\"id\\\": \\\"dmz-sw\\\"},\\n    {\\\"id\\\": \\\"corp-sw\\\"}\\n  ],\\n  \\\"hosts\\\": [\\n    {\\\"name\\\": \\\"edge-fw\\\", \\\"role\\\": \\\"firewall\\\", \\\"connect\\\": \\\"core-sw\\\"},\\n    {\\\"name\\\": \\\"bastion-01\\\", \\\"role\\\": \\\"bastion\\\", \\\"connect\\\": \\\"corp-sw\\\"},\\n    {\\\"name\\\": \\\"jump-ops\\\", \\\"role\\\": \\\"operations\\\", \\\"connect\\\": \\\"corp-sw\\\"},\\n    {\\\"name\\\": \\\"dmz-web-01\\\", \\\"role\\\": \\\"public-web\\\", \\\"connect\\\": \\\"dmz-sw\\\"},\\n    {\\\"name\\\": \\\"dmz-api-01\\\", \\\"role\\\": \\\"public-api\\\", \\\"connect\\\": \\\"dmz-sw\\\"},\\n    {\\\"name\\\": \\\"app-01\\\", \\\"role\\\": \\\"application\\\", \\\"connect\\\": \\\"corp-sw\\\"},\\n    {\\\"name\\\": \\\"db-01\\\", \\\"role\\\": \\\"database\\\", \\\"connect\\\": \\\"corp-sw\\\"},\\n    {\\\"name\\\": \\\"fileserver-01\\\", \\\"role\\\": \\\"fileserver\\\", \\\"connect\\\": \\\"corp-sw\\\"}\\n  ],\\n  \\\"links\\\": [\\n    {\\\"endpoints\\\": [\\\"core-sw\\\", \\\"dmz-sw\\\"]},\\n    {\\\"endpoints\\\": [\\\"core-sw\\\", \\\"corp-sw\\\"]},\\n    {\\\"endpoints\\\": [\\\"core-sw\\\", \\\"edge-fw\\\"]},\\n    {\\\"endpoints\\\": [\\\"dmz-sw\\\", \\\"dmz-web-01\\\"]},\\n    {\\\"endpoints\\\": [\\\"dmz-sw\\\", \\\"dmz-api-01\\\"]},\\n    {\\\"endpoints\\\": [\\\"corp-sw\\\", \\\"bastion-01\\\"]},\\n    {\\\"endpoints\\\": [\\\"corp-sw\\\", \\\"jump-ops\\\"]},\\n    {\\\"endpoints\\\": [\\\"corp-sw\\\", \\\"app-01\\\"]},\\n    {\\\"endpoints\\\": [\\\"corp-sw\\\", \\\"db-01\\\"]},\\n    {\\\"endpoints\\\": [\\\"corp-sw\\\", \\\"fileserver-01\\\"]}\\n  ]\\n}\\n\"}",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Metadata name is Enterprise Production Segment",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Metadata description is Canonical enterprise network used to derive shadow honeynet topology",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Metadata version is 2024.10",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Switch core-sw exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Switch dmz-sw exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Switch corp-sw exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Host edge-fw is a firewall host connected to core-sw",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Host bastion-01 is a bastion host connected to corp-sw",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Host jump-ops is a operations host connected to corp-sw",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Host dmz-web-01 is a public-web host connected to dmz-sw",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Host dmz-api-01 is a public-api host connected to dmz-sw",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Host app-01 is a application host connected to corp-sw",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Host db-01 is a database host connected to corp-sw",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Host fileserver-01 is a fileserver host connected to corp-sw",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Link core-sw-dmz-sw exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Link core-sw-corp-sw exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Link core-sw-edge-fw exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Link dmz-sw-dmz-web-01 exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Link dmz-sw-dmz-api-01 exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Link corp-sw-bastion-01 exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Link corp-sw-jump-ops exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Link corp-sw-app-01 exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Link corp-sw-db-01 exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Link corp-sw-fileserver-01 exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "TOPOLOGY_JSON::{\"metadata\": {\"name\": \"Enterprise Production Segment\", \"description\": \"Canonical enterprise network used to derive shadow honeynet topology\", \"version\": \"2024.10\"}, \"switches\": [{\"id\": \"core-sw\"}, {\"id\": \"dmz-sw\"}, {\"id\": \"corp-sw\"}], \"hosts\": [{\"name\": \"edge-fw\", \"role\": \"firewall\", \"connect\": \"core-sw\"}, {\"name\": \"bastion-01\", \"role\": \"bastion\", \"connect\": \"corp-sw\"}, {\"name\": \"jump-ops\", \"role\": \"operations\", \"connect\": \"corp-sw\"}, {\"name\": \"dmz-web-01\", \"role\": \"public-web\", \"connect\": \"dmz-sw\"}, {\"name\": \"dmz-api-01\", \"role\": \"public-api\", \"connect\": \"dmz-sw\"}, {\"name\": \"app-01\", \"role\": \"application\", \"connect\": \"corp-sw\"}, {\"name\": \"db-01\", \"role\": \"database\", \"connect\": \"corp-sw\"}, {\"name\": \"fileserver-01\", \"role\": \"fileserver\", \"connect\": \"corp-sw\"}], \"links\": [{\"endpoints\": [\"core-sw\", \"dmz-sw\"]}, {\"endpoints\": [\"core-sw\", \"corp-sw\"]}, {\"endpoints\": [\"core-sw\", \"edge-fw\"]}, {\"endpoints\": [\"dmz-sw\", \"dmz-web-01\"]}, {\"endpoints\": [\"dmz-sw\", \"dmz-api-01\"]}, {\"endpoints\": [\"corp-sw\", \"bastion-01\"]}, {\"endpoints\": [\"corp-sw\", \"jump-ops\"]}, {\"endpoints\": [\"corp-sw\", \"app-01\"]}, {\"endpoints\": [\"corp-sw\", \"db-01\"]}, {\"endpoints\": [\"corp-sw\", \"fileserver-01\"]}]}",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "{\"type\": \"enterprise_asset\", \"filename\": \"enterprise_topology.json\", \"relative_path\": \"enterprise_topology.json\", \"content\": \"{\\n  \\\"metadata\\\": {\\n    \\\"name\\\": \\\"Enterprise Production Segment\\\",\\n    \\\"description\\\": \\\"Canonical enterprise network used to derive shadow honeynet topology\\\",\\n    \\\"version\\\": \\\"2024.10\\\"\\n  },\\n  \\\"switches\\\": [\\n    {\\\"id\\\": \\\"core-sw\\\"},\\n    {\\\"id\\\": \\\"dmz-sw\\\"},\\n    {\\\"id\\\": \\\"corp-sw\\\"}\\n  ],\\n  \\\"hosts\\\": [\\n    {\\\"name\\\": \\\"edge-fw\\\", \\\"role\\\": \\\"firewall\\\", \\\"connect\\\": \\\"core-sw\\\"},\\n    {\\\"name\\\": \\\"bastion-01\\\", \\\"role\\\": \\\"bastion\\\", \\\"connect\\\": \\\"corp-sw\\\"},\\n    {\\\"name\\\": \\\"jump-ops\\\", \\\"role\\\": \\\"operations\\\", \\\"connect\\\": \\\"corp-sw\\\"},\\n    {\\\"name\\\": \\\"dmz-web-01\\\", \\\"role\\\": \\\"public-web\\\", \\\"connect\\\": \\\"dmz-sw\\\"},\\n    {\\\"name\\\": \\\"dmz-api-01\\\", \\\"role\\\": \\\"public-api\\\", \\\"connect\\\": \\\"dmz-sw\\\"},\\n    {\\\"name\\\": \\\"app-01\\\", \\\"role\\\": \\\"application\\\", \\\"connect\\\": \\\"corp-sw\\\"},\\n    {\\\"name\\\": \\\"db-01\\\", \\\"role\\\": \\\"database\\\", \\\"connect\\\": \\\"corp-sw\\\"},\\n    {\\\"name\\\": \\\"fileserver-01\\\", \\\"role\\\": \\\"fileserver\\\", \\\"connect\\\": \\\"corp-sw\\\"}\\n  ],\\n  \\\"links\\\": [\\n    {\\\"endpoints\\\": [\\\"core-sw\\\", \\\"dmz-sw\\\"]},\\n    {\\\"endpoints\\\": [\\\"core-sw\\\", \\\"corp-sw\\\"]},\\n    {\\\"endpoints\\\": [\\\"core-sw\\\", \\\"edge-fw\\\"]},\\n    {\\\"endpoints\\\": [\\\"dmz-sw\\\", \\\"dmz-web-01\\\"]},\\n    {\\\"endpoints\\\": [\\\"dmz-sw\\\", \\\"dmz-api-01\\\"]},\\n    {\\\"endpoints\\\": [\\\"corp-sw\\\", \\\"bastion-01\\\"]},\\n    {\\\"endpoints\\\": [\\\"corp-sw\\\", \\\"jump-ops\\\"]},\\n    {\\\"endpoints\\\": [\\\"corp-sw\\\", \\\"app-01\\\"]},\\n    {\\\"endpoints\\\": [\\\"corp-sw\\\", \\\"db-01\\\"]},\\n    {\\\"endpoints\\\": [\\\"corp-sw\\\", \\\"fileserver-01\\\"]}\\n  ]\\n}\\n\"}",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Metadata name is Enterprise Production Segment",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Metadata description is Canonical enterprise network used to derive shadow honeynet topology",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Metadata version is 2024.10",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Switch core-sw exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Switch dmz-sw exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Switch corp-sw exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Host edge-fw is a firewall host connected to core-sw",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Host bastion-01 is a bastion host connected to corp-sw",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Host jump-ops is a operations host connected to corp-sw",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Host dmz-web-01 is a public-web host connected to dmz-sw",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Host dmz-api-01 is a public-api host connected to dmz-sw",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Host app-01 is a application host connected to corp-sw",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Host db-01 is a database host connected to corp-sw",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Host fileserver-01 is a fileserver host connected to corp-sw",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Link core-sw-dmz-sw exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Link core-sw-corp-sw exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Link core-sw-edge-fw exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Link dmz-sw-dmz-web-01 exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Link dmz-sw-dmz-api-01 exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Link corp-sw-bastion-01 exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Link corp-sw-jump-ops exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Link corp-sw-app-01 exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Link corp-sw-db-01 exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "Link corp-sw-fileserver-01 exists",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    },
+    {
+      "user_id": "enterprise",
+      "memory": "TOPOLOGY_JSON::{\"metadata\": {\"name\": \"Enterprise Production Segment\", \"description\": \"Canonical enterprise network used to derive shadow honeynet topology\", \"version\": \"2024.10\"}, \"switches\": [{\"id\": \"core-sw\"}, {\"id\": \"dmz-sw\"}, {\"id\": \"corp-sw\"}], \"hosts\": [{\"name\": \"edge-fw\", \"role\": \"firewall\", \"connect\": \"core-sw\"}, {\"name\": \"bastion-01\", \"role\": \"bastion\", \"connect\": \"corp-sw\"}, {\"name\": \"jump-ops\", \"role\": \"operations\", \"connect\": \"corp-sw\"}, {\"name\": \"dmz-web-01\", \"role\": \"public-web\", \"connect\": \"dmz-sw\"}, {\"name\": \"dmz-api-01\", \"role\": \"public-api\", \"connect\": \"dmz-sw\"}, {\"name\": \"app-01\", \"role\": \"application\", \"connect\": \"corp-sw\"}, {\"name\": \"db-01\", \"role\": \"database\", \"connect\": \"corp-sw\"}, {\"name\": \"fileserver-01\", \"role\": \"fileserver\", \"connect\": \"corp-sw\"}], \"links\": [{\"endpoints\": [\"core-sw\", \"dmz-sw\"]}, {\"endpoints\": [\"core-sw\", \"corp-sw\"]}, {\"endpoints\": [\"core-sw\", \"edge-fw\"]}, {\"endpoints\": [\"dmz-sw\", \"dmz-web-01\"]}, {\"endpoints\": [\"dmz-sw\", \"dmz-api-01\"]}, {\"endpoints\": [\"corp-sw\", \"bastion-01\"]}, {\"endpoints\": [\"corp-sw\", \"jump-ops\"]}, {\"endpoints\": [\"corp-sw\", \"app-01\"]}, {\"endpoints\": [\"corp-sw\", \"db-01\"]}, {\"endpoints\": [\"corp-sw\", \"fileserver-01\"]}]}",
+      "categories": [],
+      "metadata": {
+        "offline": true
+      }
+    }
+  ]
+}

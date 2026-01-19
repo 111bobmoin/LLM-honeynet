@@ -1,0 +1,31 @@
+{
+  "honeyfiles": [
+    "/root/readme.md",
+    "/var/service/runbook.txt",
+    "/srv/ftp/backups/snapshot-2024-04-10.tar.gz"
+  ],
+  "stage_indicators": {
+    "stage1": {
+      "events": ["request", "login_attempt"],
+      "keywords": ["exploit", "sql", "union", "admin", "/api", "/wp-admin"]
+    },
+    "stage2": {
+      "events": ["login_attempt"],
+      "success_required": true,
+      "keywords": ["root", "admin", "deploy"]
+    },
+    "stage3": {
+      "events": ["command"],
+      "commands": ["netstat", "nmap", "ifconfig", "uname", "ssh", "scp", "wget"]
+    },
+    "stage4": {
+      "honeyfile": true
+    },
+    "stage5": {
+      "events": ["command", "request"],
+      "commands": ["systemctl", "service", "docker", "kubectl", "mysql", "psql"],
+      "http_paths": ["/internal", "/api/collect", "/api/version"],
+      "keywords": ["payment", "customer", "orders"]
+    }
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "metadata": {
+    "name": "Enterprise Production Segment",
+    "description": "Canonical enterprise network used to derive shadow honeynet topology",
+    "version": "2024.10"
+  },
+  "switches": [
+    "core-sw",
+    "dmz-sw",
+    "corp-sw"
+  ],
+  "hosts": [
+    {
+      "name": "edge-fw",
+      "role": "firewall",
+      "connect": "core-sw"
+    },
+    {
+      "name": "bastion-01",
+      "role": "bastion",
+      "connect": "corp-sw"
+    },
+    {
+      "name": "jump-ops",
+      "role": "operations",
+      "connect": "corp-sw"
+    },
+    {
+      "name": "dmz-web-01",
+      "role": "public-web",
+      "connect": "dmz-sw"
+    },
+    {
+      "name": "dmz-api-01",
+      "role": "public-api",
+      "connect": "dmz-sw"
+    },
+    {
+      "name": "app-01",
+      "role": "application",
+      "connect": "corp-sw"
+    },
+    {
+      "name": "db-01",
+      "role": "database",
+      "connect": "corp-sw"
+    },
+    {
+      "name": "fileserver-01",
+      "role": "fileserver",
+      "connect": "corp-sw"
+    }
+  ],
+  "links": [
+    {
+      "node1": "core-sw",
+      "node2": "dmz-sw"
+    },
+    {
+      "node1": "core-sw",
+      "node2": "corp-sw"
+    },
+    {
+      "node1": "core-sw",
+      "node2": "edge-fw"
+    },
+    {
+      "node1": "dmz-sw",
+      "node2": "dmz-web-01"
+    },
+    {
+      "node1": "dmz-sw",
+      "node2": "dmz-api-01"
+    },
+    {
+      "node1": "corp-sw",
+      "node2": "bastion-01"
+    },
+    {
+      "node1": "corp-sw",
+      "node2": "jump-ops"
+    },
+    {
+      "node1": "corp-sw",
+      "node2": "app-01"
+    },
+    {
+      "node1": "corp-sw",
+      "node2": "db-01"
+    },
+    {
+      "node1": "corp-sw",
+      "node2": "fileserver-01"
+    }
+  ]
+}

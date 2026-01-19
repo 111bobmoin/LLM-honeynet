@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Metrics Dashboard</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        margin: 3rem;
+      }
+      h1 {
+        margin-bottom: 0.5rem;
+      }
+      .pill {
+        display: inline-block;
+        background: #2e7d32;
+        color: #fff;
+        padding: 0.2rem 0.75rem;
+        border-radius: 999px;
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Secure Metrics Gateway</h1>
+    <p class="pill">TLS Only</p>
+    <p>
+      Authenticated agents should post metrics payloads to
+      <code>/api/collect</code>. Out-of-band enrollment is required.
+    </p>
+  </body>
+</html>

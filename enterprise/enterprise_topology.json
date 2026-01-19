@@ -1,0 +1,34 @@
+{
+  "metadata": {
+    "name": "Enterprise Production Segment",
+    "description": "Canonical enterprise network used to derive shadow honeynet topology",
+    "version": "2024.10"
+  },
+  "switches": [
+    {"id": "core-sw"},
+    {"id": "dmz-sw"},
+    {"id": "corp-sw"}
+  ],
+  "hosts": [
+    {"name": "edge-fw", "role": "firewall", "connect": "core-sw"},
+    {"name": "bastion-01", "role": "bastion", "connect": "corp-sw"},
+    {"name": "jump-ops", "role": "operations", "connect": "corp-sw"},
+    {"name": "dmz-web-01", "role": "public-web", "connect": "dmz-sw"},
+    {"name": "dmz-api-01", "role": "public-api", "connect": "dmz-sw"},
+    {"name": "app-01", "role": "application", "connect": "corp-sw"},
+    {"name": "db-01", "role": "database", "connect": "corp-sw"},
+    {"name": "fileserver-01", "role": "fileserver", "connect": "corp-sw"}
+  ],
+  "links": [
+    {"endpoints": ["core-sw", "dmz-sw"]},
+    {"endpoints": ["core-sw", "corp-sw"]},
+    {"endpoints": ["core-sw", "edge-fw"]},
+    {"endpoints": ["dmz-sw", "dmz-web-01"]},
+    {"endpoints": ["dmz-sw", "dmz-api-01"]},
+    {"endpoints": ["corp-sw", "bastion-01"]},
+    {"endpoints": ["corp-sw", "jump-ops"]},
+    {"endpoints": ["corp-sw", "app-01"]},
+    {"endpoints": ["corp-sw", "db-01"]},
+    {"endpoints": ["corp-sw", "fileserver-01"]}
+  ]
+}

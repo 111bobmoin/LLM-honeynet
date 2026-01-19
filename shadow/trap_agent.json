@@ -1,0 +1,82 @@
+{
+  "hosts": [
+    {
+      "name": "edge-fw",
+      "host_loops": []
+    },
+    {
+      "name": "bastion-01",
+      "host_loops": [
+        [
+          "/home/user/.ssh/id_rsa",
+          "/var/log/auth.log",
+          "/home/user/.ssh/id_rsa"
+        ]
+      ]
+    },
+    {
+      "name": "jump-ops",
+      "host_loops": []
+    },
+    {
+      "name": "dmz-web-01",
+      "host_loops": []
+    },
+    {
+      "name": "dmz-api-01",
+      "host_loops": []
+    },
+    {
+      "name": "app-01",
+      "host_loops": []
+    },
+    {
+      "name": "db-01",
+      "host_loops": []
+    },
+    {
+      "name": "fileserver-01",
+      "host_loops": []
+    }
+  ],
+  "chains": [
+    {
+      "name": "SSH to API Loop",
+      "steps": [
+        {
+          "host": "bastion-01",
+          "tier": "mid"
+        },
+        {
+          "host": "dmz-api-01",
+          "tier": "low"
+        },
+        {
+          "host": "app-01",
+          "tier": "mid"
+        },
+        {
+          "host": "bastion-01",
+          "tier": "mid"
+        }
+      ]
+    },
+    {
+      "name": "Web to File Loop",
+      "steps": [
+        {
+          "host": "dmz-web-01",
+          "tier": "low"
+        },
+        {
+          "host": "fileserver-01",
+          "tier": "low"
+        },
+        {
+          "host": "dmz-web-01",
+          "tier": "low"
+        }
+      ]
+    }
+  ]
+}

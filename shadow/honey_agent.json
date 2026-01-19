@@ -1,0 +1,192 @@
+{
+  "metadata": {
+    "generated_at": "2025-11-18T14:03:15Z",
+    "mode": "initialization"
+  },
+  "hosts": [
+    {
+      "name": "edge-fw",
+      "ports": [
+        {
+          "port": 443,
+          "service": "HTTPS",
+          "files": [
+            {
+              "path": "/etc/ssl/private/server.key"
+            },
+            {
+              "path": "/var/www/html/backup.tar.gz"
+            }
+          ]
+        }
+      ],
+      "vulnerabilities": [
+        {
+          "type": "config leak",
+          "target_file": "/etc/ssl/private/server.key"
+        }
+      ]
+    },
+    {
+      "name": "bastion-01",
+      "ports": [
+        {
+          "port": 22,
+          "service": "SSH",
+          "files": [
+            {
+              "path": "/home/user/.ssh/id_rsa"
+            },
+            {
+              "path": "/var/log/auth.log"
+            }
+          ]
+        }
+      ],
+      "vulnerabilities": [
+        {
+          "type": "weak creds",
+          "target_file": "/home/user/.ssh/id_rsa"
+        }
+      ]
+    },
+    {
+      "name": "jump-ops",
+      "ports": [
+        {
+          "port": 80,
+          "service": "HTTP",
+          "files": [
+            {
+              "path": "/var/www/html/config.php"
+            },
+            {
+              "path": "/var/www/html/passwords.txt"
+            }
+          ]
+        }
+      ],
+      "vulnerabilities": [
+        {
+          "type": "path traversal",
+          "target_file": "/var/www/html/config.php"
+        }
+      ]
+    },
+    {
+      "name": "dmz-web-01",
+      "ports": [
+        {
+          "port": 80,
+          "service": "HTTP",
+          "files": [
+            {
+              "path": "/var/www/html/admin_backup.zip"
+            },
+            {
+              "path": "/var/www/html/secrets.txt"
+            }
+          ]
+        }
+      ],
+      "vulnerabilities": [
+        {
+          "type": "file upload",
+          "target_file": "/var/www/html/admin_backup.zip"
+        }
+      ]
+    },
+    {
+      "name": "dmz-api-01",
+      "ports": [
+        {
+          "port": 443,
+          "service": "HTTPS",
+          "files": [
+            {
+              "path": "/etc/api/keys.json"
+            },
+            {
+              "path": "/var/www/html/api_backup.sql"
+            }
+          ]
+        }
+      ],
+      "vulnerabilities": [
+        {
+          "type": "RCE",
+          "target_file": "/etc/api/keys.json"
+        }
+      ]
+    },
+    {
+      "name": "app-01",
+      "ports": [
+        {
+          "port": 8080,
+          "service": "HTTP",
+          "files": [
+            {
+              "path": "/var/www/app/config.yaml"
+            },
+            {
+              "path": "/var/www/app/finance_data.csv"
+            }
+          ]
+        }
+      ],
+      "vulnerabilities": [
+        {
+          "type": "outdated ssh",
+          "target_port": 8080
+        }
+      ]
+    },
+    {
+      "name": "db-01",
+      "ports": [
+        {
+          "port": 5432,
+          "service": "PostgreSQL",
+          "files": [
+            {
+              "path": "/var/lib/postgresql/data/backup.sql"
+            },
+            {
+              "path": "/var/lib/postgresql/data/users.csv"
+            }
+          ]
+        }
+      ],
+      "vulnerabilities": [
+        {
+          "type": "config leak",
+          "target_file": "/var/lib/postgresql/data/backup.sql"
+        }
+      ]
+    },
+    {
+      "name": "fileserver-01",
+      "ports": [
+        {
+          "port": 445,
+          "service": "SMB",
+          "files": [
+            {
+              "path": "/srv/files/finance_backup.zip"
+            },
+            {
+              "path": "/srv/files/passwords.txt"
+            }
+          ]
+        }
+      ],
+      "vulnerabilities": [
+        {
+          "type": "file upload",
+          "target_file": "/srv/files/passwords.txt"
+        }
+      ]
+    }
+  ]
+}

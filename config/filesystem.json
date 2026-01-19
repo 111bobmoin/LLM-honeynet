@@ -1,0 +1,210 @@
+{
+  "root": {
+    "type": "directory",
+    "mode": "0755",
+    "owner": "root",
+    "group": "root",
+    "children": {
+      "etc": {
+        "type": "directory",
+        "mode": "0755",
+        "owner": "root",
+        "group": "root",
+        "children": {
+          "passwd": {
+            "type": "file",
+            "mode": "0644",
+            "owner": "root",
+            "group": "root",
+            "modified": "2024-04-10T08:14:00Z",
+            "content": "root:x:0:0:root:/root:/bin/bash\nadmin:x:1001:1001:Admin User:/home/admin:/bin/bash\nservice:x:1002:1002:Service Account:/var/service:/bin/bash\nftp:x:1003:1003:FTP User:/srv/ftp:/usr/sbin/nologin\n"
+          },
+          "shadow": {
+            "type": "file",
+            "mode": "0640",
+            "owner": "root",
+            "group": "shadow",
+            "modified": "2024-04-10T08:14:00Z",
+            "content": "root:$6$Qxn...$examplehash:19500:0:99999:7:::\nadmin:$6$1Uw...$examplehash:19500:0:99999:7:::\n"
+          },
+          "ssh": {
+            "type": "directory",
+            "mode": "0755",
+            "owner": "root",
+            "group": "root",
+            "children": {
+              "sshd_config": {
+                "type": "file",
+                "mode": "0644",
+                "owner": "root",
+                "group": "root",
+                "modified": "2024-03-21T11:22:00Z",
+                "content": "Port 22\nPermitRootLogin prohibit-password\nPasswordAuthentication yes\nSubsystem sftp /usr/lib/openssh/sftp-server\n"
+              }
+            }
+          }
+        }
+      },
+      "var": {
+        "type": "directory",
+        "mode": "0755",
+        "owner": "root",
+        "group": "root",
+        "children": {
+          "log": {
+            "type": "directory",
+            "mode": "0755",
+            "owner": "root",
+            "group": "adm",
+            "children": {
+              "auth.log": {
+                "type": "file",
+                "mode": "0640",
+                "owner": "root",
+                "group": "adm",
+                "modified": "2024-04-12T06:30:00Z",
+                "content": "Apr 12 06:26:44 intranet sshd[2031]: Accepted password for admin from 10.54.17.23 port 52844 ssh2\nApr 12 06:27:18 intranet sshd[2044]: Failed password for root from 203.0.113.41 port 44112 ssh2\nApr 12 06:29:02 intranet vsftpd[2140]: CONNECT: Client \"198.51.100.77\"\n"
+              }
+            }
+          },
+          "service": {
+            "type": "directory",
+            "mode": "0750",
+            "owner": "service",
+            "group": "service",
+            "children": {
+              "runbook.txt": {
+                "type": "file",
+                "mode": "0640",
+                "owner": "service",
+                "group": "service",
+                "modified": "2024-02-18T09:30:00Z",
+                "content": "Service escalation steps:\n1. Check systemd unit status.\n2. Review journal logs for errors.\n3. Contact on-call engineer if outage exceeds 15 minutes.\n"
+              }
+            }
+          }
+        }
+      },
+      "home": {
+        "type": "directory",
+        "mode": "0755",
+        "owner": "root",
+        "group": "root",
+        "children": {
+          "admin": {
+            "type": "directory",
+            "mode": "0750",
+            "owner": "admin",
+            "group": "admin",
+            "children": {
+              "notes.txt": {
+                "type": "file",
+                "mode": "0640",
+                "owner": "admin",
+                "group": "admin",
+                "modified": "2024-04-05T13:15:00Z",
+                "content": "- Rotate bastion passwords monthly.\n- Update VPN ACL before next deployment.\n"
+              },
+              ".ssh": {
+                "type": "directory",
+                "mode": "0700",
+                "owner": "admin",
+                "group": "admin",
+                "children": {
+                  "known_hosts": {
+                    "type": "file",
+                    "mode": "0644",
+                    "owner": "admin",
+                    "group": "admin",
+                    "modified": "2024-03-29T09:00:00Z",
+                    "content": "intranet bastion rsa AAAAB3Nza...\n"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "root": {
+        "type": "directory",
+        "mode": "0700",
+        "owner": "root",
+        "group": "root",
+        "children": {
+          ".bash_history": {
+            "type": "file",
+            "mode": "0600",
+            "owner": "root",
+            "group": "root",
+            "modified": "2024-04-11T21:42:00Z",
+            "content": "apt update\napt upgrade\ncat /var/log/auth.log\n"
+          },
+          "readme.md": {
+            "type": "file",
+            "mode": "0644",
+            "owner": "root",
+            "group": "root",
+            "modified": "2024-03-01T08:00:00Z",
+            "content": "# Internal bastion host\n\nDo not store secrets locally. All changes must be tracked in Git.\n"
+          }
+        }
+      },
+      "srv": {
+        "type": "directory",
+        "mode": "0755",
+        "owner": "root",
+        "group": "root",
+        "children": {
+          "ftp": {
+            "type": "directory",
+            "mode": "0755",
+            "owner": "ftp",
+            "group": "ftp",
+            "children": {
+              "pub": {
+                "type": "directory",
+                "mode": "0755",
+                "owner": "ftp",
+                "group": "ftp",
+                "children": {
+                  "welcome.txt": {
+                    "type": "file",
+                    "mode": "0644",
+                    "owner": "ftp",
+                    "group": "ftp",
+                    "modified": "2024-04-08T07:45:00Z",
+                    "content": "Welcome to the staging FTP share.\nFiles refresh nightly at 02:00 UTC.\n"
+                  },
+                  "release_notes.txt": {
+                    "type": "file",
+                    "mode": "0644",
+                    "owner": "ftp",
+                    "group": "ftp",
+                    "modified": "2024-04-10T03:10:00Z",
+                    "content": "April 2024 release introduces improved telemetry collection and updated API schemas.\n"
+                  }
+                }
+              },
+              "backups": {
+                "type": "directory",
+                "mode": "0750",
+                "owner": "deploy",
+                "group": "deploy",
+                "children": {
+                  "snapshot-2024-04-10.tar.gz": {
+                    "type": "file",
+                    "mode": "0640",
+                    "owner": "deploy",
+                    "group": "deploy",
+                    "modified": "2024-04-10T01:00:00Z",
+                    "content": "placeholder\n"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
