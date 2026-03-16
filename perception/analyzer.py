@@ -185,3 +185,38 @@ def stage_number(stage: str) -> int:
         return int(stage.replace("stage", ""))
     except ValueError:
         return 0
+
+
+def discover_hosts(include_base: bool = False, root_dir: Path = None) -> Dict[str, Path]:
+    """Discover available hosts from deployments directory.
+
+    Args:
+        include_base: Whether to include the base logs/ directory
+        root_dir: Root directory to search from (defaults to current working directory)
+
+    Returns:
+        Dictionary mapping host names to their log directory paths
+    """
+    if root_dir is None:
+        root_dir = Path.cwd()
+    else:
+        root_dir = Path(root_dir)
+
+    hosts: Dict[str, Path] = {}
+
+    if include_base and (root_dir / "logs").exists():
+        hosts["base"] = root_dir / "logs"
+
+    deploy_root = root_dir / "deployments"
+    if deploy_root.exists():
+        for host_dir in sorted(p for p in deploy_root.iterdir() if p.is_dir()):
+            log_dir = host_dir / "logs"
+            if log_dir.exists():
+                hosts[host_dir.name] = log_dir
+
+    # Backward compatibility with legacy layout (logs_hostname)
+    for path in sorted(root_dir.glob("logs_*")):
+        host = path.name.split("_", 1)[1] if "_" in path.name else path.name
+        hosts.setdefault(host, path)
+
+    return hosts

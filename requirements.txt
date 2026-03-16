@@ -1,0 +1,16 @@
+# LLM Honeynet Platform Requirements
+
+# Core dependencies
+flask>=3.0.0
+flask-cors>=4.0.0
+
+# LLM Clients - GLM (Zhipu AI)
+zhipuai>=2.0.0
+
+# Optional: OpenAI (for backward compatibility if needed)
+# openai>=1.0.0
+
+# Development dependencies (optional)
+# pytest>=7.0.0
+# black>=23.0.0
+# mypy>=1.0.0
