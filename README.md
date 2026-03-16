@@ -1,132 +1,424 @@
-# LLM Honeynet 平台指南
+# LLM Honeynet 平台
 
-LLM Honeynet 是一套围绕影子蜜网构建的攻防研究平台。它整合多协议高仿真蜜罐、阶段化入侵感知、轻量记忆，以及基于大模型的 Honey Agent 与 Trap Agent，用于自动化生成端口诱饵、文件陷阱、跨主机凭证链和脆弱性叙事，从而持续牵制和延迟攻击者。
+基于大语言模型的智能蜜网平台，集成多协议高仿真蜜罐、阶段化入侵感知、自动化诱饵生成与 Web 管理界面。
 
----
-
-## 核心能力一览
-- **多协议蜜罐**：SSH/Telnet/FTP/HTTP/HTTPS/MySQL 等，支持虚拟文件系统与命令诱饵。
-- **批量部署**：快捷生成多主机运行目录、证书与独立日志。
-- **入侵阶段识别**：基于规则评估 Stage1–Stage5，可选调用 OpenAI 摘要。
-- **轻量记忆**：短期树（主机→端口→文件→漏洞类别）+ 长期端口事实，压缩提示上下文。
-- **Honey Agent**：生成端口/文件/漏洞类别诱饵，支持微调模式。
-- **Trap Agent**：生成主机内文件闭环和跨主机循环链。
-- **影子拓扑**：从企业拓扑生成 Mininet 可用的影子网络。
+![GLM](https://img.shields.io/badge/LLM-GLM--4--Flash-blue)
+![Flask](https://img.shields.io/badge/Web-Flask-3.0-green)
+![Python](https://img.shields.io/badge/Python-3.10+-yellow)
 
 ---
 
-## 系统架构
-1. **数据输入层**：`enterprise/`（拓扑、文档）、`config/`（协议配置、虚拟文件系统）、`deployments/`（部署副本）。
-2. **采集运行层**：`run_honeypot.py` 多协议蜜罐；`shadow/mininet_shadow.py` 影子网络模拟。
-3. **分析生成层**：`run_perception.py` 阶段识别；`run_honey_agent.py` / `run_trap_agent.py` 生成诱饵与陷阱。
-4. **记忆与检索层**：`shadow/honey_agent.json`、`shadow/trap_agent.json`、`shadow/long_memory.json`、`shadow/attacker_preferences.json`。
+## 核心特性
+
+### 三阶段自动化流程
+- **感知 (Perception)**：分析蜜罐日志，识别攻击阶段 (Stage 1-5)
+- **编排 (Orchestration)**：Honey Agent 生成端口/文件/漏洞诱饵，Trap Agent 生成陷阱链
+- **欺骗 (Deception)**：一致性审计并生成部署配置
+
+### 智能诱饵生成
+- **Honey Agent**：基于 GLM 生成真实感的端口、文件和漏洞配置
+- **Trap Agent**：创建主机内文件闭环和跨主机凭证链
+- **Attacker Preferences**：学习和适应攻击者行为模式
+
+### Web 管理界面
+- **实时仪表板**：监控所有阶段的状态和操作
+- **可视化展示**：影子数据、陷阱环、凭证链的图形化展示
+- **一键操作**：通过 Web UI 运行完整的欺骗流程
+
+---
+
+## 快速开始
+
+### 环境要求
+```bash
+Python 3.10+
+```
+
+### 安装依赖
+
+```bash
+# 安装 Python 包
+pip install -r requirements.txt
+
+# 配置 GLM API Key
+# 从 https://open.bigmodel.cn/usercenter/apikeys 获取
+mkdir -p secrets
+echo "your_api_key_here" > secrets/glm_api_key.txt
+```
+
+### 启动 Web 服务器
+
+```bash
+# 方法 1：使用启动脚本
+python3 run_web.py
+
+# 方法 2：直接运行
+python3 web/api.py
+```
+
+访问：http://localhost:5000
 
 ---
 
 ## 目录结构
-| 路径 | 说明 |
-| --- | --- |
-| `honeypot/` | 多协议服务实现、虚拟文件系统与运行调度 |
-| `config/` | 默认协议配置、虚拟文件系统、规则模板 |
-| `deployments/` | 多主机部署产物（脚本生成） |
-| `enterprise/` | 原始企业拓扑/文档输入 |
-| `shadow/` | 影子拓扑与 Agent 输出：`honey_agent.json`、`trap_agent.json`、`long_memory.json`、`attacker_preferences.json` |
-| `orchestrator/` | 轻量记忆、Honey Agent、Trap Agent、拓扑工具 |
-| `deception/` | 诱饵一致性检测与配置生成 |
-| `perception/` | 入侵阶段识别与摘要 |
-| `scripts/` | 管道脚本（拓扑转换、部署、实用工具） |
-| `logs/` | 本地蜜罐服务日志（NDJSON） |
-| `www/` / `ftp/` | HTTP/FTP 静态诱饵内容 |
+
+```
+llm_honeynet/
+├── llm/                    # GLM API 客户端
+│   └── glm_client.py      # 智谱 AI API 封装
+├── perception/             # 感知模块
+│   ├── analyzer.py        # 日志分析与阶段识别
+│   └── glm_summary.py     # GLM 摘要生成
+├── orchestrator/          # 编排模块
+│   ├── honey_agent.py     # 诱饵生成 Agent
+│   ├── trap_agent.py      # 陷阱生成 Agent
+│   └── memory.py          # 短期/长期记忆管理
+├── deception/             # 欺骗模块
+│   └── agent.py           # 一致性审计与配置生成
+├── web/                   # Web 前端
+│   ├── static/            # HTML/CSS/JS
+│   └── api.py             # Flask REST API
+├── shadow/                # 影子数据存储
+│   ├── honey_agent.json   # Honey Agent 输出
+│   ├── trap_agent.json    # Trap Agent 输出
+│   ├── long_memory.json   # 长期记忆
+│   └── attacker_preferences.json  # 攻击者偏好
+├── deployments/           # 蜜罐部署目录
+├── config/                # 配置模板
+├── logs/                  # 蜜罐日志
+└── secrets/               # 敏感信息（API Key）
+```
 
 ---
 
-## 关键组件
-### 1. 多协议蜜罐 (`run_honeypot.py`)
-- 自动读取 `config/` 下 `*_config.json` 启动对应协议。
-- 支持 `--services ssh,telnet` 指定子集；日志写入 `logs/<service>.log`。
-- 虚拟文件系统定义在 `config/filesystem.json`，SSH/Telnet/FTP 共享。
-- 批量部署：`python3 scripts/manage_hosts.py add h1` 或 `bulk/from-topology`。
+## 使用指南
 
-### 2. 感知管线 (`run_perception.py`)
-- 自动发现 `logs/` 与 `deployments/*/logs`，加载规则（Stage1–Stage5）。
-- 支持 `--hosts`、`--rules`、`--include-base`；`--openai` 可做摘要。
+### Web 界面操作
 
-### 3. 轻量记忆
-- 短期记忆树（主机→端口→文件→漏洞类别），长期记忆 `shadow/long_memory.json` 提供端口/服务事实，偏好列表 `shadow/attacker_preferences.json`。
+#### 1. 感知分析
+- 导航到 **感知** 页面
+- 选择目标主机
+- 点击 **开始分析** 识别攻击阶段
 
-### 4. Honey Agent (`run_honey_agent.py`)
-- 三段流水：1) 端口；2) 文件（仅 path，诱饵命名）；3) 漏洞类别（type，引用端口/文件）。
-- 模式：`initialization` / `finetune`（读取并微调现有 `honey_agent.json`）。
-- 输出：`shadow/honey_agent.json`（可用 `--short-memory` 覆盖）。
+#### 2. 运行 Honey Agent
+- 导航到 **编排** 页面
+- 选择运行模式（初始化/微调）
+- 配置 GLM 模型参数
+- 点击 **运行 Honey Agent**
 
-### 5. Trap Agent (`run_trap_agent.py`)
-- 依赖 Honey Agent 树构造陷阱：
-  1. 每机 0–3 条闭环文件链（路径序列）。
-  2. 1–3 条跨主机链，steps 形如 host(low)→host(mid)→host(high)→host(low)，steps ≤5。
-- 输出：`shadow/trap_agent.json`（包含 host_loops 与 chains）。
+#### 3. 运行 Trap Agent
+- 选择运行模式（完整流程/仅主机内/仅跨主机）
+- 配置参数
+- 点击 **运行 Trap Agent**
 
-### 6. Deception Agent (`run_deception.py`)
-- 汇总 `honey_agent.json` + `trap_agent.json`，执行一致性审计、按部署生成配置。
-- 支持 `--mode consistency` / `generate-configs` / `full`，可用 `--hosts` 限定目标。
-- 审计输出 `shadow/deception_consistency_report.json`，配置写入各 `deployments/<host>/config/`。
+#### 4. 配置欺骗
+- 导航到 **欺骗** 页面
+- 运行一致性审计
+- 生成部署配置
 
-### 7. 影子拓扑 (`scripts/build_shadow.py` / `shadow/mininet_shadow.py`)
-- `build_shadow.py` 从 `enterprise/enterprise_topology.json` 生成 `shadow/shadow_topology.json` 与 Mininet 脚本。
-- `sudo python3 shadow/mininet_shadow.py` 可在 Mininet 中调试影子网络。
+### 命令行操作
+
+```bash
+# 运行感知分析
+python3 -c "
+from perception import analyze_host, load_rules
+from pathlib import Path
+rules = load_rules(Path('config'))
+analysis = analyze_host('test-host', Path('logs'), rules)
+print(f'Max stage: {analysis.max_stage}')
+"
+
+# 运行 Honey Agent
+python3 -c "
+from orchestrator import HoneyAgent, HoneyAgentConfig
+from pathlib import Path
+
+config = HoneyAgentConfig(
+    short_memory_path=Path('shadow/honey_agent.json'),
+    glm_key_path=Path('secrets/glm_api_key.txt'),
+    glm_model='glm-4-flash'
+)
+
+agent = HoneyAgent(config)
+result = agent.run_initialization()
+print(f'Generated {len(result[\"short_memory\"])} hosts')
+"
+
+# 运行 Trap Agent
+python3 -c "
+from orchestrator import TrapAgent, TrapAgentConfig
+from pathlib import Path
+
+config = TrapAgentConfig(
+    short_memory_path=Path('shadow/honey_agent.json'),
+    trap_memory_path=Path('shadow/trap_agent.json'),
+    glm_key_path=Path('secrets/glm_api_key.txt')
+)
+
+agent = TrapAgent(config)
+result = agent.run_full_pipeline()
+print(f'Generated trap chains for {len(result[\"hosts\"])} hosts')
+"
+
+# 运行 Deception Agent
+python3 -c "
+from deception import DeceptionAgent, DeceptionAgentConfig
+from pathlib import Path
+
+config = DeceptionAgentConfig(
+    deployments_root=Path('deployments'),
+    short_memory_path=Path('shadow/honey_agent.json'),
+    trap_memory_path=Path('shadow/trap_agent.json'),
+    glm_key_path=Path('secrets/glm_api_key.txt')
+)
+
+agent = DeceptionAgent(config)
+
+# 一致性审计
+report = agent.run_consistency_check()
+print(f'Issues found: {len(report.get(\"issues\", []))}')
+
+# 生成配置
+configs = agent.generate_host_configs()
+print(f'Generated configs for {len(configs)} hosts')
+"
+```
 
 ---
 
-## 常用命令
-| 操作 | 命令 |
-| --- | --- |
-| 启动蜜罐服务 | `python3 run_honeypot.py [--services ssh,http]` |
-| 批量生成部署 | `python3 scripts/manage_hosts.py bulk --prefix h --count 5` |
-| 从拓扑生成部署 | `python3 scripts/manage_hosts.py from-topology` |
-| 感知/阶段识别 | `python3 run_perception.py --openai` |
-| 构建影子拓扑 | `python3 scripts/build_shadow.py` |
-| Honey Agent 初始化 | `python3 run_honey_agent.py` |
-| Honey Agent 微调 | `python3 run_honey_agent.py finetune` |
-| Trap Agent 全量 | `python3 run_trap_agent.py` |
-| Trap Agent 单阶段 | `python3 run_trap_agent.py host` / `interhost` |
-| Deception 审计+配置 | `python3 run_deception.py` |
-| 影子拓扑 Mininet | `sudo python3 shadow/mininet_shadow.py` |
+## API 文档
+
+### REST API 端点
+
+| 端点 | 方法 | 描述 |
+|------|------|------|
+| `/api/health` | GET | 健康检查 |
+| `/api/dashboard/summary` | GET | 仪表板概览 |
+| `/api/perception/hosts` | GET | 获取可用主机 |
+| `/api/perception/analyze` | POST | 运行感知分析 |
+| `/api/orchestrate/honey` | POST | 运行 Honey Agent |
+| `/api/orchestrate/trap` | POST | 运行 Trap Agent |
+| `/api/orchestrate/status` | GET | 获取编排状态 |
+| `/api/deception/run` | POST | 运行 Deception Agent |
+| `/api/deception/consistency` | GET | 获取一致性报告 |
+| `/api/deployment/hosts` | GET | 获取部署主机列表 |
+| `/api/shadow/data` | GET | 获取影子数据 |
+| `/api/config/preferences` | GET/POST | 管理攻击者偏好 |
+
+### 请求示例
+
+```bash
+# 运行 Honey Agent
+curl -X POST http://localhost:5000/api/orchestrate/honey \
+  -H "Content-Type: application/json" \
+  -d '{"mode": "initialization"}'
+
+# 运行 Trap Agent
+curl -X POST http://localhost:5000/api/orchestrate/trap \
+  -H "Content-Type: application/json" \
+  -d '{"mode": "all"}'
+
+# 运行完整欺骗流程
+curl -X POST http://localhost:5000/api/deception/run \
+  -H "Content-Type: application/json" \
+  -d '{"mode": "full", "hosts": "h1,h2,h3"}'
+```
 
 ---
 
-## 推荐工作流
-1. **准备企业资产**：填充 `enterprise/`（拓扑 JSON、策略文档等）。
-2. **构建影子拓扑**：`python3 scripts/build_shadow.py`
-3. **部署蜜罐**：`python3 scripts/manage_hosts.py add h1` → `python3 deployments/h1/run_honeypot.py`
-4. **（可选）运行 Mininet**：`sudo python3 shadow/mininet_shadow.py`
-5. **生成诱饵/陷阱**：`python3 run_honey_agent.py` → `python3 run_trap_agent.py`
-6. **审计与下发配置**：`python3 run_deception.py`（或 `--mode consistency`）
-7. **日志感知/摘要**：`python3 run_perception.py --openai`
-8. **迭代微调**：根据新情报运行 `python3 run_honey_agent.py finetune`、重复 Trap/Honey 生成。
+## 配置说明
+
+### GLM 模型配置
+
+```python
+from llm import GLMClient, GLMClientConfig
+
+config = GLMClientConfig(
+    api_key_path=Path("secrets/glm_api_key.txt"),
+    model="glm-4-flash",      # 可选: glm-4, glm-4-plus
+    temperature=0.1,
+    top_p=0.9,
+    max_tokens=4096
+)
+```
+
+### Agent 配置
+
+**Honey Agent:**
+```python
+HoneyAgentConfig(
+    glm_model="glm-4-flash",
+    glm_temperature=0.1,
+    glm_top_p=0.9,
+    glm_max_tokens=4096
+)
+```
+
+**Trap Agent:**
+```python
+TrapAgentConfig(
+    glm_model="glm-4-flash",
+    glm_temperature=0.15,
+    glm_top_p=0.85,
+    glm_max_tokens=4096
+)
+```
+
+**Deception Agent:**
+```python
+DeceptionAgentConfig(
+    glm_model="glm-4-flash",
+    glm_temperature=0.1,
+    glm_top_p=0.9,
+    glm_max_tokens=8192  # 配置生成需要更多 token
+)
+```
 
 ---
 
-## 配置与自定义
-- 协议：`config/{ssh,telnet,http,ftp,mysql}_config.json`
-- 虚拟文件系统：`config/filesystem.json`
-- 感知规则：`config/perception_rules.json` 或 `perception/rules.py`
-- LLM 参数：`HoneyAgentConfig` / `TrapAgentConfig` 的 `openai_model`、温度、top_p
+## 数据格式
 
----
+### Honey Agent 输出
 
-## 数据与日志
-- `logs/`：蜜罐服务 NDJSON 日志；`deployments/<host>/logs/`：部署独立日志。
-- `shadow/`：`shadow_topology.json`、`mininet_shadow.py`、`honey_agent.json`、`trap_agent.json`、`long_memory.json`、`attacker_preferences.json`。
+```json
+{
+  "hosts": [
+    {
+      "name": "bastion-01",
+      "ports": [
+        {
+          "port": 22,
+          "service": "SSH",
+          "files": [
+            {"path": "/root/.ssh/authorized_keys"},
+            {"path": "/etc/ssh/sshd_config"}
+          ],
+          "vulnerabilities": [
+            {
+              "type": "weak credentials",
+              "target_port": 22
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Trap Agent 输出
+
+```json
+{
+  "hosts": [
+    {
+      "name": "bastion-01",
+      "host_loops": [
+        ["/etc/passwd", "/var/log/auth.log", "/root/.ssh/id_rsa"]
+      ]
+    }
+  ],
+  "chains": [
+    {
+      "name": "lateral-chain-1",
+      "steps": [
+        {"host": "bastion-01", "tier": "low"},
+        {"host": "app-01", "tier": "mid"},
+        {"host": "bastion-01", "tier": "low"}
+      ]
+    }
+  ]
+}
+```
 
 ---
 
 ## 常见问题
-- **Trap/Honey Agent 提示空拓扑**：先运行 `python3 scripts/build_shadow.py` 确保有 `shadow/shadow_topology.json`。
-- **OpenAI 调用失败**：检查 API Key/网络/模型；必要时降低 `openai_temperature`。
+
+### Q: GLM API 调用失败？
+**A:** 检查以下项：
+1. API Key 是否正确配置在 `secrets/glm_api_key.txt`
+2. 网络连接是否正常
+3. API 额度是否充足
+
+### Q: 配置生成返回空结果？
+**A:**
+1. 确保 Honey Agent 和 Trap Agent 已成功运行
+2. 检查 `shadow/` 目录下是否有生成的 JSON 文件
+3. 增加 `glm_max_tokens` 参数值
+
+### Q: 如何查看生成的配置？
+**A:**
+1. 访问 **欺骗** 页面查看部署主机列表
+2. 查看 `deployments/<host>/config/` 目录下的配置文件
+3. 访问 **影子数据** 页面查看可视化数据
+
+### Q: Web 服务器端口冲突？
+**A:** 修改 `web/api.py` 最后一行的端口：
+```python
+app.run(host='0.0.0.0', port=5001, debug=True)
+```
 
 ---
 
-## 贡献与扩展
-- 欢迎提交新的协议模拟、规则模板或 Agent 提示词改进。
-- 文档和示例的补充同样重要，期待你的经验分享。
+## 技术架构
 
-> 目标：构建具有持续欺骗能力、易于扩展的 LLM 驱动蜜网。
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        Web Frontend                         │
+│                  (Dashboard + Controls)                     │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                      Flask REST API                         │
+│                      /web/api.py                            │
+└─────┬─────────────┬─────────────┬──────────────────────────┘
+      │             │             │
+      ▼             ▼             ▼
+┌──────────┐  ┌──────────┐  ┌────────────┐
+│Perception│  │Orchestrat│  │ Deception  │
+│  Module  │  │   or     │  │   Module   │
+└─────┬────┘  └────┬─────┘  └──────┬─────┘
+      │            │                │
+      └────────────┴────────────────┘
+                   │
+                   ▼
+          ┌────────────────┐
+          │  GLM Client    │
+          │ (zhipuai SDK)  │
+          └────────────────┘
+                   │
+                   ▼
+          ┌────────────────┐
+          │ GLM-4-Flash    │
+          │   (智谱 AI)     │
+          └────────────────┘
+```
+
+---
+
+## 开发计划
+
+- [ ] 支持更多 LLM 提供商
+- [ ] 添加实时日志流展示
+- [ ] 支持多租户管理
+- [ ] 添加攻击行为可视化图表
+- [ ] 支持自定义协议插件
+
+---
+
+## 许可证
+
+MIT License
+
+---
+
+## 致谢
+
+- [智谱 AI](https://open.bigmodel.cn/) - 提供 GLM-4 大语言模型 API
+- 原项目架构设计者
+
+---
+
+**目标**：构建具有持续欺骗能力、易于扩展的 LLM 驱动蜜网平台
