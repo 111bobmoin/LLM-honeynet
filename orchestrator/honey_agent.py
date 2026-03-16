@@ -125,6 +125,19 @@ class HoneyAgent:
             "attacker_preferences": list(preferences),
             "baseline_ports": baseline_ports,
         }
+
+        # Add long term memory insights for finetune mode
+        if mode == "finetune" and self.long_memory:
+            # Get successful patterns
+            successful_patterns = self.long_memory.get_successful_patterns()
+            if successful_patterns:
+                context["successful_patterns"] = successful_patterns[:5]  # Limit to top 5
+
+            # Get attacker behaviors
+            attacker_behaviors = self.long_memory.get_attacker_behaviors()
+            if attacker_behaviors:
+                context["attacker_behaviors"] = attacker_behaviors[:3]  # Limit to top 3
+
         instructions = (
             "You are a deception planner producing only host and port layers. "
             "Return strict JSON {hosts:[{name, ports}]} with no prose. "
@@ -150,6 +163,14 @@ class HoneyAgent:
             "ports": ports_payload,
             "baseline_files": baseline_files,
         }
+
+        # Add long term memory insights for finetune mode
+        if mode == "finetune" and self.long_memory:
+            # Get effective decoys by type
+            effective_decoys = self.long_memory.get_effective_decoys()
+            if effective_decoys:
+                context["effective_decoys"] = effective_decoys
+
         instructions = (
             "You are a deception planner adding honey files for each port. "
             "Return strict JSON {hosts:[{name, ports:[{port, service, files:[{path}]}]}]} with no prose. "

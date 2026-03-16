@@ -223,6 +223,70 @@ class DeceptionAgent:
             note_path = host_dir / "deception_notes.json"
             note_path.write_text(json.dumps(notes, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
+        # Save key information to long term memory
+        self._save_to_long_term_memory(host, data)
+
+    def _save_to_long_term_memory(self, host: str, config_data: Dict[str, Any]) -> None:
+        """Extract and save key configuration information to long term memory."""
+        if not self.long_memory:
+            return
+
+        # Extract port information
+        services = config_data.get("services", {})
+        for service_name, cfg in services.items():
+            if isinstance(cfg, dict) and "port" in cfg:
+                port = cfg.get("port")
+                if port:
+                    # Build port facts
+                    facts = {
+                        "service": service_name,
+                        "host": host,
+                    }
+                    if "banner" in cfg:
+                        facts["banner"] = cfg["banner"]
+                    if "server_header" in cfg:
+                        facts["server_header"] = cfg["server_header"]
+
+                    # Extract effective decoy patterns
+                    effective_decoys = []
+                    if "users" in cfg:
+                        effective_decoys.append("credential_access")
+                    if "routes" in cfg:
+                        effective_decoys.append("web_application")
+                    if cfg.get("default_status") == 404:
+                        effective_decoys.append("hidden_paths")
+
+                    if effective_decoys:
+                        facts["effective_decoys"] = effective_decoys
+
+                    self.long_memory.add_port_facts(port, facts)
+
+        # Record configuration generation
+        config_summary = {
+            "host": host,
+            "services": list(services.keys()),
+            "has_filesystem": bool(config_data.get("filesystem")),
+        }
+
+        # Extract files with vulnerabilities (potential decoys)
+        memory = self.short_memory
+        if memory:
+            host_node = next((h for h in memory.hosts if h.name == host), None)
+            if host_node:
+                decoy_files = []
+                for port in host_node.ports:
+                    for file in port.files:
+                        if file.vulnerabilities or file.lure_type:
+                            decoy_files.append({
+                                "path": file.path,
+                                "lure_type": file.lure_type,
+                                "vulnerabilities": len(file.vulnerabilities)
+                            })
+                if decoy_files:
+                    config_summary["decoy_files"] = decoy_files[:5]  # Keep summary concise
+
+        self.long_memory.record_config_generation(host, config_summary)
+
     # ------------------------------------------------------------------ GLM helpers
 
     def _invoke_llm(self, *, stage: str, instructions: str, context: Dict[str, Any]) -> Dict[str, Any]:

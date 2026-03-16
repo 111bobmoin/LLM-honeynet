@@ -990,48 +990,214 @@ async function renderPreferencesData() {
 function renderLongMemoryData(data) {
     const container = document.getElementById('long-memory-data');
 
-    const portFacts = data.port_facts || {};
-    const factCount = Object.keys(portFacts).length;
+    const hasPortFacts = data.ports && Object.keys(data.ports).length > 0;
+    const hasPatterns = data.successful_patterns && data.successful_patterns.length > 0;
+    const hasBehaviors = data.attacker_behaviors && data.attacker_behaviors.length > 0;
+    const hasDecoys = data.effective_decoys && Object.keys(data.effective_decoys).length > 0;
+    const hasHistory = data.config_history && data.config_history.length > 0;
 
-    if (factCount === 0) {
-        container.innerHTML = '<p class="text-muted">暂无数据</p>';
+    if (!hasPortFacts && !hasPatterns && !hasBehaviors && !hasDecoys && !hasHistory) {
+        container.innerHTML = '<p class="text-muted">暂无长期记忆数据</p>';
         return;
     }
 
-    let html = '<div class="data-cards">';
+    let html = '<div class="long-memory-container">';
 
-    // Group by service type
-    const services = {};
-    Object.entries(portFacts).forEach(([port, facts]) => {
-        const service = facts.service || 'unknown';
-        if (!services[service]) {
-            services[service] = [];
-        }
-        services[service].push({ port, ...facts });
-    });
+    // Summary section
+    html += '<div class="memory-summary">';
+    html += '<h3 class="summary-title">🧠 长期记忆概览</h3>';
+    html += '<div class="summary-stats">';
 
-    Object.entries(services).forEach(([service, ports]) => {
+    const summary = data.last_updated ? `
+        <div class="summary-stat">
+            <span class="stat-label">最后更新</span>
+            <span class="stat-value">${formatTime(data.last_updated)}</span>
+        </div>
+    ` : '';
+
+    html += summary || '';
+
+    if (data.ports) {
         html += `
-            <div class="data-card">
-                <div class="data-card-header">
-                    <h4 class="data-card-title">🔌 ${service}</h4>
-                </div>
-                <div class="data-card-body">
-                    <div class="port-facts-list">
-                        ${ports.map(p => `
-                            <div class="port-fact-item">
-                                <span class="port-fact-port">Port ${p.port}</span>
-                                <div class="port-fact-details">
-                                    ${p.banner ? `<div class="port-fact-banner">${p.banner}</div>` : ''}
-                                    ${p.default_software ? `<div class="port-fact-software">${p.default_software}</div>` : ''}
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
+            <div class="summary-stat">
+                <span class="stat-label">端口知识</span>
+                <span class="stat-value">${Object.keys(data.ports).length}</span>
             </div>
         `;
-    });
+    }
+
+    if (hasPatterns) {
+        html += `
+            <div class="summary-stat">
+                <span class="stat-label">成功模式</span>
+                <span class="stat-value">${data.successful_patterns.length}</span>
+            </div>
+        `;
+    }
+
+    if (hasBehaviors) {
+        html += `
+            <div class="summary-stat">
+                <span class="stat-label">攻击行为</span>
+                <span class="stat-value">${data.attacker_behaviors.length}</span>
+            </div>
+        `;
+    }
+
+    html += '</div></div>';
+
+    // Port Facts section
+    if (hasPortFacts) {
+        html += '<div class="memory-section">';
+        html += '<h3 class="section-title">🔌 端口知识库</h3>';
+        html += '<div class="port-facts-grid">';
+
+        Object.entries(data.ports).forEach(([portKey, facts]) => {
+            const [port, protocol] = portKey.split('/');
+            html += `
+                <div class="port-fact-card">
+                    <div class="port-fact-header">
+                        <span class="port-fact-number">${port}</span>
+                        <span class="port-fact-protocol">${protocol}</span>
+                        <span class="port-fact-service">${facts.service || 'unknown'}</span>
+                    </div>
+                    ${facts.version ? `<div class="port-fact-version">${facts.version}</div>` : ''}
+                    ${facts.banner ? `<div class="port-fact-banner">${facts.banner}</div>` : ''}
+                    ${facts.notes && facts.notes.length > 0 ? `
+                        <div class="port-fact-notes">
+                            ${facts.notes.map(note => `<span class="note-tag">${note}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                    ${facts.effective_decoys && facts.effective_decoys.length > 0 ? `
+                        <div class="port-fact-decoys">
+                            <span class="decoy-label">有效诱饵:</span>
+                            ${facts.effective_decoys.map(decoy => `<span class="decoy-tag">${decoy}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        });
+
+        html += '</div></div>';
+    }
+
+    // Successful Patterns section
+    if (hasPatterns) {
+        html += '<div class="memory-section">';
+        html += '<h3 class="section-title">✅ 成功模式</h3>';
+        html += '<div class="patterns-grid">';
+
+        data.successful_patterns.forEach(pattern => {
+            html += `
+                <div class="pattern-card">
+                    <div class="pattern-header">
+                        <span class="pattern-name">${pattern.pattern || pattern.name || 'Unknown'}</span>
+                        ${pattern.effectiveness ? `<span class="pattern-effectiveness">${pattern.effectiveness}</span>` : ''}
+                    </div>
+                    ${pattern.description ? `<div class="pattern-description">${pattern.description}</div>` : ''}
+                    ${pattern.examples && pattern.examples.length > 0 ? `
+                        <div class="pattern-examples">
+                            ${pattern.examples.map(ex => `<code class="example-code">${ex}</code>`).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        });
+
+        html += '</div></div>';
+    }
+
+    // Attacker Behaviors section
+    if (hasBehaviors) {
+        html += '<div class="memory-section">';
+        html += '<h3 class="section-title">🎯 攻击者行为</h3>';
+        html += '<div class="behaviors-grid">';
+
+        data.attacker_behaviors.forEach(behavior => {
+            html += `
+                <div class="behavior-card">
+                    <div class="behavior-header">
+                        <span class="behavior-name">${behavior.behavior || 'Unknown'}</span>
+                        ${behavior.frequency ? `<span class="behavior-frequency">${behavior.frequency}</span>` : ''}
+                    </div>
+                    ${behavior.description ? `<div class="behavior-description">${behavior.description}</div>` : ''}
+                    ${behavior.common_credentials ? `
+                        <div class="behavior-credentials">
+                            <span class="behavior-label">常见凭证:</span>
+                            <span class="behavior-value">${behavior.common_credentials.join(', ')}</span>
+                        </div>
+                    ` : ''}
+                    ${behavior.common_paths ? `
+                        <div class="behavior-paths">
+                            <span class="behavior-label">常见路径:</span>
+                            <span class="behavior-value">${behavior.common_paths.join(', ')}</span>
+                        </div>
+                    ` : ''}
+                    ${behavior.indicators ? `
+                        <div class="behavior-indicators">
+                            <span class="behavior-label">指标:</span>
+                            <span class="behavior-value">${behavior.indicators.join(', ')}</span>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        });
+
+        html += '</div></div>';
+    }
+
+    // Effective Decoys section
+    if (hasDecoys) {
+        html += '<div class="memory-section">';
+        html += '<h3 class="section-title">🎭 有效诱饵</h3>';
+        html += '<div class="decoys-grid">';
+
+        Object.entries(data.effective_decoys).forEach(([type, decoys]) => {
+            html += `
+                <div class="decoy-type-card">
+                    <div class="decoy-type-header">
+                        <span class="decoy-type-name">${type}</span>
+                        <span class="decoy-count">${decoys.length}</span>
+                    </div>
+                    <div class="decoy-list">
+                        ${decoys.slice(0, 5).map(decoy => `
+                            <div class="decoy-item">
+                                ${decoy.config ? `<span class="decoy-config">${decoy.config}</span>` : ''}
+                                ${decoy.details ? `<span class="decoy-details">${decoy.details}</span>` : ''}
+                            </div>
+                        `).join('')}
+                        ${decoys.length > 5 ? `<div class="decoy-more">...还有 ${decoys.length - 5} 个</div>` : ''}
+                    </div>
+                </div>
+            `;
+        });
+
+        html += '</div></div>';
+    }
+
+    // Config History section
+    if (hasHistory) {
+        html += '<div class="memory-section">';
+        html += '<h3 class="section-title">📜 配置历史 (最近10条)</h3>';
+        html += '<div class="history-list">';
+
+        data.config_history.slice(-10).reverse().forEach(entry => {
+            html += `
+                <div class="history-item">
+                    <span class="history-time">${formatTime(entry.timestamp)}</span>
+                    <span class="history-host">${entry.host}</span>
+                    ${entry.summary ? `
+                        <div class="history-summary">
+                            ${entry.summary.services ? `服务: ${entry.summary.services.join(', ')}` : ''}
+                            ${entry.summary.decoy_files ? `, 诱饵: ${entry.summary.decoy_files.length} 个` : ''}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        });
+
+        html += '</div></div>';
+    }
 
     html += '</div>';
     container.innerHTML = html;

@@ -221,7 +221,7 @@ class ShortTermMemory:
 
 
 class LongTermMemory:
-    """Supplemental factual memory keyed by node identity (e.g., port/protocol)."""
+    """Supplemental factual memory for persistent honeynet knowledge."""
 
     def __init__(self, path: Path, builtin: Optional[Dict[str, Any]] = None) -> None:
         self.path = path
@@ -239,6 +239,12 @@ class LongTermMemory:
         merged.update(payload)
         self.data = merged
 
+    def save(self) -> None:
+        """Persist long term memory to disk."""
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.data["last_updated"] = utc_now()
+        self.path.write_text(json.dumps(self.data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
     def port_facts(self, port: int) -> Dict[str, Any]:
         key = f"{port}/tcp"
         return self.data.get("ports", {}).get(key, {})
@@ -250,6 +256,108 @@ class LongTermMemory:
             if facts:
                 result[f"{port}/tcp"] = facts
         return result
+
+    def add_port_facts(self, port: int, facts: Dict[str, Any]) -> None:
+        """Add or update port facts."""
+        if "ports" not in self.data:
+            self.data["ports"] = {}
+        key = f"{port}/tcp"
+        self.data["ports"][key] = {
+            **self.data["ports"].get(key, {}),
+            **facts,
+            "port": port,
+            "protocol": "tcp",
+            "last_seen": utc_now()
+        }
+        self.save()
+
+    def record_config_generation(self, host: str, config_summary: Dict[str, Any]) -> None:
+        """Record a configuration generation event for learning."""
+        if "config_history" not in self.data:
+            self.data["config_history"] = []
+
+        entry = {
+            "timestamp": utc_now(),
+            "host": host,
+            "summary": config_summary,
+        }
+        self.data["config_history"].append(entry)
+
+        # Keep only last 100 entries
+        if len(self.data["config_history"]) > 100:
+            self.data["config_history"] = self.data["config_history"][-100:]
+
+        self.save()
+
+    def get_successful_patterns(self) -> List[Dict[str, Any]]:
+        """Get historically successful configuration patterns."""
+        return self.data.get("successful_patterns", [])
+
+    def add_successful_pattern(self, pattern: Dict[str, Any]) -> None:
+        """Add a successful configuration pattern."""
+        if "successful_patterns" not in self.data:
+            self.data["successful_patterns"] = []
+
+        pattern["timestamp"] = utc_now()
+        self.data["successful_patterns"].append(pattern)
+
+        # Keep only last 50 patterns
+        if len(self.data["successful_patterns"]) > 50:
+            self.data["successful_patterns"] = self.data["successful_patterns"][-50:]
+
+        self.save()
+
+    def get_attacker_behaviors(self) -> List[Dict[str, Any]]:
+        """Get learned attacker behavior patterns."""
+        return self.data.get("attacker_behaviors", [])
+
+    def record_attacker_behavior(self, behavior: Dict[str, Any]) -> None:
+        """Record observed attacker behavior."""
+        if "attacker_behaviors" not in self.data:
+            self.data["attacker_behaviors"] = []
+
+        behavior["timestamp"] = utc_now()
+        self.data["attacker_behaviors"].append(behavior)
+
+        # Keep only last 100 behaviors
+        if len(self.data["attacker_behaviors"]) > 100:
+            self.data["attacker_behaviors"] = self.data["attacker_behaviors"][-100:]
+
+        self.save()
+
+    def get_effective_decoys(self) -> Dict[str, Any]:
+        """Get decoy configurations that have been effective."""
+        return self.data.get("effective_decoys", {})
+
+    def record_effective_decoy(self, decoy_type: str, config: Dict[str, Any]) -> None:
+        """Record an effective decoy configuration."""
+        if "effective_decoys" not in self.data:
+            self.data["effective_decoys"] = {}
+
+        if decoy_type not in self.data["effective_decoys"]:
+            self.data["effective_decoys"][decoy_type] = []
+
+        self.data["effective_decoys"][decoy_type].append({
+            "config": config,
+            "timestamp": utc_now()
+        })
+
+        # Keep only last 20 per type
+        if len(self.data["effective_decoys"][decoy_type]) > 20:
+            self.data["effective_decoys"][decoy_type] = self.data["effective_decoys"][decoy_type][-20:]
+
+        self.save()
+
+    def get_summary(self) -> Dict[str, Any]:
+        """Get a summary of long term memory contents."""
+        return {
+            "last_updated": self.data.get("last_updated"),
+            "ports_count": len(self.data.get("ports", {})),
+            "config_history_count": len(self.data.get("config_history", [])),
+            "successful_patterns_count": len(self.data.get("successful_patterns", [])),
+            "attacker_behaviors_count": len(self.data.get("attacker_behaviors", [])),
+            "effective_decoys_types": list(self.data.get("effective_decoys", {}).keys()),
+        }
 
 
 def default_long_term() -> Dict[str, Any]:

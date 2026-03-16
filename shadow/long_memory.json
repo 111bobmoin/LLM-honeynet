@@ -1,0 +1,202 @@
+{
+  "ports": {
+    "22/tcp": {
+      "service": "ssh",
+      "protocol": "tcp",
+      "version": "OpenSSH 8.4p1",
+      "banner": "SSH-2.0-OpenSSH_8.4p1 Debian-5",
+      "notes": [
+        "Common for remote admin",
+        "Use slightly outdated version for realism",
+        "Default port 22 is standard",
+        "Weak credentials effective: root/toor, admin/password123"
+      ],
+      "effective_decoys": [
+        "Fake authorized_keys with backdoor entries",
+        "Old SSH key format for realism",
+        "Welcome banner with company name"
+      ]
+    },
+    "80/tcp": {
+      "service": "http",
+      "protocol": "tcp",
+      "version": "nginx/1.18.0",
+      "notes": [
+        "Static lure pages",
+        "Expose admin-looking paths sparingly",
+        "Common web ports attract reconnaissance"
+      ],
+      "effective_decoys": [
+        "Admin login panel at /admin",
+        "Config files at /config.php",
+        "Backup files at /backup/"
+      ]
+    },
+    "443/tcp": {
+      "service": "https",
+      "protocol": "tcp",
+      "version": "nginx/1.18.0",
+      "notes": [
+        "Self-signed acceptable",
+        "Keep cipher list plausible",
+        "TLS 1.2 only for slight obsolescence"
+      ],
+      "effective_decoys": [
+        "SSL certificate with generic company name",
+        "Private keys in predictable locations"
+      ]
+    },
+    "3306/tcp": {
+      "service": "mysql",
+      "protocol": "tcp",
+      "version": "MySQL 8.0.26",
+      "notes": [
+        "Default MySQL port",
+        "Weak root passwords effective",
+        "Fake databases with realistic names"
+      ],
+      "effective_decoys": [
+        "Config file at /etc/mysql/my.cnf",
+        "Data directory at /var/lib/mysql",
+        "Backup scripts with hardcoded credentials"
+      ]
+    },
+    "21/tcp": {
+      "service": "ftp",
+      "protocol": "tcp",
+      "version": "vsftpd 3.0.3",
+      "notes": [
+        "Anonymous FTP sometimes enabled",
+        "Clear-text authentication attractive",
+        "Often has readable config files"
+      ],
+      "effective_decoys": [
+        "Welcome banner with site info",
+        "Hidden files in home directory",
+        "Backup files in FTP root"
+      ]
+    },
+    "23/tcp": {
+      "service": "telnet",
+      "protocol": "tcp",
+      "version": "Linux telnetd",
+      "notes": [
+        "Insecure protocol attracts attackers",
+        "Clear-text credentials",
+        "Often enabled on legacy systems"
+      ],
+      "effective_decoys": [
+        "Login prompts with system info",
+        "Motd with 'last login' information",
+        "Command history files accessible"
+      ]
+    },
+    "5432/tcp": {
+      "service": "postgresql",
+      "protocol": "tcp",
+      "version": "PostgreSQL 13.10",
+      "notes": [
+        "Default PostgreSQL port",
+        "Often has weak postgres user password",
+        "pg_hba.conf may have trust authentication"
+      ],
+      "effective_decoys": [
+        "Config at /etc/postgresql/13/main/pg_hba.conf",
+        "Data directory at /var/lib/postgresql",
+        "Backup files with credentials"
+      ]
+    }
+  },
+  "successful_patterns": [
+    {
+      "pattern": "credential_files",
+      "description": "Files containing credentials are highly attractive",
+      "examples": [
+        ".ssh/id_rsa",
+        ".ssh/authorized_keys",
+        "config.php",
+        "my.cnf"
+      ],
+      "effectiveness": "high"
+    },
+    {
+      "pattern": "backup_files",
+      "description": "Backup files often contain sensitive data",
+      "examples": [
+        "backup.sql",
+        "backup.sh",
+        ".bak",
+        "~"
+      ],
+      "effectiveness": "high"
+    },
+    {
+      "pattern": "config_files",
+      "description": "Configuration files reveal system details",
+      "examples": [
+        "sshd_config",
+        "my.cnf",
+        "pg_hba.conf"
+      ],
+      "effectiveness": "medium"
+    }
+  ],
+  "attacker_behaviors": [
+    {
+      "behavior": "ssh_brute_force",
+      "description": "Attackers try common username/password combinations",
+      "common_credentials": [
+        "root:root",
+        "admin:admin",
+        "root:password",
+        "admin:password123"
+      ],
+      "frequency": "high"
+    },
+    {
+      "behavior": "web_scanning",
+      "description": "Automated scanning of web paths and vulnerabilities",
+      "common_paths": [
+        "/admin",
+        "/wp-admin",
+        "/config.php",
+        "/backup"
+      ],
+      "frequency": "high"
+    },
+    {
+      "behavior": "lateral_movement",
+      "description": "After gaining access, attackers move to other systems",
+      "indicators": [
+        "SSH connections from new IPs",
+        "File transfers",
+        "Port scanning"
+      ],
+      "frequency": "medium"
+    }
+  ],
+  "effective_decoys": {
+    "ssh": [
+      {
+        "config": "weak_credentials",
+        "details": "Root account with weak password 'toor' or 'changeme123'"
+      },
+      {
+        "config": "fake_keys",
+        "details": "SSH private keys with weak passphrases"
+      }
+    ],
+    "http": [
+      {
+        "config": "admin_panel",
+        "details": "Fake admin login at /admin or /administrator"
+      },
+      {
+        "config": "exposed_config",
+        "details": "PHP config files with database credentials"
+      }
+    ]
+  },
+  "config_history": [],
+  "last_updated": "2026-03-16T00:00:00Z"
+}
