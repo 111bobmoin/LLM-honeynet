@@ -231,7 +231,7 @@ def run_perception():
     """Run perception analysis on hosts"""
     data = request.json or {}
     hosts = data.get('hosts')  # None means auto-discover
-    use_glm = data.get('use_glm', False)
+    use_openai = data.get('use_openai', False)
 
     def perception_task():
         try:
@@ -278,11 +278,11 @@ def run_perception():
                 "timestamp": datetime.now().isoformat()
             }
 
-            # Optionally call GLM for summary
-            if use_glm:
+            # Optionally call OpenAI for summary
+            if use_openai:
                 try:
-                    from perception import GLMSummarizer
-                    summarizer = GLMSummarizer()
+                    from perception import OpenAISummarizer
+                    summarizer = OpenAISummarizer()
                     # Convert to HostAnalysis objects
                     from perception.analyzer import HostAnalysis, HostEvent
                     host_analyses = []
@@ -300,16 +300,16 @@ def run_perception():
                             events=events
                         ))
                     summary = summarizer.summarize(host_analyses)
-                    result["glm_summary"] = summary
+                    result["openai_summary"] = summary
                 except Exception as e:
-                    result["glm_error"] = str(e)
+                    result["openai_error"] = str(e)
 
             return result
 
         except Exception as e:
             raise Exception(f"Perception analysis failed: {e}")
 
-    op_id = create_operation("perception", {"hosts": hosts, "use_glm": use_glm})
+    op_id = create_operation("perception", {"hosts": hosts, "use_openai": use_openai})
     run_sync_task(perception_task, op_id)
 
     return jsonify({"operation_id": op_id, "status": "started"})
@@ -331,10 +331,10 @@ def run_honey_agent():
                 topology_path=project_root / "shadow/shadow_topology.json",
                 fallback_topology_path=project_root / "enterprise/enterprise_topology.json",
                 preferences_path=project_root / "shadow/attacker_preferences.json",
-                glm_key_path=project_root / "secrets/glm_api_key.txt",
-                glm_model=data.get('glm_model', 'glm-4-flash'),
-                glm_temperature=data.get('glm_temperature', 0.1),
-                glm_top_p=data.get('glm_top_p', 0.9)
+                openai_key_path=project_root / "secrets/openai_api_key.txt",
+                openai_model=data.get('openai_model', 'gpt-4o-mini'),
+                openai_temperature=data.get('openai_temperature', 0.1),
+                openai_top_p=data.get('openai_top_p', 0.9)
             )
 
             agent = HoneyAgent(config)
@@ -376,10 +376,10 @@ def run_trap_agent():
                 topology_path=project_root / "shadow/shadow_topology.json",
                 fallback_topology_path=project_root / "enterprise/enterprise_topology.json",
                 preferences_path=project_root / "shadow/attacker_preferences.json",
-                glm_key_path=project_root / "secrets/glm_api_key.txt",
-                glm_model=data.get('glm_model', 'glm-4-flash'),
-                glm_temperature=data.get('glm_temperature', 0.15),
-                glm_top_p=data.get('glm_top_p', 0.85)
+                openai_key_path=project_root / "secrets/openai_api_key.txt",
+                openai_model=data.get('openai_model', 'gpt-4o-mini'),
+                openai_temperature=data.get('openai_temperature', 0.15),
+                openai_top_p=data.get('openai_top_p', 0.85)
             )
 
             agent = TrapAgent(config)
@@ -494,7 +494,17 @@ def run_deception():
                 results["consistency_report"] = consistency_report
 
             if mode in ["generate-configs", "full"]:
-                host_set = [h.strip() for h in hosts.split(",")] if hosts else None
+                # Handle hosts parameter - can be string (comma-separated) or list
+                if hosts:
+                    if isinstance(hosts, str):
+                        host_set = [h.strip() for h in hosts.split(",") if h.strip()]
+                    elif isinstance(hosts, list):
+                        host_set = [str(h).strip() for h in hosts if h]
+                    else:
+                        host_set = None
+                else:
+                    host_set = None
+
                 host_configs = agent.generate_host_configs(hosts=host_set)
                 results["host_configs"] = {
                     "generated": len(host_configs) if isinstance(host_configs, dict) else 0,

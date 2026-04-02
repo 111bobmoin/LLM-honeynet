@@ -156,7 +156,7 @@ class HttpService(BaseService):
             body_content = str(route["body"])
             return body_content, len(body_content.encode("utf-8"))
         if "body_file" in route:
-            file_path = self.resolve_path(route["body_file"])
+            file_path = self.resolve_resource_path(route["body_file"])
             with file_path.open("r", encoding=route.get("encoding", "utf-8")) as handle:
                 content = handle.read()
                 return content, len(content.encode("utf-8"))
@@ -193,8 +193,8 @@ class HttpsService(HttpService):
         self.ssl_context = self.build_ssl_context()
 
     def build_ssl_context(self) -> ssl.SSLContext:
-        cert_file = self.resolve_path(self.config["certificate"])
-        key_file = self.resolve_path(self.config["private_key"])
+        cert_file = self.resolve_resource_path(self.config["certificate"])
+        key_file = self.resolve_resource_path(self.config["private_key"])
         if not cert_file.exists() or not key_file.exists():
             raise FileNotFoundError(f"HTTPS certificate or key not found: {cert_file}, {key_file}")
         ssl_ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)

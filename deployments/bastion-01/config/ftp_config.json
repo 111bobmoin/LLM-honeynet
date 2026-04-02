@@ -1,0 +1,43 @@
+{
+  "host": "0.0.0.0",
+  "port": 2121,
+  "banner": "220 (vsFTPd 3.0.3)",
+  "users": {
+    "anonymous": {
+      "passwords": [
+        "",
+        "anonymous@"
+      ],
+      "welcome": "230 Anonymous access granted, restrictions apply.",
+      "user_prompt": "Please enter email as password.",
+      "home": "/srv/ftp/pub"
+    },
+    "deploy": {
+      "passwords": [
+        "deploy2024"
+      ],
+      "welcome": "230 Login successful. Directory restricted to /var/snapshots.",
+      "home": "/srv/ftp/backups"
+    }
+  },
+  "default_home": "/srv/ftp",
+  "syst_response": "215 UNIX Type: L8",
+  "features": [
+    "211-Features:",
+    " AUTH SSL",
+    " PBSZ",
+    " PROT",
+    " UTF8",
+    "211 End"
+  ],
+  "command_responses": {
+    "STAT": [
+      "211-FTP server status:",
+      " Connected to internal mirror network.",
+      " Logged in with restricted privileges.",
+      "211 End of status."
+    ],
+    "CWD": "250 Directory successfully changed."
+  },
+  "log_file": "../logs/ftp.log"
+}

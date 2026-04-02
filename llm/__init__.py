@@ -1,15 +1,15 @@
-"""LLM package for unified LLM client interface."""
+"""LLM package for unified LLM client interfaces."""
 
-from .glm_client import (
-    GLMClient,
-    GLMClientConfig,
-    create_glm_client,
+from .openai_client import (
+    OpenAIClient,
+    OpenAIClientConfig,
+    create_openai_client,
     chat_completion_simple,
 )
 
 __all__ = [
-    "GLMClient",
-    "GLMClientConfig",
-    "create_glm_client",
+    "OpenAIClient",
+    "OpenAIClientConfig",
+    "create_openai_client",
     "chat_completion_simple",
 ]

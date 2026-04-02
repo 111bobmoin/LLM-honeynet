@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generated_at": "2025-11-18T14:03:15Z",
+    "generated_at": "2026-04-02T07:00:05Z",
     "mode": "initialization"
   },
   "hosts": [
@@ -9,7 +9,7 @@
       "ports": [
         {
           "port": 443,
-          "service": "HTTPS",
+          "service": "https",
           "files": [
             {
               "path": "/etc/ssl/private/server.key"
@@ -18,12 +18,28 @@
               "path": "/var/www/html/backup.tar.gz"
             }
           ]
+        },
+        {
+          "port": 22,
+          "service": "ssh",
+          "files": [
+            {
+              "path": "/root/.ssh/id_rsa"
+            },
+            {
+              "path": "/etc/passwd.bak"
+            }
+          ]
         }
       ],
       "vulnerabilities": [
         {
           "type": "config leak",
           "target_file": "/etc/ssl/private/server.key"
+        },
+        {
+          "type": "weak creds",
+          "target_file": "/etc/passwd.bak"
         }
       ]
     },
@@ -32,21 +48,37 @@
       "ports": [
         {
           "port": 22,
-          "service": "SSH",
+          "service": "ssh",
           "files": [
             {
-              "path": "/home/user/.ssh/id_rsa"
+              "path": "/home/user/.ssh/authorized_keys"
             },
             {
-              "path": "/var/log/auth.log"
+              "path": "/etc/backup/config_backup.conf"
+            }
+          ]
+        },
+        {
+          "port": 80,
+          "service": "http",
+          "files": [
+            {
+              "path": "/var/www/html/admin_credentials.txt"
+            },
+            {
+              "path": "/var/www/html/finance_report.xlsx"
             }
           ]
         }
       ],
       "vulnerabilities": [
         {
+          "type": "config leak",
+          "target_file": "/etc/backup/config_backup.conf"
+        },
+        {
           "type": "weak creds",
-          "target_file": "/home/user/.ssh/id_rsa"
+          "target_file": "/var/www/html/admin_credentials.txt"
         }
       ]
     },
@@ -54,22 +86,34 @@
       "name": "jump-ops",
       "ports": [
         {
-          "port": 80,
-          "service": "HTTP",
+          "port": 22,
+          "service": "ssh",
           "files": [
             {
-              "path": "/var/www/html/config.php"
+              "path": "/home/ops/.ssh/id_rsa"
             },
             {
-              "path": "/var/www/html/passwords.txt"
+              "path": "/etc/ops/secret_keys.json"
+            }
+          ]
+        },
+        {
+          "port": 8080,
+          "service": "http",
+          "files": [
+            {
+              "path": "/var/www/html/operations_backup.zip"
+            },
+            {
+              "path": "/var/www/html/credentials.txt"
             }
           ]
         }
       ],
       "vulnerabilities": [
         {
-          "type": "path traversal",
-          "target_file": "/var/www/html/config.php"
+          "type": "weak creds",
+          "target_file": "/etc/ops/secret_keys.json"
         }
       ]
     },
@@ -78,21 +122,33 @@
       "ports": [
         {
           "port": 80,
-          "service": "HTTP",
+          "service": "http",
           "files": [
             {
-              "path": "/var/www/html/admin_backup.zip"
+              "path": "/var/www/html/user_data.json"
             },
             {
-              "path": "/var/www/html/secrets.txt"
+              "path": "/var/www/html/backup.sql"
+            }
+          ]
+        },
+        {
+          "port": 443,
+          "service": "https",
+          "files": [
+            {
+              "path": "/etc/ssl/certs/certificate.crt"
+            },
+            {
+              "path": "/var/www/html/private_keys.pem"
             }
           ]
         }
       ],
       "vulnerabilities": [
         {
-          "type": "file upload",
-          "target_file": "/var/www/html/admin_backup.zip"
+          "type": "path traversal",
+          "target_file": "/var/www/html/user_data.json"
         }
       ]
     },
@@ -100,14 +156,26 @@
       "name": "dmz-api-01",
       "ports": [
         {
-          "port": 443,
-          "service": "HTTPS",
+          "port": 8080,
+          "service": "http",
           "files": [
             {
-              "path": "/etc/api/keys.json"
+              "path": "/var/www/html/api_keys.txt"
             },
             {
-              "path": "/var/www/html/api_backup.sql"
+              "path": "/var/www/html/backup_api_data.json"
+            }
+          ]
+        },
+        {
+          "port": 443,
+          "service": "https",
+          "files": [
+            {
+              "path": "/etc/ssl/private/api_key.pem"
+            },
+            {
+              "path": "/var/www/html/finance_data.csv"
             }
           ]
         }
@@ -115,7 +183,7 @@
       "vulnerabilities": [
         {
           "type": "RCE",
-          "target_file": "/etc/api/keys.json"
+          "target_file": "/var/www/html/api_keys.txt"
         }
       ]
     },
@@ -123,22 +191,34 @@
       "name": "app-01",
       "ports": [
         {
-          "port": 8080,
-          "service": "HTTP",
+          "port": 5000,
+          "service": "http",
           "files": [
             {
-              "path": "/var/www/app/config.yaml"
+              "path": "/var/www/html/app_config.yaml"
             },
             {
-              "path": "/var/www/app/finance_data.csv"
+              "path": "/var/www/html/finance_backup.zip"
+            }
+          ]
+        },
+        {
+          "port": 3306,
+          "service": "mysql",
+          "files": [
+            {
+              "path": "/var/lib/mysql/user_credentials.sql"
+            },
+            {
+              "path": "/var/lib/mysql/finance_data.sql"
             }
           ]
         }
       ],
       "vulnerabilities": [
         {
-          "type": "outdated ssh",
-          "target_port": 8080
+          "type": "file upload",
+          "target_file": "/var/www/html/app_config.yaml"
         }
       ]
     },
@@ -147,13 +227,25 @@
       "ports": [
         {
           "port": 5432,
-          "service": "PostgreSQL",
+          "service": "postgresql",
           "files": [
             {
               "path": "/var/lib/postgresql/data/backup.sql"
             },
             {
-              "path": "/var/lib/postgresql/data/users.csv"
+              "path": "/var/lib/postgresql/data/passwords.txt"
+            }
+          ]
+        },
+        {
+          "port": 3306,
+          "service": "mysql",
+          "files": [
+            {
+              "path": "/var/lib/mysql/db_backup.sql"
+            },
+            {
+              "path": "/var/lib/mysql/finance_keys.txt"
             }
           ]
         }
@@ -161,7 +253,7 @@
       "vulnerabilities": [
         {
           "type": "config leak",
-          "target_file": "/var/lib/postgresql/data/backup.sql"
+          "target_file": "/var/lib/postgresql/data/passwords.txt"
         }
       ]
     },
@@ -170,13 +262,25 @@
       "ports": [
         {
           "port": 445,
-          "service": "SMB",
+          "service": "smb",
           "files": [
             {
-              "path": "/srv/files/finance_backup.zip"
+              "path": "/srv/files/finance_reports.xlsx"
             },
             {
-              "path": "/srv/files/passwords.txt"
+              "path": "/srv/files/user_passwords.txt"
+            }
+          ]
+        },
+        {
+          "port": 21,
+          "service": "ftp",
+          "files": [
+            {
+              "path": "/srv/ftp/backup.zip"
+            },
+            {
+              "path": "/srv/ftp/finance_data.csv"
             }
           ]
         }
@@ -184,7 +288,7 @@
       "vulnerabilities": [
         {
           "type": "file upload",
-          "target_file": "/srv/files/passwords.txt"
+          "target_file": "/srv/ftp/backup.zip"
         }
       ]
     }

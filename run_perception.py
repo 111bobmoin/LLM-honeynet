@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 from typing import Dict, List
 
+from orchestrator.topology import build_shadow_topology, load_enterprise_topology, update_rag_cache, write_shadow_artifacts
 from perception import HostAnalysis, OpenAISummarizer, analyze_host, load_rules
 
 
@@ -41,6 +42,23 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         default=Path("shadow/attacker_preferences.json"),
         help="Path to write extracted attacker preferences when using --openai (default: shadow/attacker_preferences.json)",
+    )
+    parser.add_argument(
+        "--enterprise-dir",
+        type=Path,
+        default=Path("enterprise"),
+        help="Directory containing enterprise_topology.json used to derive the shadow topology.",
+    )
+    parser.add_argument(
+        "--shadow-dir",
+        type=Path,
+        default=Path("shadow"),
+        help="Directory used to store shadow topology artifacts.",
+    )
+    parser.add_argument(
+        "--skip-shadow-topology",
+        action="store_true",
+        help="Skip generating shadow_topology.json and mininet_shadow.py artifacts.",
     )
     return parser.parse_args()
 
@@ -104,6 +122,14 @@ def save_preferences(preferences: List[str], path: Path) -> None:
     path.write_text(json.dumps(preferences, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
+def generate_shadow_topology(enterprise_dir: Path, shadow_dir: Path) -> tuple[Path, Path]:
+    enterprise_topology = load_enterprise_topology(enterprise_dir)
+    shadow_topology = build_shadow_topology(enterprise_topology)
+    topology_path, mininet_path = write_shadow_artifacts(shadow_topology, shadow_dir)
+    update_rag_cache(shadow_topology, source=f"enterprise:{enterprise_dir / 'enterprise_topology.json'}")
+    return topology_path, mininet_path
+
+
 def main() -> None:
     args = parse_args()
 
@@ -136,6 +162,15 @@ def main() -> None:
         save_preferences(preferences, args.preferences_output)
         print("\n[Attacker Preferences]")
         print(f"Saved {len(preferences)} preference(s) to {args.preferences_output}")
+
+    if not args.skip_shadow_topology:
+        topology_path, mininet_path = generate_shadow_topology(
+            enterprise_dir=args.enterprise_dir.resolve(),
+            shadow_dir=args.shadow_dir.resolve(),
+        )
+        print("\n[Shadow Topology]")
+        print(f"Saved topology to {topology_path}")
+        print(f"Saved Mininet launcher to {mininet_path}")
 
 
 if __name__ == "__main__":

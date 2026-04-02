@@ -1,3 +1,8 @@
+// ==========================================
+// LLM Honeynet - Premium Frontend
+// Modern JavaScript Application
+// ==========================================
+
 // ===== API Configuration =====
 const API_BASE = window.location.origin + '/api';
 
@@ -36,18 +41,23 @@ function initNavigation() {
     const menuToggle = document.getElementById('menu-toggle');
     const sidebar = document.getElementById('sidebar');
 
-    menuToggle.addEventListener('click', () => {
-        sidebar.classList.toggle('open');
-    });
+    if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
 
-    // Close sidebar when clicking outside on mobile
-    document.addEventListener('click', (e) => {
-        if (window.innerWidth <= 768) {
-            if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
-                sidebar.classList.remove('open');
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+                    sidebar.classList.remove('open');
+                }
             }
-        }
-    });
+        });
+    }
+
+    // Initialize modern tabs
+    initModernTabs();
 }
 
 function navigateTo(page) {
@@ -69,16 +79,19 @@ function navigateTo(page) {
         targetPage.classList.add('active');
         currentPage = page;
 
-        // Update title
+        // Update breadcrumb title
         const titles = {
-            'dashboard': '概览',
-            'perception': '感知',
-            'orchestration': '编排',
-            'deception': '欺骗',
-            'operations': '操作记录',
+            'dashboard': '仪表盘',
+            'perception': '感知分析',
+            'orchestration': '智能编排',
+            'deception': '欺骗配置',
             'shadow': '影子数据'
         };
-        document.getElementById('page-title').textContent = titles[page] || 'Dashboard';
+
+        const titleElement = document.getElementById('page-title');
+        if (titleElement) {
+            titleElement.textContent = titles[page] || 'Dashboard';
+        }
 
         // Load page-specific data
         loadPageData(page);
@@ -89,7 +102,10 @@ function navigateTo(page) {
 
     // Close sidebar on mobile
     if (window.innerWidth <= 768) {
-        document.getElementById('sidebar').classList.remove('open');
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar) {
+            sidebar.classList.remove('open');
+        }
     }
 }
 
@@ -104,13 +120,11 @@ function loadPageData(page) {
         case 'orchestration':
             loadOrchestrationStatus();
             loadPreferences();
+            initSliders();
             break;
         case 'deception':
             loadDeploymentHosts();
             loadConsistencyReport();
-            break;
-        case 'operations':
-            loadOperations();
             break;
         case 'shadow':
             loadShadowData();
@@ -153,57 +167,95 @@ async function loadDashboard() {
         const data = await apiCall('/dashboard/summary');
 
         // Update stats
-        document.getElementById('stat-hosts').textContent = data.hosts.count;
-        document.getElementById('stat-completed').textContent = data.operations.completed;
-        document.getElementById('stat-running').textContent = data.operations.running;
-        document.getElementById('stat-failed').textContent = data.operations.failed;
+        const statHosts = document.getElementById('stat-hosts');
+        const statCompleted = document.getElementById('stat-completed');
+        const statRunning = document.getElementById('stat-running');
+        const statTotal = document.getElementById('stat-total');
 
-        // Update phase status
-        updatePhaseStatus('perception', data.hosts.count > 0);
-        updatePhaseStatus('orchestration', data.shadow_files['honey_agent.json']?.exists);
-        updatePhaseStatus('deception', data.shadow_files['trap_agent.json']?.exists);
+        if (statHosts) statHosts.textContent = data.hosts?.count || '-';
+        if (statCompleted) statCompleted.textContent = data.operations?.completed || '-';
+        if (statRunning) statRunning.textContent = data.operations?.running || '-';
+        if (statTotal) statTotal.textContent = data.operations?.total || '-';
 
-        // Load recent operations
+        // Update pipeline status
+        updatePipelineStatus('perception', data.hosts?.count > 0);
+        updatePipelineStatus('orchestration', data.shadow_files?.['honey_agent.json']?.exists);
+        updatePipelineStatus('deception', data.shadow_files?.['trap_agent.json']?.exists);
+
+        // Load recent activity
         const ops = await apiCall('/operations?limit=5');
-        displayRecentOperations(ops.operations);
+        displayRecentActivity(ops.operations);
 
-        // Update connection status
-        updateConnectionStatus(true);
+        // Update system status
+        updateSystemStatus(true);
 
     } catch (error) {
         console.error('Failed to load dashboard:', error);
-        updateConnectionStatus(false);
+        updateSystemStatus(false);
     }
 }
 
-function updatePhaseStatus(phase, isReady) {
-    const indicator = document.getElementById(`phase-${phase}`);
-    if (indicator) {
-        indicator.className = 'phase-indicator';
-        if (isReady) {
-            indicator.classList.add('active');
-            indicator.querySelector('.phase-text').textContent = '就绪';
-        } else {
-            indicator.querySelector('.phase-text').textContent = '待运行';
-        }
+function updatePipelineStatus(step, status) {
+    const statusElement = document.getElementById(`pipeline-${step}`);
+    if (!statusElement) return;
+
+    statusElement.className = 'step-status';
+
+    switch (status) {
+        case 'running':
+            statusElement.classList.add('running');
+            break;
+        case 'completed':
+        case 'ready':
+            statusElement.classList.add('active');
+            break;
+        case 'failed':
+            statusElement.classList.add('error');
+            break;
+        case 'pending':
+        default:
+            // Default state
+            break;
     }
 }
 
-function displayRecentOperations(operations) {
-    const container = document.getElementById('recent-operations');
+function displayRecentActivity(operations) {
+    const container = document.getElementById('recent-activity');
+
+    if (!container) return;
 
     if (!operations || operations.length === 0) {
-        container.innerHTML = '<p class="text-muted">暂无操作记录</p>';
+        container.innerHTML = `
+            <div class="activity-item">
+                <div class="activity-dot"></div>
+                <div class="activity-content">
+                    <div class="activity-time">系统消息</div>
+                    <div class="activity-text">暂无操作记录</div>
+                </div>
+            </div>
+        `;
         return;
     }
 
     container.innerHTML = operations.map(op => `
-        <div class="operation-item">
-            <span class="operation-type">${getOperationTypeName(op.type)}</span>
-            <span class="operation-status ${op.status}">${getStatusText(op.status)}</span>
-            <span class="operation-time">${formatTime(op.created_at)}</span>
+        <div class="activity-item">
+            <div class="activity-dot" style="background: ${getStatusColor(op.status)}"></div>
+            <div class="activity-content">
+                <div class="activity-time">${formatTime(op.created_at)}</div>
+                <div class="activity-text">${getOperationTypeName(op.type)} - ${getStatusText(op.status)}</div>
+            </div>
         </div>
     `).join('');
+}
+
+function getStatusColor(status) {
+    const colors = {
+        'completed': 'var(--success)',
+        'running': 'var(--warning)',
+        'failed': 'var(--danger)',
+        'pending': 'var(--text-muted)'
+    };
+    return colors[status] || 'var(--text-muted)';
 }
 
 function getOperationTypeName(type) {
@@ -239,42 +291,174 @@ function formatTime(isoString) {
     return date.toLocaleDateString('zh-CN');
 }
 
-function updateConnectionStatus(online) {
-    const dot = document.getElementById('connection-status');
-    const text = document.getElementById('connection-text');
-
-    if (online) {
-        dot.className = 'status-dot online';
-        text.textContent = '已连接';
-    } else {
-        dot.className = 'status-dot offline';
-        text.textContent = '连接失败';
+function updateSystemStatus(online) {
+    const statusText = document.getElementById('system-status-text');
+    if (statusText) {
+        statusText.textContent = online ? '正常' : '离线';
     }
+}
+
+// ===== Full Pipeline =====
+async function runFullPipeline() {
+    // Reset orchestration and deception steps to pending
+    updatePipelineStatus('orchestration', 'pending');
+    updatePipelineStatus('deception', 'pending');
+
+    // Show loading overlay
+    showLoadingOverlay('运行完整流程...');
+
+    try {
+        // Step 1: Orchestration (Honey Agent + Trap Agent)
+        updatePipelineStatus('orchestration', 'running');
+        updateLoadingMessage('正在生成诱饵和陷阱...');
+
+        const honeyResult = await apiCall('/orchestrate/honey', {
+            method: 'POST',
+            body: JSON.stringify({ mode: 'initialization' })
+        });
+
+        await waitForOperation(honeyResult.operation_id, 'Honey Agent');
+
+        const trapResult = await apiCall('/orchestrate/trap', {
+            method: 'POST',
+            body: JSON.stringify({ mode: 'all' })
+        });
+
+        await waitForOperation(trapResult.operation_id, 'Trap Agent');
+
+        updatePipelineStatus('orchestration', 'completed');
+
+        // Step 2: Deception
+        updatePipelineStatus('deception', 'running');
+        updateLoadingMessage('正在进行一致性审计和配置生成...');
+
+        const deceptionResult = await apiCall('/deception/run', {
+            method: 'POST',
+            body: JSON.stringify({ mode: 'full' })
+        });
+
+        await waitForOperation(deceptionResult.operation_id, 'Deception');
+
+        updatePipelineStatus('deception', 'completed');
+
+        hideLoadingOverlay();
+        showToast('success', '完整流程', '所有步骤已成功完成');
+        loadDashboard();
+
+    } catch (error) {
+        // Mark current step as failed
+        hideLoadingOverlay();
+        showToast('error', '完整流程', `执行失败: ${error.message}`);
+
+        // Check which step failed and mark it
+        const orchestrationEl = document.getElementById('pipeline-orchestration');
+        if (orchestrationEl && !orchestrationEl.classList.contains('active')) {
+            updatePipelineStatus('orchestration', 'failed');
+        }
+
+        const deceptionEl = document.getElementById('pipeline-deception');
+        if (deceptionEl && !deceptionEl.classList.contains('active')) {
+            updatePipelineStatus('deception', 'failed');
+        }
+    }
+}
+
+// Update loading overlay message
+function updateLoadingMessage(message) {
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) {
+        const messageElement = overlay.querySelector('p');
+        if (messageElement) {
+            messageElement.textContent = message;
+        }
+    }
+}
+
+async function waitForOperation(operationId, stepName = '操作') {
+    return new Promise((resolve, reject) => {
+        const maxAttempts = 300;
+        let attempts = 0;
+        let lastUpdate = 0;
+
+        const poll = async () => {
+            try {
+                const data = await apiCall(`/operations/${operationId}`);
+
+                if (data.status === 'completed') {
+                    updateLoadingMessage(`${stepName} 完成！`);
+                    resolve(data);
+                    return;
+                }
+
+                if (data.status === 'failed') {
+                    updateLoadingMessage(`${stepName} 失败`);
+                    reject(new Error(data.error || '操作失败'));
+                    return;
+                }
+
+                // Update loading message every few seconds
+                attempts++;
+                if (attempts - lastUpdate >= 3) {
+                    updateLoadingMessage(`正在执行 ${stepName}... (${attempts}s)`);
+                    lastUpdate = attempts;
+                }
+
+                if (attempts < maxAttempts) {
+                    setTimeout(poll, 1000);
+                } else {
+                    updateLoadingMessage(`${stepName} 超时`);
+                    reject(new Error('操作超时'));
+                }
+
+            } catch (error) {
+                updateLoadingMessage(`${stepName} 出错`);
+                reject(error);
+            }
+        };
+
+        poll();
+    });
 }
 
 // ===== Perception =====
 async function loadHosts() {
     const container = document.getElementById('perception-hosts');
-    container.innerHTML = '<div class="loading">加载中...</div>';
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+        </div>
+    `;
 
     try {
         const data = await apiCall('/perception/hosts');
 
         if (!data.hosts || data.hosts.length === 0) {
-            container.innerHTML = '<p class="text-muted">未找到主机</p>';
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-server"></i>
+                    <p>未找到主机</p>
+                </div>
+            `;
             return;
         }
 
-        container.innerHTML = data.hosts.map(host => `
+        container.innerHTML = `<div class="hosts-grid">` + data.hosts.map(host => `
             <div class="host-item" data-host="${host.name}" onclick="toggleHostSelection('${host.name}')">
                 <input type="checkbox" class="host-checkbox" ${selectedHosts.has(host.name) ? 'checked' : ''}>
                 <div class="host-name">${host.name}</div>
-                <div class="host-info">${host.log_files.length} 日志文件</div>
+                <div class="host-info">${host.log_files?.length || 0} 日志文件</div>
             </div>
-        `).join('');
+        `).join('') + `</div>`;
 
     } catch (error) {
-        container.innerHTML = `<p class="text-danger">加载失败: ${error.message}</p>`;
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>加载失败: ${error.message}</p>
+            </div>
+        `;
     }
 }
 
@@ -287,86 +471,102 @@ function toggleHostSelection(hostName) {
 
     // Update checkbox
     const hostItem = document.querySelector(`.host-item[data-host="${hostName}"]`);
-    const checkbox = hostItem.querySelector('.host-checkbox');
-    checkbox.checked = selectedHosts.has(hostName);
-
-    // Update selected class
-    hostItem.classList.toggle('selected', selectedHosts.has(hostName));
+    if (hostItem) {
+        const checkbox = hostItem.querySelector('.host-checkbox');
+        if (checkbox) checkbox.checked = selectedHosts.has(hostName);
+        hostItem.classList.toggle('selected', selectedHosts.has(hostName));
+    }
 }
 
 async function runPerception() {
-    const useOpenAI = document.getElementById('perception-openai').checked;
+    const useOpenAI = document.getElementById('perception-openai')?.checked ?? false;
     const hosts = selectedHosts.size > 0 ? Array.from(selectedHosts) : null;
 
     const statusBadge = document.getElementById('perception-status');
     const resultsContainer = document.getElementById('perception-results');
 
+    if (!statusBadge || !resultsContainer) return;
+
     try {
-        statusBadge.textContent = '运行中...';
-        statusBadge.className = 'badge badge-warning';
+        statusBadge.querySelector('.status-text').textContent = '运行中';
+        statusBadge.classList.add('running');
 
         const data = await apiCall('/perception/analyze', {
             method: 'POST',
             body: JSON.stringify({ hosts, use_openai: useOpenAI })
         });
 
-        statusBadge.textContent = '处理中';
-        statusBadge.className = 'badge badge-info';
+        statusBadge.querySelector('.status-text').textContent = '处理中';
+        statusBadge.classList.remove('running');
+        statusBadge.classList.add('active');
 
         // Poll for results
         pollOperation(data.operation_id, (result) => {
-            statusBadge.textContent = '完成';
-            statusBadge.className = 'badge badge-success';
+            statusBadge.querySelector('.status-text').textContent = '完成';
+            statusBadge.classList.remove('active');
+            statusBadge.classList.add('active');
             displayPerceptionResults(result.result);
             showToast('success', '感知分析', '分析已完成');
         }, (error) => {
-            statusBadge.textContent = '失败';
-            statusBadge.className = 'badge badge-danger';
-            resultsContainer.innerHTML = `<p class="text-danger">分析失败: ${error}</p>`;
+            statusBadge.querySelector('.status-text').textContent = '失败';
+            statusBadge.classList.remove('active', 'running');
+            statusBadge.classList.add('error');
+            resultsContainer.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>分析失败: ${error}</p>
+                </div>
+            `;
             showToast('error', '感知分析', `分析失败: ${error}`);
         });
 
     } catch (error) {
-        statusBadge.textContent = '失败';
-        statusBadge.className = 'badge badge-danger';
+        statusBadge.querySelector('.status-text').textContent = '失败';
+        statusBadge.classList.remove('running', 'active');
+        statusBadge.classList.add('error');
         showToast('error', '感知分析', `启动失败: ${error.message}`);
     }
 }
 
 function displayPerceptionResults(result) {
     const container = document.getElementById('perception-results');
+    if (!container) return;
 
     if (!result || !result.analyses || result.analyses.length === 0) {
-        container.innerHTML = '<p class="text-muted">无分析结果</p>';
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-search"></i>
+                <p>无分析结果</p>
+            </div>
+        `;
         return;
     }
 
-    let html = `<p class="text-muted">共分析 ${result.total_hosts} 个主机</p>`;
+    let html = `<p class="text-muted" style="margin-bottom: 16px;">共分析 ${result.total_hosts} 个主机</p>`;
 
     if (result.openai_summary) {
         html += `
-            <div class="analysis-result">
-                <h4>🤖 AI 摘要</h4>
-                <p>${result.openai_summary}</p>
+            <div class="operation-result show">
+                <h4 style="margin-bottom: 8px;">AI 摘要</h4>
+                <p style="font-size: 13px; color: var(--text-secondary);">${result.openai_summary}</p>
             </div>
         `;
     }
 
     result.analyses.forEach(analysis => {
         html += `
-            <div class="analysis-result">
-                <div class="analysis-host">
-                    <span>🖥️ ${analysis.host}</span>
-                    <span class="analysis-stage ${analysis.stage_label}">${analysis.stage_label}</span>
+            <div class="operation-result show">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <span style="font-weight: 600;">🖥️ ${analysis.host}</span>
+                    <span class="status-badge">${analysis.stage_label || 'Unknown'}</span>
                 </div>
-                <p class="text-muted">${analysis.event_count} 个事件</p>
+                <p class="text-muted">${analysis.event_count || 0} 个事件</p>
                 ${analysis.events && analysis.events.length > 0 ? `
-                    <div class="analysis-events">
-                        ${analysis.events.map(e => `
-                            <div class="analysis-event">
+                    <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 4px;">
+                        ${analysis.events.slice(0, 5).map(e => `
+                            <div style="padding: 8px; background: var(--bg-tertiary); border-radius: 4px; font-size: 12px;">
                                 <span class="text-muted">${e.timestamp}</span>
-                                ${e.stage ? `<span class="badge badge-info">${e.stage}</span>` : ''}
-                                <span>${e.summary}</span>
+                                <span style="margin-left: 8px;">${e.summary}</span>
                             </div>
                         `).join('')}
                     </div>
@@ -383,23 +583,23 @@ async function loadOrchestrationStatus() {
     try {
         const data = await apiCall('/orchestrate/status');
 
-        const honeyEl = document.getElementById('orchestration-honey');
-        const trapEl = document.getElementById('orchestration-trap');
-        const prefsEl = document.getElementById('orchestration-prefs');
+        const statusHoney = document.getElementById('status-honey');
+        const statusTrap = document.getElementById('status-trap');
+        const statusPrefs = document.getElementById('status-prefs');
 
-        if (data.honey_agent.exists) {
-            honeyEl.textContent = `${data.honey_agent.hosts} 主机`;
-            honeyEl.className = 'status-value ready';
+        if (statusHoney && data.honey_agent?.exists) {
+            statusHoney.textContent = `${data.honey_agent.hosts} 主机`;
+            statusHoney.style.color = 'var(--success)';
         }
 
-        if (data.trap_agent.exists) {
-            trapEl.textContent = `${data.trap_agent.hosts} 主机, ${data.trap_agent.chains} 链`;
-            trapEl.className = 'status-value ready';
+        if (statusTrap && data.trap_agent?.exists) {
+            statusTrap.textContent = `${data.trap_agent.hosts} 主机, ${data.trap_agent.chains} 链`;
+            statusTrap.style.color = 'var(--success)';
         }
 
-        if (data.attacker_preferences.exists) {
-            prefsEl.textContent = `${data.attacker_preferences.count} 偏好`;
-            prefsEl.className = 'status-value ready';
+        if (statusPrefs && data.attacker_preferences?.exists) {
+            statusPrefs.textContent = `${data.attacker_preferences.count} 偏好`;
+            statusPrefs.style.color = 'var(--success)';
         }
 
     } catch (error) {
@@ -407,15 +607,55 @@ async function loadOrchestrationStatus() {
     }
 }
 
+function initSliders() {
+    // Honey Agent sliders
+    const honeyTemp = document.getElementById('honey-temp');
+    const honeyTempVal = document.getElementById('honey-temp-val');
+    const honeyTopp = document.getElementById('honey-topp');
+    const honeyToppVal = document.getElementById('honey-topp-val');
+
+    if (honeyTemp && honeyTempVal) {
+        honeyTemp.addEventListener('input', () => {
+            honeyTempVal.textContent = honeyTemp.value;
+        });
+    }
+
+    if (honeyTopp && honeyToppVal) {
+        honeyTopp.addEventListener('input', () => {
+            honeyToppVal.textContent = honeyTopp.value;
+        });
+    }
+
+    // Trap Agent sliders
+    const trapTemp = document.getElementById('trap-temp');
+    const trapTempVal = document.getElementById('trap-temp-val');
+    const trapTopp = document.getElementById('trap-topp');
+    const trapToppVal = document.getElementById('trap-topp-val');
+
+    if (trapTemp && trapTempVal) {
+        trapTemp.addEventListener('input', () => {
+            trapTempVal.textContent = trapTemp.value;
+        });
+    }
+
+    if (trapTopp && trapToppVal) {
+        trapTopp.addEventListener('input', () => {
+            trapToppVal.textContent = trapTopp.value;
+        });
+    }
+}
+
 async function runHoneyAgent() {
     const resultDiv = document.getElementById('honey-result');
-    const mode = document.getElementById('honey-mode').value;
-    const model = document.getElementById('honey-model').value;
-    const temp = parseFloat(document.getElementById('honey-temp').value);
-    const topP = parseFloat(document.getElementById('honey-topp').value);
+    const mode = document.getElementById('honey-mode')?.value || 'initialization';
+    const model = document.getElementById('honey-model')?.value || 'gpt-4o-mini';
+    const temp = parseFloat(document.getElementById('honey-temp')?.value || 0.1);
+    const topP = parseFloat(document.getElementById('honey-topp')?.value || 0.9);
+
+    if (!resultDiv) return;
 
     try {
-        resultDiv.className = 'operation-result show';
+        resultDiv.className = 'agent-result show';
         resultDiv.innerHTML = '<p>⏳ 正在运行 Honey Agent...</p>';
 
         const data = await apiCall('/orchestrate/honey', {
@@ -430,34 +670,36 @@ async function runHoneyAgent() {
 
         pollOperation(data.operation_id, (result) => {
             const r = result.result;
-            resultDiv.className = 'operation-result show success';
+            resultDiv.className = 'agent-result show success';
             resultDiv.innerHTML = `
-                <p>✅ 完成！生成 ${r.hosts_generated} 个主机的诱饵配置</p>
-                <p class="text-muted">模式: ${r.mode}</p>
+                <p style="color: var(--success); font-weight: 600;">✅ 完成！生成 ${r.hosts_generated || 0} 个主机的诱饵配置</p>
+                <p class="text-muted">模式: ${r.mode || mode}</p>
             `;
             loadOrchestrationStatus();
-            showToast('success', 'Honey Agent', `已生成 ${r.hosts_generated} 个主机的配置`);
+            showToast('success', 'Honey Agent', `已生成 ${r.hosts_generated || 0} 个主机的配置`);
         }, (error) => {
-            resultDiv.className = 'operation-result show error';
-            resultDiv.innerHTML = `<p>❌ 失败: ${error}</p>`;
+            resultDiv.className = 'agent-result show error';
+            resultDiv.innerHTML = `<p style="color: var(--danger);">❌ 失败: ${error}</p>`;
             showToast('error', 'Honey Agent', `运行失败: ${error}`);
         });
 
     } catch (error) {
-        resultDiv.className = 'operation-result show error';
-        resultDiv.innerHTML = `<p>❌ 启动失败: ${error.message}</p>`;
+        resultDiv.className = 'agent-result show error';
+        resultDiv.innerHTML = `<p style="color: var(--danger);">❌ 启动失败: ${error.message}</p>`;
     }
 }
 
 async function runTrapAgent() {
     const resultDiv = document.getElementById('trap-result');
-    const mode = document.getElementById('trap-mode').value;
-    const model = document.getElementById('trap-model').value;
-    const temp = parseFloat(document.getElementById('trap-temp').value);
-    const topP = parseFloat(document.getElementById('trap-topp').value);
+    const mode = document.getElementById('trap-mode')?.value || 'all';
+    const model = document.getElementById('trap-model')?.value || 'gpt-4o-mini';
+    const temp = parseFloat(document.getElementById('trap-temp')?.value || 0.15);
+    const topP = parseFloat(document.getElementById('trap-topp')?.value || 0.85);
+
+    if (!resultDiv) return;
 
     try {
-        resultDiv.className = 'operation-result show';
+        resultDiv.className = 'agent-result show';
         resultDiv.innerHTML = '<p>⏳ 正在运行 Trap Agent...</p>';
 
         const data = await apiCall('/orchestrate/trap', {
@@ -472,31 +714,32 @@ async function runTrapAgent() {
 
         pollOperation(data.operation_id, (result) => {
             const r = result.result;
-            resultDiv.className = 'operation-result show success';
+            resultDiv.className = 'agent-result show success';
             resultDiv.innerHTML = `
-                <p>✅ 完成！处理 ${r.hosts?.length || 0} 个主机</p>
-                <p class="text-muted">模式: ${r.mode}</p>
+                <p style="color: var(--success); font-weight: 600;">✅ 完成！处理 ${r.hosts?.length || 0} 个主机</p>
+                <p class="text-muted">模式: ${r.mode || mode}</p>
             `;
             loadOrchestrationStatus();
             showToast('success', 'Trap Agent', '陷阱链已生成');
         }, (error) => {
-            resultDiv.className = 'operation-result show error';
-            resultDiv.innerHTML = `<p>❌ 失败: ${error}</p>`;
+            resultDiv.className = 'agent-result show error';
+            resultDiv.innerHTML = `<p style="color: var(--danger);">❌ 失败: ${error}</p>`;
             showToast('error', 'Trap Agent', `运行失败: ${error}`);
         });
 
     } catch (error) {
-        resultDiv.className = 'operation-result show error';
-        resultDiv.innerHTML = `<p>❌ 启动失败: ${error.message}</p>`;
+        resultDiv.className = 'agent-result show error';
+        resultDiv.innerHTML = `<p style="color: var(--danger);">❌ 启动失败: ${error.message}</p>`;
     }
 }
 
 async function loadPreferences() {
     try {
         const data = await apiCall('/config/preferences');
+        const textarea = document.getElementById('preferences-list');
 
-        if (data.exists && data.preferences) {
-            document.getElementById('preferences-list').value = data.preferences.join('\n');
+        if (textarea && data.exists && data.preferences) {
+            textarea.value = data.preferences.join('\n');
         }
     } catch (error) {
         console.error('Failed to load preferences:', error);
@@ -504,7 +747,10 @@ async function loadPreferences() {
 }
 
 async function savePreferences() {
-    const text = document.getElementById('preferences-list').value;
+    const textarea = document.getElementById('preferences-list');
+    if (!textarea) return;
+
+    const text = textarea.value;
     const preferences = text.split('\n').map(p => p.trim()).filter(p => p);
 
     try {
@@ -523,61 +769,88 @@ async function savePreferences() {
 // ===== Deception =====
 async function loadDeploymentHosts() {
     const container = document.getElementById('deployment-hosts');
-    container.innerHTML = '<div class="loading">加载中...</div>';
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+        </div>
+    `;
 
     try {
         const data = await apiCall('/deployment/hosts');
 
         if (!data.hosts || data.hosts.length === 0) {
-            container.innerHTML = '<p class="text-muted">未找到部署主机</p>';
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-server"></i>
+                    <p>未找到部署主机</p>
+                </div>
+            `;
             return;
         }
 
-        container.innerHTML = data.hosts.map(host => `
-            <div class="deployment-host">
-                <div class="deployment-host-name">🖥️ ${host.name}</div>
-                <div class="deployment-host-info">
-                    <span>配置: ${host.has_config ? '✓' : '✗'}</span>
-                    <span>日志: ${host.has_logs ? '✓' : '✗'}</span>
+        container.innerHTML = `<div class="deployment-grid">` + data.hosts.map(host => `
+            <div class="deployment-item">
+                <div class="deployment-name">${host.name}</div>
+                <div class="deployment-info">
+                    <span>${host.has_config ? '✓ 配置' : '✗ 配置'}</span>
+                    <span>${host.has_logs ? '✓ 日志' : '✗ 日志'}</span>
                     ${host.configs ? `<span>${host.configs.length} 文件</span>` : ''}
                 </div>
             </div>
-        `).join('');
+        `).join('') + `</div>`;
 
     } catch (error) {
-        container.innerHTML = `<p class="text-danger">加载失败: ${error.message}</p>`;
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>加载失败: ${error.message}</p>
+            </div>
+        `;
     }
 }
 
 async function loadConsistencyReport() {
     const container = document.getElementById('consistency-report');
+    if (!container) return;
 
     try {
         const data = await apiCall('/deception/consistency');
 
         if (!data.exists) {
-            container.innerHTML = '<p class="text-muted">暂无一致性报告</p>';
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-clipboard"></i>
+                    <p>暂无一致性报告</p>
+                </div>
+            `;
             return;
         }
 
         let html = `
-            <p class="text-muted">生成时间: ${data.modified || '-'}</p>
+            <p class="text-muted" style="margin-bottom: 12px;">生成时间: ${data.modified || '-'}</p>
         `;
 
         if (data.issues && data.issues.length > 0) {
-            html += '<h4>发现问题:</h4><ul>';
+            html += '<h4 style="margin-bottom: 8px;">发现问题:</h4><ul style="list-style: none; padding: 0;">';
             data.issues.forEach(issue => {
-                html += `<li class="text-danger">${issue}</li>`;
+                html += `<li style="padding: 8px; background: var(--bg-tertiary); border-radius: 4px; margin-bottom: 4px; color: var(--danger);">${issue}</li>`;
             });
             html += '</ul>';
         } else {
-            html += '<p class="text-success">✓ 未发现一致性问题</p>';
+            html += '<p style="color: var(--success);">✓ 未发现一致性问题</p>';
         }
 
         container.innerHTML = html;
 
     } catch (error) {
-        container.innerHTML = `<p class="text-danger">加载失败: ${error.message}</p>`;
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>加载失败: ${error.message}</p>
+            </div>
+        `;
     }
 }
 
@@ -592,7 +865,10 @@ async function runDeception(mode) {
         resultDiv = document.getElementById('deception-result');
     }
 
-    const hosts = document.getElementById('deception-hosts').value || null;
+    if (!resultDiv) return;
+
+    const hostsInput = document.getElementById('deception-hosts');
+    const hosts = hostsInput?.value ? hostsInput.value.split(',').map(h => h.trim()) : null;
 
     try {
         resultDiv.className = 'operation-result show';
@@ -605,94 +881,30 @@ async function runDeception(mode) {
 
         pollOperation(data.operation_id, (result) => {
             const r = result.result;
-            resultDiv.className = 'operation-result show success';
+            resultDiv.className = 'operation-result show';
+            resultDiv.innerHTML = '<p style="color: var(--success); font-weight: 600;">✅ 完成</p>';
 
             if (mode === 'consistency') {
-                resultDiv.innerHTML = '<p>✅ 一致性审计完成</p>';
                 loadConsistencyReport();
             } else if (mode === 'generate-configs') {
-                resultDiv.innerHTML = `<p>✅ 已生成 ${r.results?.host_configs?.generated || 0} 个主机配置</p>`;
+                const count = r.results?.host_configs?.generated || 0;
+                resultDiv.innerHTML = `<p style="color: var(--success); font-weight: 600;">✅ 已生成 ${count} 个主机配置</p>`;
                 loadDeploymentHosts();
             } else {
-                resultDiv.innerHTML = '<p>✅ 完整流程执行完成</p>';
                 loadConsistencyReport();
                 loadDeploymentHosts();
             }
 
             showToast('success', '欺骗配置', '操作已完成');
         }, (error) => {
-            resultDiv.className = 'operation-result show error';
-            resultDiv.innerHTML = `<p>❌ 失败: ${error}</p>`;
+            resultDiv.className = 'operation-result show';
+            resultDiv.innerHTML = `<p style="color: var(--danger);">❌ 失败: ${error}</p>`;
             showToast('error', '欺骗配置', `运行失败: ${error}`);
         });
 
     } catch (error) {
-        resultDiv.className = 'operation-result show error';
-        resultDiv.innerHTML = `<p>❌ 启动失败: ${error.message}</p>`;
-    }
-}
-
-// ===== Operations =====
-async function loadOperations() {
-    const container = document.getElementById('operations-list');
-    container.innerHTML = '<div class="loading">加载中...</div>';
-
-    try {
-        const data = await apiCall('/operations?limit=50');
-
-        if (!data.operations || data.operations.length === 0) {
-            container.innerHTML = '<p class="text-muted text-center" style="grid-column: 1/-1; padding: 24px;">暂无操作记录</p>';
-            return;
-        }
-
-        container.innerHTML = data.operations.map(op => `
-            <div class="table-row">
-                <div class="table-cell">${getOperationTypeName(op.type)}</div>
-                <div class="table-cell">
-                    <span class="operation-status ${op.status}">${getStatusText(op.status)}</span>
-                </div>
-                <div class="table-cell">${formatTime(op.created_at)}</div>
-                <div class="table-cell">
-                    ${op.status === 'completed' ? `
-                        <button class="btn btn-secondary btn-sm" onclick="showOperationDetail('${op.id}')">详情</button>
-                    ` : ''}
-                </div>
-            </div>
-        `).join('');
-
-    } catch (error) {
-        container.innerHTML = `<p class="text-danger text-center" style="grid-column: 1/-1; padding: 24px;">加载失败: ${error.message}</p>`;
-    }
-}
-
-async function showOperationDetail(opId) {
-    try {
-        const data = await apiCall(`/operations/${opId}`);
-
-        let content = `
-            <h4>操作详情</h4>
-            <p><strong>类型:</strong> ${getOperationTypeName(data.type)}</p>
-            <p><strong>状态:</strong> ${getStatusText(data.status)}</p>
-            <p><strong>创建时间:</strong> ${data.created_at}</p>
-        `;
-
-        if (data.params) {
-            content += '<h5>参数:</h5><pre>' + JSON.stringify(data.params, null, 2) + '</pre>';
-        }
-
-        if (data.result) {
-            content += '<h5>结果:</h5><pre>' + JSON.stringify(data.result, null, 2) + '</pre>';
-        }
-
-        if (data.error) {
-            content += `<p class="text-danger"><strong>错误:</strong> ${data.error}</p>`;
-        }
-
-        // Show in modal or alert
-        alert(content.replace(/<[^>]*>/g, '\n').replace(/\n+/g, '\n'));
-
-    } catch (error) {
-        showToast('error', '操作详情', `加载失败: ${error.message}`);
+        resultDiv.className = 'operation-result show';
+        resultDiv.innerHTML = `<p style="color: var(--danger);">❌ 启动失败: ${error.message}</p>`;
     }
 }
 
@@ -703,18 +915,20 @@ async function loadShadowData() {
         const summary = await apiCall('/dashboard/summary');
         const container = document.getElementById('shadow-files-status');
 
-        container.innerHTML = Object.entries(summary.shadow_files).map(([name, info]) => {
-            const displayName = name.replace('.json', '').replace(/_/g, ' ');
-            return `
-                <div class="shadow-file-item">
-                    <div class="shadow-file-name">${displayName}</div>
-                    <span class="shadow-file-status ${info.exists ? 'exists' : 'missing'}">
-                        ${info.exists ? '✓ 存在' : '✗ 缺失'}
-                    </span>
-                    ${info.modified ? `<div class="shadow-file-modified">${formatTime(info.modified)}</div>` : ''}
-                </div>
-            `;
-        }).join('');
+        if (container) {
+            container.innerHTML = Object.entries(summary.shadow_files || {}).map(([name, info]) => {
+                const displayName = name.replace('.json', '').replace(/_/g, ' ');
+                return `
+                    <div class="file-status-item">
+                        <div class="file-status-name">${displayName}</div>
+                        <span class="file-status-indicator ${info.exists ? 'exists' : 'missing'}">
+                            ${info.exists ? '✓ 存在' : '✗ 缺失'}
+                        </span>
+                        ${info.modified ? `<div class="history-time">${formatTime(info.modified)}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
 
     } catch (error) {
         console.error('Failed to load shadow data:', error);
@@ -739,14 +953,13 @@ async function loadShadowData() {
     } catch (error) {
         console.error('Failed to load shadow data details:', error);
     }
-
-    // Initialize tabs
-    initTabs();
 }
 
-// Render Honey Agent data with visual cards
+// Render Honey Agent data
 function renderHoneyAgentData(data) {
     const container = document.getElementById('honey-agent-data');
+
+    if (!container) return;
 
     if (!data.hosts || data.hosts.length === 0) {
         container.innerHTML = '<p class="text-muted">暂无数据</p>';
@@ -807,9 +1020,11 @@ function renderHoneyAgentData(data) {
     container.innerHTML = html;
 }
 
-// Render Trap Agent data with visual cards
+// Render Trap Agent data
 function renderTrapAgentData(data) {
     const container = document.getElementById('trap-agent-data');
+
+    if (!container) return;
 
     const hasHosts = data.hosts && data.hosts.length > 0;
     const hasChains = data.chains && data.chains.length > 0;
@@ -914,6 +1129,8 @@ function renderTrapAgentData(data) {
 async function renderPreferencesData() {
     const container = document.getElementById('preferences-data');
 
+    if (!container) return;
+
     try {
         const data = await apiCall('/config/preferences');
 
@@ -982,13 +1199,15 @@ async function renderPreferencesData() {
         container.innerHTML = html;
 
     } catch (error) {
-        container.innerHTML = `<p class="text-danger">加载失败: ${error.message}</p>`;
+        container.innerHTML = `<p style="color: var(--danger);">加载失败: ${error.message}</p>`;
     }
 }
 
 // Render Long Memory data
 function renderLongMemoryData(data) {
     const container = document.getElementById('long-memory-data');
+
+    if (!container) return;
 
     const hasPortFacts = data.ports && Object.keys(data.ports).length > 0;
     const hasPatterns = data.successful_patterns && data.successful_patterns.length > 0;
@@ -1008,14 +1227,14 @@ function renderLongMemoryData(data) {
     html += '<h3 class="summary-title">🧠 长期记忆概览</h3>';
     html += '<div class="summary-stats">';
 
-    const summary = data.last_updated ? `
-        <div class="summary-stat">
-            <span class="stat-label">最后更新</span>
-            <span class="stat-value">${formatTime(data.last_updated)}</span>
-        </div>
-    ` : '';
-
-    html += summary || '';
+    if (data.last_updated) {
+        html += `
+            <div class="summary-stat">
+                <span class="stat-label">最后更新</span>
+                <span class="stat-value">${formatTime(data.last_updated)}</span>
+            </div>
+        `;
+    }
 
     if (data.ports) {
         html += `
@@ -1203,26 +1422,32 @@ function renderLongMemoryData(data) {
     container.innerHTML = html;
 }
 
-function initTabs() {
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabPanes = document.querySelectorAll('.tab-pane');
+// ===== Modern Tabs =====
+function initModernTabs() {
+    const tabBtns = document.querySelectorAll('.modern-tab');
 
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const tabName = btn.dataset.tab;
+            const container = btn.closest('.shadow-card-body');
 
-            tabBtns.forEach(b => b.classList.remove('active'));
-            tabPanes.forEach(p => p.classList.remove('active'));
-
+            // Update buttons
+            container.querySelectorAll('.modern-tab').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            document.getElementById(`tab-${tabName}`).classList.add('active');
+
+            // Update panes
+            container.querySelectorAll('.modern-tab-pane').forEach(p => p.classList.remove('active'));
+            const targetPane = container.querySelector(`#tab-${tabName}`);
+            if (targetPane) {
+                targetPane.classList.add('active');
+            }
         });
     });
 }
 
 // ===== Polling =====
 function pollOperation(opId, onSuccess, onError) {
-    const maxAttempts = 300; // 5 minutes max
+    const maxAttempts = 300;
     let attempts = 0;
 
     const poll = async () => {
@@ -1239,7 +1464,6 @@ function pollOperation(opId, onSuccess, onError) {
                 return;
             }
 
-            // Still running, continue polling
             attempts++;
             if (attempts < maxAttempts) {
                 setTimeout(poll, 1000);
@@ -1259,22 +1483,24 @@ function pollOperation(opId, onSuccess, onError) {
 function showToast(type, title, message) {
     const container = document.getElementById('toast-container');
 
+    if (!container) return;
+
     const icons = {
-        success: '✅',
-        error: '❌',
-        info: 'ℹ️',
-        warning: '⚠️'
+        success: 'fa-check-circle',
+        error: 'fa-times-circle',
+        info: 'fa-info-circle',
+        warning: 'fa-exclamation-triangle'
     };
 
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
     toast.innerHTML = `
-        <span class="toast-icon">${icons[type] || icons.info}</span>
+        <span class="toast-icon"><i class="fas ${icons[type] || icons.info}"></i></span>
         <div class="toast-content">
             <div class="toast-title">${title}</div>
             <div class="toast-message">${message}</div>
         </div>
-        <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+        <button class="toast-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
     `;
 
     container.appendChild(toast);
@@ -1285,31 +1511,101 @@ function showToast(type, title, message) {
     }, 5000);
 }
 
+// ===== Loading Overlay =====
+function showLoadingOverlay(message = '处理中...') {
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) {
+        overlay.querySelector('p').textContent = message;
+        overlay.classList.add('show');
+    }
+}
+
+function hideLoadingOverlay() {
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) {
+        overlay.classList.remove('show');
+    }
+}
+
+// ===== Theme Toggle =====
+function toggleTheme() {
+    const html = document.documentElement;
+    const currentTheme = html.getAttribute('data-theme') || 'dark';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+    // Add rotation animation to button icon
+    const buttonIcon = document.querySelector('[onclick="toggleTheme()"] i');
+    if (buttonIcon) {
+        buttonIcon.style.transform = 'rotate(360deg)';
+    }
+
+    // Apply theme change after a short delay for animation
+    setTimeout(() => {
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+
+        // Update theme button icon
+        updateThemeButton(newTheme);
+
+        // Reset icon rotation
+        if (buttonIcon) {
+            buttonIcon.style.transform = '';
+        }
+    }, 150);
+
+    // Show toast notification
+    const themeName = newTheme === 'dark' ? '深色' : '浅色';
+    showToast('info', '主题切换', `已切换到${themeName}主题`);
+}
+
+function updateThemeButton(theme) {
+    const button = document.querySelector('[onclick="toggleTheme()"] i');
+    if (button) {
+        // Fade out, change icon, fade in
+        button.style.opacity = '0';
+        setTimeout(() => {
+            button.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+            button.style.opacity = '1';
+        }, 150);
+    }
+}
+
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    const html = document.documentElement;
+    html.setAttribute('data-theme', savedTheme);
+
+    // Set initial icon
+    const button = document.querySelector('[onclick="toggleTheme()"] i');
+    if (button) {
+        button.className = savedTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+    }
+
+    // Add transition style for theme icon
+    if (button) {
+        button.style.transition = 'transform 0.3s ease, opacity 0.15s ease';
+    }
+}
+
 // ===== Auto-refresh =====
 function startAutoRefresh() {
-    // Refresh dashboard every 10 seconds
+    // Refresh dashboard every 30 seconds
     setInterval(() => {
         if (currentPage === 'dashboard') {
             loadDashboard();
         }
-    }, 10000);
-
-    // Refresh running operations every 2 seconds
-    setInterval(() => {
-        if (currentPage === 'operations') {
-            loadOperations();
-        }
-    }, 2000);
+    }, 30000);
 }
 
 // ===== Initialize =====
 document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
     initNavigation();
     loadDashboard();
     startAutoRefresh();
 
     // Check initial connection
     apiCall('/health')
-        .then(() => updateConnectionStatus(true))
-        .catch(() => updateConnectionStatus(false));
+        .then(() => updateSystemStatus(true))
+        .catch(() => updateSystemStatus(false));
 });

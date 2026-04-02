@@ -1,0 +1,5 @@
+[
+  "Updated SSH service to include weak credentials for realism.",
+  "Maintained HTTP service on port 80 with existing configurations.",
+  "Added user-specific authorized_keys file under user directory."
+]

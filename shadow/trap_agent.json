@@ -2,75 +2,129 @@
   "hosts": [
     {
       "name": "edge-fw",
-      "host_loops": []
+      "host_loops": [
+        [
+          "/etc/ssl/private/server.key",
+          "/var/www/html/backup.tar.gz",
+          "/root/.ssh/id_rsa",
+          "/etc/passwd.bak"
+        ]
+      ]
     },
     {
       "name": "bastion-01",
       "host_loops": [
         [
-          "/home/user/.ssh/id_rsa",
-          "/var/log/auth.log",
-          "/home/user/.ssh/id_rsa"
+          "/home/user/.ssh/authorized_keys",
+          "/etc/backup/config_backup.conf",
+          "/var/www/html/admin_credentials.txt",
+          "/var/www/html/finance_report.xlsx"
         ]
       ]
     },
     {
       "name": "jump-ops",
-      "host_loops": []
+      "host_loops": [
+        [
+          "/home/ops/.ssh/id_rsa",
+          "/etc/ops/secret_keys.json",
+          "/var/www/html/operations_backup.zip",
+          "/var/www/html/credentials.txt"
+        ]
+      ]
     },
     {
       "name": "dmz-web-01",
-      "host_loops": []
+      "host_loops": [
+        [
+          "/var/www/html/user_data.json",
+          "/var/www/html/backup.sql",
+          "/etc/ssl/certs/certificate.crt",
+          "/var/www/html/private_keys.pem"
+        ]
+      ]
     },
     {
       "name": "dmz-api-01",
-      "host_loops": []
+      "host_loops": [
+        [
+          "/var/www/html/api_keys.txt",
+          "/var/www/html/backup_api_data.json",
+          "/etc/ssl/private/api_key.pem",
+          "/var/www/html/finance_data.csv"
+        ]
+      ]
     },
     {
       "name": "app-01",
-      "host_loops": []
+      "host_loops": [
+        [
+          "/var/www/html/app_config.yaml",
+          "/var/www/html/finance_backup.zip",
+          "/var/lib/mysql/user_credentials.sql",
+          "/var/lib/mysql/finance_data.sql"
+        ]
+      ]
     },
     {
       "name": "db-01",
-      "host_loops": []
+      "host_loops": [
+        [
+          "/var/lib/postgresql/data/backup.sql",
+          "/var/lib/postgresql/data/passwords.txt",
+          "/var/lib/mysql/db_backup.sql",
+          "/var/lib/mysql/finance_keys.txt"
+        ]
+      ]
     },
     {
       "name": "fileserver-01",
-      "host_loops": []
+      "host_loops": [
+        [
+          "/srv/files/finance_reports.xlsx",
+          "/srv/files/user_passwords.txt",
+          "/srv/ftp/backup.zip",
+          "/srv/ftp/finance_data.csv"
+        ]
+      ]
     }
   ],
   "chains": [
     {
-      "name": "SSH to API Loop",
+      "name": "Chain 1",
       "steps": [
         {
-          "host": "bastion-01",
-          "tier": "mid"
-        },
-        {
-          "host": "dmz-api-01",
+          "host": "edge-fw",
           "tier": "low"
         },
         {
-          "host": "app-01",
+          "host": "bastion-01",
           "tier": "mid"
         },
         {
-          "host": "bastion-01",
-          "tier": "mid"
+          "host": "jump-ops",
+          "tier": "high"
+        },
+        {
+          "host": "edge-fw",
+          "tier": "low"
         }
       ]
     },
     {
-      "name": "Web to File Loop",
+      "name": "Chain 2",
       "steps": [
         {
           "host": "dmz-web-01",
           "tier": "low"
         },
         {
-          "host": "fileserver-01",
-          "tier": "low"
+          "host": "dmz-api-01",
+          "tier": "mid"
+        },
+        {
+          "host": "app-01",
+          "tier": "high"
         },
         {
           "host": "dmz-web-01",

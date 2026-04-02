@@ -1,0 +1,47 @@
+{
+  "host": "0.0.0.0",
+  "port": 8080,
+  "server_header": "Apache/2.4.52 (Ubuntu)",
+  "default_status": 404,
+  "default_headers": {
+    "X-Powered-By": "PHP/7.4.3"
+  },
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "response_headers": {
+        "Content-Type": "text/html; charset=utf-8"
+      },
+      "body_file": "../www/index.html"
+    },
+    {
+      "method": "GET",
+      "path": "/status",
+      "status": 200,
+      "response_headers": {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "no-store"
+      },
+      "body_file": "../www/status.html"
+    },
+    {
+      "method": "POST",
+      "path": "/api/login",
+      "status": 200,
+      "response_headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "{\"status\": \"ok\", \"token\": \"3f4dc3e8\", \"role\": \"viewer\"}"
+    }
+  ],
+  "not_found": {
+    "status": 404,
+    "response_headers": {
+      "Content-Type": "text/html; charset=utf-8"
+    },
+    "body_file": "../www/404.html"
+  },
+  "log_file": "../logs/http.log"
+}

@@ -1,0 +1,42 @@
+{
+  "host": "0.0.0.0",
+  "port": 8443,
+  "certificate": "../certs/honeypot.crt",
+  "private_key": "../certs/honeypot.key",
+  "tls_versions": [
+    "TLSv1.2",
+    "TLSv1.3"
+  ],
+  "server_header": "nginx/1.22.1",
+  "default_headers": {
+    "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload"
+  },
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "response_headers": {
+        "Content-Type": "text/html; charset=utf-8"
+      },
+      "body_file": "../www/https_index.html"
+    },
+    {
+      "method": "GET",
+      "path": "/api/version",
+      "status": 200,
+      "response_headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "{\"service\": \"metrics\", \"version\": \"1.14.0\", \"build\": \"20240412\"}"
+    }
+  ],
+  "not_found": {
+    "status": 404,
+    "response_headers": {
+      "Content-Type": "text/html; charset=utf-8"
+    },
+    "body_file": "../www/404.html"
+  },
+  "log_file": "../logs/https.log"
+}

@@ -3,186 +3,312 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LLM Honeynet Platform</title>
+    <title>LLM Honeynet - 智能蜜网管理平台</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Sidebar Navigation -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h2>🕸️ 蜜网平台</h2>
-            <p>LLM Honeynet Dashboard</p>
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="bg-gradient"></div>
+        <div class="bg-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
         </div>
+    </div>
+
+    <!-- Glassmorphism Sidebar -->
+    <aside class="sidebar glassmorphism" id="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-icon">
+                <i class="fas fa-shield-halved"></i>
+            </div>
+            <div class="logo-text">
+                <h1>Honeynet</h1>
+                <span>智能蜜网平台</span>
+            </div>
+        </div>
+
         <nav class="sidebar-nav">
             <a href="#dashboard" class="nav-item active" data-page="dashboard">
-                <span class="nav-icon">📊</span>
-                <span class="nav-text">概览</span>
+                <div class="nav-icon-wrapper">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="nav-text">
+                    <span>仪表盘</span>
+                    <small>Dashboard</small>
+                </div>
             </a>
             <a href="#perception" class="nav-item" data-page="perception">
-                <span class="nav-icon">👁️</span>
-                <span class="nav-text">感知</span>
-                <span class="nav-badge" id="perception-badge"></span>
+                <div class="nav-icon-wrapper">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <div class="nav-text">
+                    <span>感知分析</span>
+                    <small>Perception</small>
+                </div>
+                <div class="nav-indicator" id="perception-indicator"></div>
             </a>
             <a href="#orchestration" class="nav-item" data-page="orchestration">
-                <span class="nav-icon">🎯</span>
-                <span class="nav-text">编排</span>
+                <div class="nav-icon-wrapper">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <div class="nav-text">
+                    <span>智能编排</span>
+                    <small>Orchestration</small>
+                </div>
+                <div class="nav-indicator" id="orchestration-indicator"></div>
             </a>
             <a href="#deception" class="nav-item" data-page="deception">
-                <span class="nav-icon">🎭</span>
-                <span class="nav-text">欺骗</span>
-            </a>
-            <a href="#operations" class="nav-item" data-page="operations">
-                <span class="nav-icon">⚙️</span>
-                <span class="nav-text">操作记录</span>
+                <div class="nav-icon-wrapper">
+                    <i class="fas fa-theater-masks"></i>
+                </div>
+                <div class="nav-text">
+                    <span>欺骗配置</span>
+                    <small>Deception</small>
+                </div>
+                <div class="nav-indicator" id="deception-indicator"></div>
             </a>
             <a href="#shadow" class="nav-item" data-page="shadow">
-                <span class="nav-icon">💾</span>
-                <span class="nav-text">影子数据</span>
+                <div class="nav-icon-wrapper">
+                    <i class="fas fa-database"></i>
+                </div>
+                <div class="nav-text">
+                    <span>影子数据</span>
+                    <small>Shadow Data</small>
+                </div>
             </a>
         </nav>
+
         <div class="sidebar-footer">
-            <div class="status-indicator">
-                <span class="status-dot" id="connection-status"></span>
-                <span class="status-text" id="connection-text">连接中...</span>
+            <div class="system-status">
+                <div class="status-dot status-active"></div>
+                <div class="status-text">
+                    <span class="status-label">系统状态</span>
+                    <span class="status-value" id="system-status-text">正常</span>
+                </div>
             </div>
         </div>
     </aside>
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Header -->
-        <header class="header">
+        <!-- Top Navigation Bar -->
+        <header class="top-nav glassmorphism">
             <button class="menu-toggle" id="menu-toggle">
                 <span></span>
                 <span></span>
                 <span></span>
             </button>
-            <h1 class="page-title" id="page-title">概览</h1>
-            <div class="header-actions">
-                <button class="btn btn-secondary btn-sm" onclick="refreshCurrentPage()">
-                    🔄 刷新
+
+            <div class="breadcrumb" id="breadcrumb">
+                <i class="fas fa-home"></i>
+                <span class="breadcrumb-separator"><i class="fas fa-chevron-right"></i></span>
+                <span class="breadcrumb-current" id="page-title">仪表盘</span>
+            </div>
+
+            <div class="top-nav-actions">
+                <button class="icon-btn" onclick="refreshCurrentPage()" title="刷新">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="icon-btn" onclick="toggleTheme()" title="切换主题">
+                    <i class="fas fa-moon"></i>
                 </button>
             </div>
         </header>
 
-        <!-- Page Content Container -->
-        <div class="page-container">
+        <!-- Page Content -->
+        <div class="content-wrapper">
             <!-- Dashboard Page -->
             <div class="page active" id="page-dashboard">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">🖥️</div>
+                <!-- Stats Cards -->
+                <div class="stats-container">
+                    <div class="stat-card gradient-blue">
+                        <div class="stat-icon">
+                            <i class="fas fa-server"></i>
+                        </div>
                         <div class="stat-content">
-                            <h3 class="stat-value" id="stat-hosts">-</h3>
-                            <p class="stat-label">部署主机</p>
+                            <div class="stat-value" id="stat-hosts">-</div>
+                            <div class="stat-label">部署主机</div>
+                        </div>
+                        <div class="stat-chart">
+                            <svg viewBox="0 0 36 36">
+                                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 12.8424 9.6245 1.3898 1.3898 0 0 1 5.5775-4.3759 15.9155 15.9155 0 0 1-12.8424 9.6245 1.3898 1.3898 0 0 1 5.5775-4.3759Z" />
+                            </svg>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">✅</div>
+
+                    <div class="stat-card gradient-green">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
                         <div class="stat-content">
-                            <h3 class="stat-value" id="stat-completed">-</h3>
-                            <p class="stat-label">已完成操作</p>
+                            <div class="stat-value" id="stat-completed">-</div>
+                            <div class="stat-label">已完成</div>
+                        </div>
+                        <div class="stat-trend" id="stat-trend">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+12%</span>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">⚡</div>
+
+                    <div class="stat-card gradient-orange">
+                        <div class="stat-icon">
+                            <i class="fas fa-spinner"></i>
+                        </div>
                         <div class="stat-content">
-                            <h3 class="stat-value" id="stat-running">-</h3>
-                            <p class="stat-label">运行中</p>
+                            <div class="stat-value" id="stat-running">-</div>
+                            <div class="stat-label">运行中</div>
+                        </div>
+                        <div class="stat-pulse">
+                            <span class="pulse-dot"></span>
+                            <span class="pulse-text">实时</span>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">❌</div>
+
+                    <div class="stat-card gradient-purple">
+                        <div class="stat-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
                         <div class="stat-content">
-                            <h3 class="stat-value" id="stat-failed">-</h3>
-                            <p class="stat-label">失败操作</p>
+                            <div class="stat-value" id="stat-total">-</div>
+                            <div class="stat-label">总操作</div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Main Dashboard Grid -->
                 <div class="dashboard-grid">
-                    <!-- Phase Status Cards -->
-                    <div class="card">
+                    <!-- Phase Pipeline -->
+                    <div class="dashboard-card pipeline-card">
                         <div class="card-header">
-                            <h3>阶段状态</h3>
+                            <h3><i class="fas fa-project-diagram"></i>自动化流程</h3>
                         </div>
                         <div class="card-body">
-                            <div class="phase-status">
-                                <div class="phase-item">
-                                    <span class="phase-name">感知</span>
-                                    <span class="phase-indicator" id="phase-perception">
-                                        <span class="phase-dot"></span>
-                                        <span class="phase-text">待运行</span>
-                                    </span>
+                            <div class="pipeline-container">
+                                <div class="pipeline-step" data-step="perception">
+                                    <div class="step-number">1</div>
+                                    <div class="step-content">
+                                        <div class="step-title">感知分析</div>
+                                        <div class="step-description">日志分析 & 阶段识别</div>
+                                    </div>
+                                    <div class="step-status" id="pipeline-perception">
+                                        <span class="status-dot"></span>
+                                    </div>
                                 </div>
-                                <div class="phase-item">
-                                    <span class="phase-name">编排</span>
-                                    <span class="phase-indicator" id="phase-orchestration">
-                                        <span class="phase-dot"></span>
-                                        <span class="phase-text">待运行</span>
-                                    </span>
+                                <div class="pipeline-arrow"><i class="fas fa-chevron-right"></i></div>
+
+                                <div class="pipeline-step" data-step="orchestration">
+                                    <div class="step-number">2</div>
+                                    <div class="step-content">
+                                        <div class="step-title">智能编排</div>
+                                        <div class="step-description">诱饵生成 & 陷阱配置</div>
+                                    </div>
+                                    <div class="step-status" id="pipeline-orchestration">
+                                        <span class="status-dot"></span>
+                                    </div>
                                 </div>
-                                <div class="phase-item">
-                                    <span class="phase-name">欺骗</span>
-                                    <span class="phase-indicator" id="phase-deception">
-                                        <span class="phase-dot"></span>
-                                        <span class="phase-text">待运行</span>
-                                    </span>
+                                <div class="pipeline-arrow"><i class="fas fa-chevron-right"></i></div>
+
+                                <div class="pipeline-step" data-step="deception">
+                                    <div class="step-number">3</div>
+                                    <div class="step-content">
+                                        <div class="step-title">欺骗配置</div>
+                                        <div class="step-description">一致性审计 & 部署生成</div>
+                                    </div>
+                                    <div class="step-status" id="pipeline-deception">
+                                        <span class="status-dot"></span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Recent Operations -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>最近操作</h3>
-                            <a href="#operations" class="card-link">查看全部</a>
-                        </div>
-                        <div class="card-body">
-                            <div class="operations-list" id="recent-operations">
-                                <p class="text-muted">暂无操作记录</p>
+                            <div class="pipeline-actions">
+                                <button class="btn-primary-gradient" onclick="runFullPipeline()">
+                                    <i class="fas fa-play"></i>
+                                    <span>运行完整流程</span>
+                                </button>
                             </div>
                         </div>
                     </div>
 
                     <!-- Quick Actions -->
-                    <div class="card">
+                    <div class="dashboard-card quick-actions-card">
                         <div class="card-header">
-                            <h3>快速操作</h3>
+                            <h3><i class="fas fa-bolt"></i>快速操作</h3>
                         </div>
                         <div class="card-body">
-                            <div class="quick-actions">
-                                <button class="quick-action-btn" onclick="navigateTo('perception')">
-                                    <span class="action-icon">👁️</span>
-                                    <span class="action-text">运行感知分析</span>
+                            <div class="quick-actions-grid">
+                                <button class="quick-action-item" onclick="navigateTo('perception')">
+                                    <div class="quick-icon quick-icon-blue">
+                                        <i class="fas fa-eye"></i>
+                                    </div>
+                                    <span>感知分析</span>
                                 </button>
-                                <button class="quick-action-btn" onclick="navigateTo('orchestration')">
-                                    <span class="action-icon">🎯</span>
-                                    <span class="action-text">生成诱饵</span>
+                                <button class="quick-action-item" onclick="navigateTo('orchestration')">
+                                    <div class="quick-icon quick-icon-green">
+                                        <i class="fas fa-cogs"></i>
+                                    </div>
+                                    <span>生成诱饵</span>
                                 </button>
-                                <button class="quick-action-btn" onclick="navigateTo('deception')">
-                                    <span class="action-icon">🎭</span>
-                                    <span class="action-text">配置欺骗</span>
+                                <button class="quick-action-item" onclick="navigateTo('deception')">
+                                    <div class="quick-icon quick-icon-orange">
+                                        <i class="fas fa-theater-masks"></i>
+                                    </div>
+                                    <span>配置欺骗</span>
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- System Info -->
-                    <div class="card">
+                    <!-- Recent Activity -->
+                    <div class="dashboard-card activity-card">
                         <div class="card-header">
-                            <h3>系统信息</h3>
+                            <h3><i class="fas fa-clock"></i>最近活动</h3>
+                            <a href="#operations" class="view-all-link">查看全部 <i class="fas fa-arrow-right"></i></a>
                         </div>
                         <div class="card-body">
-                            <div class="info-list" id="system-info">
+                            <div class="activity-timeline" id="recent-activity">
+                                <div class="activity-item">
+                                    <div class="activity-dot"></div>
+                                    <div class="activity-content">
+                                        <div class="activity-time">刚刚</div>
+                                        <div class="activity-text">系统初始化完成</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- System Info -->
+                    <div class="dashboard-card info-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-info-circle"></i>系统信息</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="info-grid">
                                 <div class="info-item">
-                                    <span class="info-label">API 版本</span>
-                                    <span class="info-value">1.0.0</span>
+                                    <i class="fas fa-microchip"></i>
+                                    <div>
+                                        <div class="info-label">LLM 引擎</div>
+                                        <div class="info-value">OpenAI</div>
+                                    </div>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">状态</span>
-                                    <span class="info-value status-badge status-ok">正常</span>
+                                    <i class="fas fa-code-branch"></i>
+                                    <div>
+                                        <div class="info-label">API 版本</div>
+                                        <div class="info-value">v1.0.0</div>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-network-wired"></i>
+                                    <div>
+                                        <div class="info-label">状态</div>
+                                        <div class="info-value text-success">运行中</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -192,54 +318,77 @@
 
             <!-- Perception Page -->
             <div class="page" id="page-perception">
-                <div class="page-header">
-                    <h2>👁️ 感知分析</h2>
-                    <p class="page-description">分析蜜罐日志，识别攻击阶段和行为模式</p>
+                <div class="page-header-section">
+                    <div class="page-title-section">
+                        <div class="page-title-wrapper">
+                            <h1 class="page-title-large">
+                                <i class="fas fa-eye"></i>
+                                感知分析
+                            </h1>
+                            <p class="page-subtitle">分析蜜罐日志，识别攻击阶段和行为模式</p>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="content-grid">
-                    <!-- Hosts Selection -->
-                    <div class="card">
+                    <!-- Host Selection -->
+                    <div class="content-card">
                         <div class="card-header">
-                            <h3>目标主机</h3>
-                            <button class="btn btn-secondary btn-sm" onclick="loadHosts()">🔄 刷新</button>
-                        </div>
-                        <div class="card-body">
-                            <div class="hosts-list" id="perception-hosts">
-                                <div class="loading">加载中...</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Analysis Configuration -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>分析配置</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <input type="checkbox" id="perception-openai">
-                                    使用 OpenAI 进行智能摘要
-                                </label>
-                            </div>
-                            <button class="btn btn-primary" onclick="runPerception()">
-                                🚀 开始分析
+                            <h3><i class="fas fa-server"></i>目标主机</h3>
+                            <button class="btn-icon" onclick="loadHosts()">
+                                <i class="fas fa-sync-alt"></i>
                             </button>
                         </div>
-                    </div>
-
-                    <!-- Analysis Results -->
-                    <div class="card full-width">
-                        <div class="card-header">
-                            <h3>分析结果</h3>
-                            <div class="card-actions">
-                                <span class="badge" id="perception-status">等待运行</span>
+                        <div class="card-body">
+                            <div class="hosts-grid" id="perception-hosts">
+                                <div class="loading-spinner">
+                                    <div class="spinner"></div>
+                                </div>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Analysis Panel -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-brain"></i>智能分析</h3>
+                        </div>
                         <div class="card-body">
-                            <div id="perception-results">
-                                <p class="text-muted">运行分析后显示结果</p>
+                            <div class="analysis-config">
+                                <div class="config-option">
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="perception-openai" checked>
+                                        <label for="perception-openai" class="toggle-label">
+                                            <span class="toggle-slider"></span>
+                                            <span class="toggle-text">使用 OpenAI 智能摘要</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="action-area">
+                                <button class="btn-primary-gradient" onclick="runPerception()">
+                                    <i class="fas fa-search"></i>
+                                    <span>开始分析</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results -->
+                    <div class="content-card full-width">
+                        <div class="card-header">
+                            <h3><i class="fas fa-chart-bar"></i>分析结果</h3>
+                            <span class="status-badge" id="perception-status">
+                                <span class="status-dot"></span>
+                                <span class="status-text">等待运行</span>
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <div id="perception-results" class="results-container">
+                                <div class="empty-state">
+                                    <i class="fas fa-search"></i>
+                                    <p>运行分析后显示结果</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -248,125 +397,182 @@
 
             <!-- Orchestration Page -->
             <div class="page" id="page-orchestration">
-                <div class="page-header">
-                    <h2>🎯 编排</h2>
-                    <p class="page-description">使用 LLM 生成端口、文件和漏洞诱饵，以及陷阱链</p>
+                <div class="page-header-section">
+                    <div class="page-title-section">
+                        <div class="page-title-wrapper">
+                            <h1 class="page-title-large">
+                                <i class="fas fa-cogs"></i>
+                                智能编排
+                            </h1>
+                            <p class="page-subtitle">使用 LLM 生成端口、文件和漏洞诱饵，以及陷阱链</p>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Orchestration Status -->
-                <div class="orchestration-status" id="orchestration-status">
+                <div class="orchestration-status-bar">
                     <div class="status-item">
-                        <span class="status-label">Honey Agent</span>
-                        <span class="status-value" id="orchestration-honey">未生成</span>
+                        <div class="status-icon-wrapper status-blue">
+                            <i class="fas fa-honey-pot"></i>
+                        </div>
+                        <div class="status-info">
+                            <div class="status-title">Honey Agent</div>
+                            <div class="status-value" id="status-honey">待运行</div>
+                        </div>
                     </div>
                     <div class="status-item">
-                        <span class="status-label">Trap Agent</span>
-                        <span class="status-value" id="orchestration-trap">未生成</span>
+                        <div class="status-icon-wrapper status-orange">
+                            <i class="fas fa-triangle-exclamation"></i>
+                        </div>
+                        <div class="status-info">
+                            <div class="status-title">Trap Agent</div>
+                            <div class="status-value" id="status-trap">待运行</div>
+                        </div>
                     </div>
                     <div class="status-item">
-                        <span class="status-label">攻击者偏好</span>
-                        <span class="status-value" id="orchestration-prefs">未设置</span>
+                        <div class="status-icon-wrapper status-purple">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="status-info">
+                            <div class="status-title">偏好学习</div>
+                            <div class="status-value" id="status-prefs">待运行</div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="content-grid">
-                    <!-- Honey Agent -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>🍯 Honey Agent</h3>
-                            <span class="badge badge-info">诱饵生成</span>
+                    <!-- Honey Agent Card -->
+                    <div class="agent-card">
+                        <div class="agent-header agent-header-blue">
+                            <div class="agent-icon">
+                                <i class="fas fa-honey-pot"></i>
+                            </div>
+                            <div class="agent-info">
+                                <h3>Honey Agent</h3>
+                                <span class="agent-badge">诱饵生成</span>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <p class="card-description">
-                                生成端口、文件和漏洞类别的欺骗性诱饵
-                            </p>
-                            <div class="form-group">
-                                <label class="form-label">运行模式</label>
-                                <select class="form-select" id="honey-mode">
-                                    <option value="initialization">初始化</option>
-                                    <option value="finetune">微调</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">OpenAI 模型</label>
-                                <input type="text" class="form-input" id="honey-model" value="gpt-4o-mini">
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label">温度</label>
-                                    <input type="number" class="form-input" id="honey-temp" value="0.1" step="0.1" min="0" max="1">
+                        <div class="agent-body">
+                            <p class="agent-description">基于 OpenAI 生成端口、文件和漏洞类别的欺骗性诱饵</p>
+
+                            <div class="agent-config">
+                                <div class="config-row">
+                                    <div class="config-col">
+                                        <label>运行模式</label>
+                                        <select id="honey-mode" class="modern-select">
+                                            <option value="initialization">初始化</option>
+                                            <option value="finetune">微调优化</option>
+                                        </select>
+                                    </div>
+                                    <div class="config-col">
+                                        <label>模型</label>
+                                        <select id="honey-model" class="modern-select">
+                                            <option value="gpt-4o-mini">GPT-4o Mini</option>
+                                            <option value="gpt-4o">GPT-4o</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label class="form-label">Top-P</label>
-                                    <input type="number" class="form-input" id="honey-topp" value="0.9" step="0.1" min="0" max="1">
+                                <div class="config-row">
+                                    <div class="config-col">
+                                        <label>温度: <span id="honey-temp-val">0.1</span></label>
+                                        <input type="range" class="slider" id="honey-temp" min="0" max="1" step="0.1" value="0.1">
+                                    </div>
+                                    <div class="config-col">
+                                        <label>Top-P: <span id="honey-topp-val">0.9</span></label>
+                                        <input type="range" class="slider" id="honey-topp" min="0" max="1" step="0.1" value="0.9">
+                                    </div>
                                 </div>
                             </div>
-                            <button class="btn btn-primary" onclick="runHoneyAgent()">
-                                🚀 运行 Honey Agent
+
+                            <button class="btn-primary-gradient btn-block" onclick="runHoneyAgent()">
+                                <i class="fas fa-rocket"></i>
+                                <span>运行 Honey Agent</span>
                             </button>
-                            <div id="honey-result" class="operation-result"></div>
+
+                            <div id="honey-result" class="agent-result"></div>
                         </div>
                     </div>
 
-                    <!-- Trap Agent -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>🪤 Trap Agent</h3>
-                            <span class="badge badge-warning">陷阱生成</span>
+                    <!-- Trap Agent Card -->
+                    <div class="agent-card">
+                        <div class="agent-header agent-header-orange">
+                            <div class="agent-icon">
+                                <i class="fas fa-triangle-exclamation"></i>
+                            </div>
+                            <div class="agent-info">
+                                <h3>Trap Agent</h3>
+                                <span class="agent-badge">陷阱生成</span>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <p class="card-description">
-                                生成主机内闭环和跨主机陷阱链
-                            </p>
-                            <div class="form-group">
-                                <label class="form-label">运行模式</label>
-                                <select class="form-select" id="trap-mode">
-                                    <option value="all">完整流程</option>
-                                    <option value="host">仅主机内</option>
-                                    <option value="interhost">仅跨主机</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">OpenAI 模型</label>
-                                <input type="text" class="form-input" id="trap-model" value="gpt-4o-mini">
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label">温度</label>
-                                    <input type="number" class="form-input" id="trap-temp" value="0.15" step="0.1" min="0" max="1">
+                        <div class="agent-body">
+                            <p class="agent-description">生成主机内文件闭环和跨主机陷阱链</p>
+
+                            <div class="agent-config">
+                                <div class="config-row">
+                                    <div class="config-col">
+                                        <label>运行模式</label>
+                                        <select id="trap-mode" class="modern-select">
+                                            <option value="all">完整流程</option>
+                                            <option value="host">仅主机内</option>
+                                            <option value="interhost">仅跨主机</option>
+                                        </select>
+                                    </div>
+                                    <div class="config-col">
+                                        <label>模型</label>
+                                        <select id="trap-model" class="modern-select">
+                                            <option value="gpt-4o-mini">GPT-4o Mini</option>
+                                            <option value="gpt-4o">GPT-4o</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label class="form-label">Top-P</label>
-                                    <input type="number" class="form-input" id="trap-topp" value="0.85" step="0.1" min="0" max="1">
+                                <div class="config-row">
+                                    <div class="config-col">
+                                        <label>温度: <span id="trap-temp-val">0.15</span></label>
+                                        <input type="range" class="slider" id="trap-temp" min="0" max="1" step="0.05" value="0.15">
+                                    </div>
+                                    <div class="config-col">
+                                        <label>Top-P: <span id="trap-topp-val">0.85</span></label>
+                                        <input type="range" class="slider" id="trap-topp" min="0" max="1" step="0.05" value="0.85">
+                                    </div>
                                 </div>
                             </div>
-                            <button class="btn btn-primary" onclick="runTrapAgent()">
-                                🚀 运行 Trap Agent
+
+                            <button class="btn-primary-gradient btn-block" onclick="runTrapAgent()">
+                                <i class="fas fa-rocket"></i>
+                                <span>运行 Trap Agent</span>
                             </button>
-                            <div id="trap-result" class="operation-result"></div>
+
+                            <div id="trap-result" class="agent-result"></div>
                         </div>
                     </div>
 
-                    <!-- Preferences -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>🎯 攻击者偏好</h3>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-description">
-                                设置攻击者偏好以指导诱饵生成
-                            </p>
-                            <div class="form-group">
-                                <label class="form-label">偏好列表 (每行一个)</label>
-                                <textarea class="form-textarea" id="preferences-list" rows="6" placeholder="例如：&#10;credential theft&#10;ssh brute force&#10;data exfiltration"></textarea>
+                    <!-- Preferences Card -->
+                    <div class="agent-card full-width">
+                        <div class="agent-header agent-header-purple">
+                            <div class="agent-icon">
+                                <i class="fas fa-brain"></i>
                             </div>
-                            <div class="btn-group">
-                                <button class="btn btn-primary" onclick="savePreferences()">
-                                    💾 保存偏好
-                                </button>
-                                <button class="btn btn-secondary" onclick="loadPreferences()">
-                                    📥 加载偏好
-                                </button>
+                            <div class="agent-info">
+                                <h3>攻击者偏好</h3>
+                                <span class="agent-badge">偏好学习</span>
+                            </div>
+                        </div>
+                        <div class="agent-body">
+                            <p class="agent-description">设置攻击者偏好以指导诱饵生成</p>
+
+                            <div class="preferences-editor">
+                                <div class="editor-header">
+                                    <span>偏好列表</span>
+                                    <div class="editor-actions">
+                                        <button class="btn-small" onclick="loadPreferences()">
+                                            <i class="fas fa-folder-open"></i>
+                                        </button>
+                                        <button class="btn-small btn-primary" onclick="savePreferences()">
+                                            <i class="fas fa-save"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <textarea id="preferences-list" class="code-editor" placeholder="例如：&#10;credential theft&#10;ssh brute force&#10;data exfiltration"></textarea>
                             </div>
                         </div>
                     </div>
@@ -375,117 +581,115 @@
 
             <!-- Deception Page -->
             <div class="page" id="page-deception">
-                <div class="page-header">
-                    <h2>🎭 欺骗配置</h2>
-                    <p class="page-description">执行一致性审计并生成部署配置</p>
+                <div class="page-header-section">
+                    <div class="page-title-section">
+                        <div class="page-title-wrapper">
+                            <h1 class="page-title-large">
+                                <i class="fas fa-theater-masks"></i>
+                                欺骗配置
+                            </h1>
+                            <p class="page-subtitle">执行一致性审计并生成部署配置</p>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="content-grid">
                     <!-- Consistency Check -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>🔍 一致性审计</h3>
+                    <div class="operation-card">
+                        <div class="operation-header">
+                            <div class="operation-icon operation-icon-blue">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="operation-info">
+                                <h3>一致性审计</h3>
+                                <p>检查诱饵配置的一致性</p>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <p class="card-description">
-                                检查诱饵配置的一致性
-                            </p>
-                            <button class="btn btn-primary" onclick="runDeception('consistency')">
-                                🔍 运行审计
+                        <div class="operation-body">
+                            <button class="btn-primary-gradient" onclick="runDeception('consistency')">
+                                <i class="fas fa-play"></i>
+                                <span>运行审计</span>
                             </button>
                             <div id="consistency-result" class="operation-result"></div>
                         </div>
                     </div>
 
                     <!-- Config Generation -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>⚙️ 配置生成</h3>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-description">
-                                为部署主机生成配置文件
-                            </p>
-                            <div class="form-group">
-                                <label class="form-label">目标主机 (逗号分隔，留空表示全部)</label>
-                                <input type="text" class="form-input" id="deception-hosts" placeholder="h1, h2, h3">
+                    <div class="operation-card">
+                        <div class="operation-header">
+                            <div class="operation-icon operation-icon-green">
+                                <i class="fas fa-file-code"></i>
                             </div>
-                            <button class="btn btn-primary" onclick="runDeception('generate-configs')">
-                                ⚙️ 生成配置
+                            <div class="operation-info">
+                                <h3>配置生成</h3>
+                                <p>为部署主机生成配置文件</p>
+                            </div>
+                        </div>
+                        <div class="operation-body">
+                            <div class="config-host-selector">
+                                <label>目标主机</label>
+                                <input type="text" id="deception-hosts" class="modern-input" placeholder="逗号分隔，留空表示全部">
+                            </div>
+                            <button class="btn-primary-gradient" onclick="runDeception('generate-configs')">
+                                <i class="fas fa-cogs"></i>
+                                <span>生成配置</span>
                             </button>
                             <div id="config-result" class="operation-result"></div>
                         </div>
                     </div>
 
                     <!-- Full Pipeline -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>🚀 完整流程</h3>
-                            <span class="badge badge-success">推荐</span>
+                    <div class="operation-card operation-card-highlight">
+                        <div class="operation-header">
+                            <div class="operation-icon operation-icon-purple">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <div class="operation-info">
+                                <h3>完整流程</h3>
+                                <p>审计 + 配置生成</p>
+                                <span class="badge-recommended">推荐</span>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <p class="card-description">
-                                运行完整欺骗流程：审计 + 配置生成
-                            </p>
-                            <button class="btn btn-success btn-block" onclick="runDeception('full')">
-                                🚀 运行完整流程
+                        <div class="operation-body">
+                            <button class="btn-success-gradient btn-block" onclick="runDeception('full')">
+                                <i class="fas fa-play-circle"></i>
+                                <span>运行完整流程</span>
                             </button>
                             <div id="deception-result" class="operation-result"></div>
                         </div>
                     </div>
-
-                    <!-- Deployment Hosts -->
-                    <div class="card full-width">
-                        <div class="card-header">
-                            <h3>🖥️ 部署主机</h3>
-                            <button class="btn btn-secondary btn-sm" onclick="loadDeploymentHosts()">🔄 刷新</button>
-                        </div>
-                        <div class="card-body">
-                            <div id="deployment-hosts" class="deployment-grid">
-                                <div class="loading">加载中...</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Consistency Report -->
-                    <div class="card full-width">
-                        <div class="card-header">
-                            <h3>📋 一致性报告</h3>
-                            <button class="btn btn-secondary btn-sm" onclick="loadConsistencyReport()">🔄 刷新</button>
-                        </div>
-                        <div class="card-body">
-                            <div id="consistency-report">
-                                <p class="text-muted">暂无报告</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Operations Page -->
-            <div class="page" id="page-operations">
-                <div class="page-header">
-                    <h2>⚙️ 操作记录</h2>
-                    <p class="page-description">查看所有操作的历史记录</p>
                 </div>
 
-                <div class="card">
+                <!-- Deployment Hosts -->
+                <div class="content-card full-width">
                     <div class="card-header">
-                        <h3>操作历史</h3>
-                        <div class="card-actions">
-                            <button class="btn btn-secondary btn-sm" onclick="loadOperations()">🔄 刷新</button>
-                        </div>
+                        <h3><i class="fas fa-server"></i>部署主机</h3>
+                        <button class="btn-icon" onclick="loadDeploymentHosts()">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
                     </div>
                     <div class="card-body">
-                        <div class="operations-table">
-                            <div class="table-header">
-                                <div class="table-cell">类型</div>
-                                <div class="table-cell">状态</div>
-                                <div class="table-cell">时间</div>
-                                <div class="table-cell">操作</div>
+                        <div id="deployment-hosts" class="deployment-grid">
+                            <div class="loading-spinner">
+                                <div class="spinner"></div>
                             </div>
-                            <div id="operations-list" class="table-body">
-                                <div class="loading">加载中...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Consistency Report -->
+                <div class="content-card full-width">
+                    <div class="card-header">
+                        <h3><i class="fas fa-clipboard-check"></i>一致性报告</h3>
+                        <button class="btn-icon" onclick="loadConsistencyReport()">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="consistency-report" class="report-container">
+                            <div class="empty-state">
+                                <i class="fas fa-clipboard"></i>
+                                <p>暂无报告</p>
                             </div>
                         </div>
                     </div>
@@ -494,46 +698,71 @@
 
             <!-- Shadow Data Page -->
             <div class="page" id="page-shadow">
-                <div class="page-header">
-                    <h2>💾 影子数据</h2>
-                    <p class="page-description">查看影子文件和生成的数据</p>
+                <div class="page-header-section">
+                    <div class="page-title-section">
+                        <div class="page-title-wrapper">
+                            <h1 class="page-title-large">
+                                <i class="fas fa-database"></i>
+                                影子数据
+                            </h1>
+                            <p class="page-subtitle">查看和管理影子文件、Agent 输出和长期记忆</p>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="content-grid">
-                    <div class="card full-width">
-                        <div class="card-header">
-                            <h3>影子文件状态</h3>
-                            <button class="btn btn-secondary btn-sm" onclick="loadShadowData()">🔄 刷新</button>
+                <div class="shadow-grid">
+                    <!-- File Status -->
+                    <div class="shadow-card">
+                        <div class="shadow-card-header">
+                            <h3><i class="fas fa-folder-open"></i>文件状态</h3>
+                            <button class="btn-icon" onclick="loadShadowData()">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
                         </div>
-                        <div class="card-body">
-                            <div id="shadow-files-status" class="shadow-files">
-                                <div class="loading">加载中...</div>
+                        <div class="shadow-card-body">
+                            <div id="shadow-files-status" class="files-status">
+                                <div class="loading-spinner">
+                                    <div class="spinner"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card full-width">
-                        <div class="card-header">
-                            <h3>数据详情</h3>
+                    <!-- Data Tabs -->
+                    <div class="shadow-card full-width">
+                        <div class="shadow-card-header">
+                            <h3><i class="fas fa-chart-pie"></i>数据详情</h3>
                         </div>
-                        <div class="card-body">
-                            <div class="tabs">
-                                <button class="tab-btn active" data-tab="honey-agent">🍯 Honey Agent</button>
-                                <button class="tab-btn" data-tab="trap-agent">🪤 Trap Agent</button>
-                                <button class="tab-btn" data-tab="preferences">🎯 Attacker Preferences</button>
-                                <button class="tab-btn" data-tab="long-memory">🧠 Long Memory</button>
+                        <div class="shadow-card-body">
+                            <div class="modern-tabs">
+                                <button class="modern-tab active" data-tab="honey-agent">
+                                    <i class="fas fa-honey-pot"></i>
+                                    <span>Honey Agent</span>
+                                </button>
+                                <button class="modern-tab" data-tab="trap-agent">
+                                    <i class="fas fa-triangle-exclamation"></i>
+                                    <span>Trap Agent</span>
+                                </button>
+                                <button class="modern-tab" data-tab="preferences">
+                                    <i class="fas fa-crosshairs"></i>
+                                    <span>攻击偏好</span>
+                                </button>
+                                <button class="modern-tab" data-tab="long-memory">
+                                    <i class="fas fa-brain"></i>
+                                    <span>长期记忆</span>
+                                </button>
                             </div>
-                            <div class="tab-content">
-                                <div id="tab-honey-agent" class="tab-pane active">
+                            <div class="modern-tab-content">
+                                <div id="tab-honey-agent" class="modern-tab-pane active">
                                     <div id="honey-agent-data" class="data-viewer">加载中...</div>
                                 </div>
-                                <div id="tab-trap-agent" class="tab-pane">
+                                <div id="tab-trap-agent" class="modern-tab-pane">
                                     <div id="trap-agent-data" class="data-viewer">加载中...</div>
                                 </div>
-                                <div id="tab-preferences" class="tab-pane">
+                                <div id="tab-preferences" class="modern-tab-pane">
                                     <div id="preferences-data" class="data-viewer">加载中...</div>
                                 </div>
-                                <div id="tab-long-memory" class="tab-pane">
+                                <div id="tab-long-memory" class="modern-tab-pane">
                                     <div id="long-memory-data" class="data-viewer">加载中...</div>
                                 </div>
                             </div>
@@ -544,8 +773,16 @@
         </div>
     </main>
 
-    <!-- Toast Container -->
+    <!-- Toast Notifications -->
     <div class="toast-container" id="toast-container"></div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-content">
+            <div class="spinner-large"></div>
+            <p>处理中...</p>
+        </div>
+    </div>
 
     <script src="app.js"></script>
 </body>

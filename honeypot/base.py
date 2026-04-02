@@ -13,6 +13,7 @@ class BaseService:
     """Base class for honeypot services providing config loading and logging helpers."""
 
     name: str = "service"
+    repo_root: Path = Path(__file__).resolve().parent.parent
 
     def __init__(self, config_path: Path, **kwargs):
         self.config_path = config_path
@@ -27,6 +28,22 @@ class BaseService:
     def resolve_path(self, candidate: str) -> Path:
         base = self.config_path.parent
         return (base / candidate).resolve()
+
+    def resolve_resource_path(self, candidate: str) -> Path:
+        """Resolve config-linked assets, falling back to shared repo resources when needed."""
+        local = self.resolve_path(candidate)
+        if local.exists() or Path(candidate).is_absolute():
+            return local
+
+        relative = Path(candidate)
+        parts = list(relative.parts)
+        while parts and parts[0] in {"..", "."}:
+            parts.pop(0)
+        if parts:
+            shared = (self.repo_root / Path(*parts)).resolve()
+            if shared.exists():
+                return shared
+        return local
 
     def _resolve_log_path(self, location: str) -> Path:
         candidate = self.resolve_path(location)

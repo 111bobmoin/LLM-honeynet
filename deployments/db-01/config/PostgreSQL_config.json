@@ -1,0 +1,16 @@
+{
+  "host": "0.0.0.0",
+  "port": 5432,
+  "protocol": "tcp",
+  "version": "PostgreSQL 13.10",
+  "notes": [
+    "Default PostgreSQL port",
+    "Often has weak postgres user password",
+    "pg_hba.conf may have trust authentication"
+  ],
+  "effective_decoys": [
+    "Config at /etc/postgresql/13/main/pg_hba.conf",
+    "Data directory at /var/lib/postgresql",
+    "Backup files with credentials"
+  ]
+}

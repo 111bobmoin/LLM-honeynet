@@ -3,7 +3,6 @@
 from .analyzer import analyze_host, discover_hosts, HostAnalysis, HostEvent
 from .rules import load_rules, Rules
 from .openai_summary import OpenAISummarizer
-from .glm_summary import GLMSummarizer
 from .rag_store import ShadowRAGStore
 
 __all__ = [
@@ -14,6 +13,5 @@ __all__ = [
     "HostAnalysis",
     "HostEvent",
     "OpenAISummarizer",
-    "GLMSummarizer",
     "ShadowRAGStore",
 ]

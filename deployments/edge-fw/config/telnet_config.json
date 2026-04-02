@@ -1,0 +1,36 @@
+{
+  "host": "0.0.0.0",
+  "port": 2323,
+  "banner": "Debian GNU/Linux 11 ttyS0",
+  "login_prompt": "login: ",
+  "password_prompt": "Password: ",
+  "shell_prompt": "service@terminal:~$ ",
+  "motd": [
+    "Debian GNU/Linux 11 service console",
+    "Unauthorized use is prohibited and monitored."
+  ],
+  "users": {
+    "service": {
+      "passwords": [
+        "service123",
+        "letmein"
+      ],
+      "home": "/var/service"
+    },
+    "guest": {
+      "passwords": [
+        ""
+      ],
+      "home": "/srv/ftp/pub"
+    }
+  },
+  "fake_commands": {
+    "help": "Available commands: pwd, ls, cat, uptime, netstat -tuln, exit",
+    "uptime": " 16:55:03 up 12 days,  3:21,  2 users,  load average: 0.12, 0.24, 0.21",
+    "netstat -tuln": "Active Internet connections (only servers)\nProto Recv-Q Send-Q Local Address           Foreign Address         State\nTCP        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN\nTCP        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN\nUDP        0      0 0.0.0.0:161             0.0.0.0:*"
+  },
+  "unknown_command": "bash: command not found",
+  "failure_message": "Login incorrect",
+  "max_attempts": 3,
+  "log_file": "../logs/telnet.log"
+}

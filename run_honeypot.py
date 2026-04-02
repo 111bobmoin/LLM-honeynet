@@ -17,9 +17,19 @@ def parse_args() -> argparse.Namespace:
         help="Directory containing *_config.json files",
     )
     parser.add_argument(
+        "--deployment",
+        help="Deployment host to run from deployments/<host>/config",
+    )
+    parser.add_argument(
+        "--deployments-root",
+        default="deployments",
+        type=Path,
+        help="Root directory containing generated deployment configs",
+    )
+    parser.add_argument(
         "--services",
         default="auto",
-        help="Comma-separated services to enable (ssh,telnet,ftp,http,https,mysql) or 'auto' to load all available configs",
+        help="Comma-separated services to enable (ssh,telnet,ftp,http,https,mysql,postgresql,rdp) or 'auto' to load all available configs",
     )
     return parser.parse_args()
 
@@ -31,12 +41,19 @@ def parse_services_argument(value: str):
     return selected or None
 
 
+def resolve_config_dir(args: argparse.Namespace) -> Path:
+    if args.deployment:
+        return args.deployments_root / args.deployment / "config"
+    return args.config_dir
+
+
 async def main_async(args: argparse.Namespace) -> None:
     services = parse_services_argument(args.services)
-    runtime = HoneypotRuntime(args.config_dir, services=services)
+    config_dir = resolve_config_dir(args)
+    runtime = HoneypotRuntime(config_dir, services=services)
     runtime.load_services()
     if not runtime.services:
-        raise RuntimeError("No services loaded. Provide configs or specify --services.")
+        raise RuntimeError(f"No services loaded from {config_dir}. Provide configs or specify --services.")
     await runtime.start()
 
 

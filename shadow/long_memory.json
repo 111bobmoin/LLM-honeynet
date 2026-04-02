@@ -12,10 +12,11 @@
         "Weak credentials effective: root/toor, admin/password123"
       ],
       "effective_decoys": [
-        "Fake authorized_keys with backdoor entries",
-        "Old SSH key format for realism",
-        "Welcome banner with company name"
-      ]
+        "credential_access"
+      ],
+      "host": "jump-ops",
+      "port": 22,
+      "last_seen": "2026-04-02T07:06:10Z"
     },
     "80/tcp": {
       "service": "http",
@@ -27,10 +28,13 @@
         "Common web ports attract reconnaissance"
       ],
       "effective_decoys": [
-        "Admin login panel at /admin",
-        "Config files at /config.php",
-        "Backup files at /backup/"
-      ]
+        "web_application",
+        "hidden_paths"
+      ],
+      "host": "dmz-web-01",
+      "server_header": "Apache/2.4.52 (Ubuntu)",
+      "port": 80,
+      "last_seen": "2026-04-02T07:03:21Z"
     },
     "443/tcp": {
       "service": "https",
@@ -42,9 +46,12 @@
         "TLS 1.2 only for slight obsolescence"
       ],
       "effective_decoys": [
-        "SSL certificate with generic company name",
-        "Private keys in predictable locations"
-      ]
+        "web_application"
+      ],
+      "host": "edge-fw",
+      "server_header": "nginx/1.22.1",
+      "port": 443,
+      "last_seen": "2026-04-02T07:05:22Z"
     },
     "3306/tcp": {
       "service": "mysql",
@@ -59,7 +66,10 @@
         "Config file at /etc/mysql/my.cnf",
         "Data directory at /var/lib/mysql",
         "Backup scripts with hardcoded credentials"
-      ]
+      ],
+      "host": "db-01",
+      "port": 3306,
+      "last_seen": "2026-04-02T07:02:26Z"
     },
     "21/tcp": {
       "service": "ftp",
@@ -71,10 +81,12 @@
         "Often has readable config files"
       ],
       "effective_decoys": [
-        "Welcome banner with site info",
-        "Hidden files in home directory",
-        "Backup files in FTP root"
-      ]
+        "credential_access"
+      ],
+      "host": "fileserver-01",
+      "banner": "220 (vsFTPd 3.0.3)",
+      "port": 21,
+      "last_seen": "2026-04-02T07:05:37Z"
     },
     "23/tcp": {
       "service": "telnet",
@@ -104,7 +116,64 @@
         "Config at /etc/postgresql/13/main/pg_hba.conf",
         "Data directory at /var/lib/postgresql",
         "Backup files with credentials"
-      ]
+      ],
+      "host": "db-01",
+      "port": 5432,
+      "last_seen": "2026-04-01T12:09:40Z"
+    },
+    "2222/tcp": {
+      "service": "ssh",
+      "host": "bastion-01",
+      "banner": "SSH-2.0-OpenSSH_8.4p1 Debian-5",
+      "effective_decoys": [
+        "credential_access"
+      ],
+      "port": 2222,
+      "protocol": "tcp",
+      "last_seen": "2026-04-01T12:00:29Z"
+    },
+    "8080/tcp": {
+      "service": "http",
+      "host": "jump-ops",
+      "server_header": "Apache/2.4.52 (Ubuntu)",
+      "effective_decoys": [
+        "web_application",
+        "hidden_paths"
+      ],
+      "port": 8080,
+      "protocol": "tcp",
+      "last_seen": "2026-04-02T07:06:10Z"
+    },
+    "8443/tcp": {
+      "service": "https",
+      "host": "edge-fw",
+      "server_header": "nginx/1.22.1",
+      "effective_decoys": [
+        "web_application"
+      ],
+      "port": 8443,
+      "protocol": "tcp",
+      "last_seen": "2026-03-16T08:57:33Z"
+    },
+    "5000/tcp": {
+      "service": "http",
+      "host": "app-01",
+      "server_header": "Apache/2.4.52 (Ubuntu)",
+      "effective_decoys": [
+        "web_application",
+        "hidden_paths"
+      ],
+      "port": 5000,
+      "protocol": "tcp",
+      "last_seen": "2026-04-02T07:01:06Z"
+    },
+    "3389/tcp": {
+      "service": "rdp",
+      "host": "bastion-01",
+      "banner": "RDP Honeypot",
+      "port": 3389,
+      "protocol": "tcp",
+      "last_seen": "2026-04-01T12:09:16Z"
     }
   },
   "successful_patterns": [
@@ -197,6 +266,440 @@
       }
     ]
   },
-  "config_history": [],
-  "last_updated": "2026-03-16T00:00:00Z"
+  "config_history": [
+    {
+      "timestamp": "2026-03-16T08:43:29Z",
+      "host": "app-01",
+      "summary": {
+        "host": "app-01",
+        "services": [
+          "https"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-03-16T08:44:51Z",
+      "host": "bastion-01",
+      "summary": {
+        "host": "bastion-01",
+        "services": [
+          "ssh"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-03-16T08:46:01Z",
+      "host": "db-01",
+      "summary": {
+        "host": "db-01",
+        "services": [
+          "MySQL",
+          "PostgreSQL"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-03-16T08:46:33Z",
+      "host": "dmz-api-01",
+      "summary": {
+        "host": "dmz-api-01",
+        "services": [
+          "https"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-03-16T08:48:17Z",
+      "host": "dmz-web-01",
+      "summary": {
+        "host": "dmz-web-01",
+        "services": [
+          "http",
+          "https"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-03-16T08:49:40Z",
+      "host": "edge-fw",
+      "summary": {
+        "host": "edge-fw",
+        "services": [
+          "http",
+          "https",
+          "ssh"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-03-16T08:50:52Z",
+      "host": "app-01",
+      "summary": {
+        "host": "app-01",
+        "services": [
+          "https"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-03-16T08:52:31Z",
+      "host": "bastion-01",
+      "summary": {
+        "host": "bastion-01",
+        "services": [
+          "ssh"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-03-16T08:53:38Z",
+      "host": "db-01",
+      "summary": {
+        "host": "db-01",
+        "services": [
+          "MySQL",
+          "PostgreSQL"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-03-16T08:55:17Z",
+      "host": "dmz-api-01",
+      "summary": {
+        "host": "dmz-api-01",
+        "services": [
+          "https"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-03-16T08:56:15Z",
+      "host": "dmz-web-01",
+      "summary": {
+        "host": "dmz-web-01",
+        "services": [
+          "http",
+          "https"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-03-16T08:57:33Z",
+      "host": "edge-fw",
+      "summary": {
+        "host": "edge-fw",
+        "services": [
+          "http",
+          "https",
+          "ssh"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-03-17T06:06:54Z",
+      "host": "app-01",
+      "summary": {
+        "host": "app-01",
+        "services": [
+          "https"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-01T12:00:05Z",
+      "host": "app-01",
+      "summary": {
+        "host": "app-01",
+        "services": [
+          "http",
+          "mysql"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-01T12:00:29Z",
+      "host": "bastion-01",
+      "summary": {
+        "host": "bastion-01",
+        "services": [
+          "ssh"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-01T12:00:40Z",
+      "host": "db-01",
+      "summary": {
+        "host": "db-01",
+        "services": [
+          "mysql"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-01T12:01:05Z",
+      "host": "dmz-api-01",
+      "summary": {
+        "host": "dmz-api-01",
+        "services": [
+          "http",
+          "https"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-01T12:01:31Z",
+      "host": "dmz-web-01",
+      "summary": {
+        "host": "dmz-web-01",
+        "services": [
+          "http",
+          "https"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-01T12:03:51Z",
+      "host": "edge-fw",
+      "summary": {
+        "host": "edge-fw",
+        "services": [
+          "https",
+          "ssh"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-01T12:04:08Z",
+      "host": "fileserver-01",
+      "summary": {
+        "host": "fileserver-01",
+        "services": [
+          "ftp"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-01T12:04:55Z",
+      "host": "jump-ops",
+      "summary": {
+        "host": "jump-ops",
+        "services": [
+          "ssh",
+          "http"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-01T12:08:59Z",
+      "host": "app-01",
+      "summary": {
+        "host": "app-01",
+        "services": [
+          "http",
+          "mysql"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-01T12:09:16Z",
+      "host": "bastion-01",
+      "summary": {
+        "host": "bastion-01",
+        "services": [
+          "ssh",
+          "rdp"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-01T12:09:40Z",
+      "host": "db-01",
+      "summary": {
+        "host": "db-01",
+        "services": [
+          "mysql",
+          "postgresql"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-01T12:10:01Z",
+      "host": "dmz-api-01",
+      "summary": {
+        "host": "dmz-api-01",
+        "services": [
+          "http",
+          "https"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-01T12:10:49Z",
+      "host": "dmz-web-01",
+      "summary": {
+        "host": "dmz-web-01",
+        "services": [
+          "http",
+          "https"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-01T12:11:17Z",
+      "host": "edge-fw",
+      "summary": {
+        "host": "edge-fw",
+        "services": [
+          "https",
+          "ssh"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-01T12:11:29Z",
+      "host": "fileserver-01",
+      "summary": {
+        "host": "fileserver-01",
+        "services": [
+          "ftp"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-01T12:11:58Z",
+      "host": "jump-ops",
+      "summary": {
+        "host": "jump-ops",
+        "services": [
+          "ssh",
+          "http"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-02T07:01:06Z",
+      "host": "app-01",
+      "summary": {
+        "host": "app-01",
+        "services": [
+          "http",
+          "mysql"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-02T07:01:27Z",
+      "host": "bastion-01",
+      "summary": {
+        "host": "bastion-01",
+        "services": [
+          "ssh",
+          "http"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-02T07:02:26Z",
+      "host": "db-01",
+      "summary": {
+        "host": "db-01",
+        "services": [
+          "mysql"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-02T07:02:57Z",
+      "host": "dmz-api-01",
+      "summary": {
+        "host": "dmz-api-01",
+        "services": [
+          "http",
+          "https"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-02T07:03:21Z",
+      "host": "dmz-web-01",
+      "summary": {
+        "host": "dmz-web-01",
+        "services": [
+          "http",
+          "https"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-02T07:05:22Z",
+      "host": "edge-fw",
+      "summary": {
+        "host": "edge-fw",
+        "services": [
+          "https",
+          "ssh"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-02T07:05:37Z",
+      "host": "fileserver-01",
+      "summary": {
+        "host": "fileserver-01",
+        "services": [
+          "ftp"
+        ],
+        "has_filesystem": true
+      }
+    },
+    {
+      "timestamp": "2026-04-02T07:06:10Z",
+      "host": "jump-ops",
+      "summary": {
+        "host": "jump-ops",
+        "services": [
+          "ssh",
+          "http"
+        ],
+        "has_filesystem": true
+      }
+    }
+  ],
+  "last_updated": "2026-04-02T07:06:10Z"
 }

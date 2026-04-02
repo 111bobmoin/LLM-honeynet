@@ -1,0 +1,41 @@
+{
+  "host": "0.0.0.0",
+  "port": 2222,
+  "banner": "SSH-2.0-OpenSSH_8.4p1 Debian-5",
+  "pre_auth_messages": [
+    "Authorized access only.",
+    "All activities are monitored and recorded."
+  ],
+  "users": {
+    "root": {
+      "passwords": [
+        "toor",
+        "changeme123"
+      ],
+      "home": "/root",
+      "motd": [
+        "Linux intranet 5.15.0-92-generic #102-Ubuntu SMP x86_64",
+        "Last login: Fri Apr 12 16:54:44 2024 from 10.54.17.23"
+      ]
+    },
+    "admin": {
+      "passwords": [
+        "P@ssw0rd!",
+        "admin2024"
+      ],
+      "home": "/home/admin",
+      "motd": [
+        "Welcome to the infrastructure bastion host."
+      ]
+    }
+  },
+  "shell_prompt": "root@intranet:~# ",
+  "fake_commands": {
+    "uname -a": "Linux intranet 5.15.0-92-generic #102-Ubuntu SMP Tue Jan 16 10:44:31 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux",
+    "id": "uid=0(root) gid=0(root) groups=0(root)",
+    "last": "root     pts/0        10.54.17.23     Fri Apr 12 16:54   still logged in"
+  },
+  "failure_message": "Permission denied, please try again.",
+  "max_auth_attempts": 4,
+  "log_file": "../logs/ssh.log"
+}

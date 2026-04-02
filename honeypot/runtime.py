@@ -7,7 +7,16 @@ from typing import Iterable, List, Optional, Sequence, Type
 
 from .base import BaseService
 from .filesystem import FakeFilesystem
-from .services import FtpService, HttpService, HttpsService, MysqlService, SshService, TelnetService
+from .services import (
+    FtpService,
+    HttpService,
+    HttpsService,
+    MysqlService,
+    PostgresqlService,
+    RdpService,
+    SshService,
+    TelnetService,
+)
 
 
 class HoneypotRuntime:
@@ -20,6 +29,8 @@ class HoneypotRuntime:
         "http": HttpService,
         "https": HttpsService,
         "mysql": MysqlService,
+        "postgresql": PostgresqlService,
+        "rdp": RdpService,
     }
     FILESYSTEM_SERVICES = {"ssh", "telnet", "ftp"}
 

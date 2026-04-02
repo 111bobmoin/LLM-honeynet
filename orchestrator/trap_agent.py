@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from .memory import HostNode, ShortTermMemory, TrapAttachment
-from llm import GLMClient, GLMClientConfig
+from llm import OpenAIClient, OpenAIClientConfig
 
 
 def _read_json(path: Path) -> Optional[Dict[str, Any]]:
@@ -25,16 +25,11 @@ class TrapAgentConfig:
     topology_path: Path = Path("shadow/shadow_topology.json")
     fallback_topology_path: Path = Path("enterprise/enterprise_topology.json")
     preferences_path: Path = Path("shadow/attacker_preferences.json")
-    glm_key_path: Path = Path("secrets/glm_api_key.txt")
-    glm_model: str = "glm-4-flash"
-    glm_temperature: float = 0.15
-    glm_top_p: float = 0.85
-    glm_max_tokens: int = 4096
-    # Legacy OpenAI aliases for backward compatibility
-    openai_key_path: Path = Path("secrets/glm_api_key.txt")
-    openai_model: str = "glm-4-flash"
+    openai_key_path: Path = Path("secrets/openai_api_key.txt")
+    openai_model: str = "gpt-4o-mini"
     openai_temperature: float = 0.15
     openai_top_p: float = 0.85
+    openai_max_tokens: int = 4096
 
 
 class TrapAgent:
@@ -42,7 +37,7 @@ class TrapAgent:
 
     def __init__(self, config: Optional[TrapAgentConfig] = None) -> None:
         self.config = config or TrapAgentConfig()
-        self._glm_client: Optional[GLMClient] = None
+        self._openai_client: Optional[OpenAIClient] = None
         self.short_memory = ShortTermMemory(self.config.short_memory_path)
 
     # ------------------------------------------------------------------ public API
@@ -172,23 +167,22 @@ class TrapAgent:
             return [str(item) for item in data if isinstance(item, (str, int, float))]
         return ["credential reuse", "pivot to crown jewels", "escape detection"]
 
-    # -------------------------------------------------------------- GLM client
+    # ------------------------------------------------------------ OpenAI client
 
     def _invoke_generation(self, instructions: str, context: Dict[str, Any], stage: str) -> Dict[str, Any]:
-        client = self._lazy_glm_client()
+        client = self._lazy_openai_client()
         if not client:
             raise RuntimeError(
-                f"GLM client unavailable. Provide a valid API key and install the zhipuai package to generate {stage}."
+                f"OpenAI client unavailable. Provide a valid API key and install the openai package to generate {stage}."
             )
         messages = [
             {"role": "system", "content": instructions},
             {"role": "user", "content": json.dumps(context, ensure_ascii=False)},
         ]
 
-        # Support legacy openai_* config parameters
-        model = self.config.glm_model or self.config.openai_model
-        temperature = self.config.glm_temperature if hasattr(self.config, 'glm_temperature') else self.config.openai_temperature
-        top_p = self.config.glm_top_p if hasattr(self.config, 'glm_top_p') else self.config.openai_top_p
+        model = self.config.openai_model
+        temperature = self.config.openai_temperature
+        top_p = self.config.openai_top_p
 
         try:
             response = client.chat_completion(
@@ -199,40 +193,37 @@ class TrapAgent:
                 response_format={"type": "json_object"},
             )
         except Exception as exc:  # noqa: BLE001
-            raise RuntimeError(f"Failed to generate {stage} via GLM: {exc}") from exc
+            raise RuntimeError(f"Failed to generate {stage} via OpenAI: {exc}") from exc
 
         raw = response.get("content", "").strip()
         if not raw:
-            raise RuntimeError(f"GLM returned empty content for {stage}.")
+            raise RuntimeError(f"OpenAI returned empty content for {stage}.")
         try:
             return json.loads(raw)
         except json.JSONDecodeError as exc:  # pragma: no cover
             snippet = raw[:200]
-            raise RuntimeError(f"GLM response for {stage} is not valid JSON (preview: {snippet})") from exc
+            raise RuntimeError(f"OpenAI response for {stage} is not valid JSON (preview: {snippet})") from exc
 
-    def _lazy_glm_client(self) -> Optional[GLMClient]:
-        if self._glm_client is False:
+    def _lazy_openai_client(self) -> Optional[OpenAIClient]:
+        if self._openai_client is False:
             return None
-        if self._glm_client is not None:
-            return self._glm_client
+        if self._openai_client is not None:
+            return self._openai_client
 
-        # Determine API key path (prefer GLM path, fall back to OpenAI path for compatibility)
-        key_path = self.config.glm_key_path if hasattr(self.config, 'glm_key_path') else self.config.openai_key_path
-
-        config = GLMClientConfig(
-            api_key_path=key_path,
-            model=self.config.glm_model or self.config.openai_model,
-            temperature=self.config.glm_temperature if hasattr(self.config, 'glm_temperature') else self.config.openai_temperature,
-            top_p=self.config.glm_top_p if hasattr(self.config, 'glm_top_p') else self.config.openai_top_p,
-            max_tokens=self.config.glm_max_tokens if hasattr(self.config, 'glm_max_tokens') else None,
+        config = OpenAIClientConfig(
+            api_key_path=self.config.openai_key_path,
+            model=self.config.openai_model,
+            temperature=self.config.openai_temperature,
+            top_p=self.config.openai_top_p,
+            max_tokens=self.config.openai_max_tokens,
         )
 
-        client = GLMClient(config)
+        client = OpenAIClient(config)
         if client.is_available():
-            self._glm_client = client
-            return self._glm_client
+            self._openai_client = client
+            return self._openai_client
 
-        self._glm_client = False
+        self._openai_client = False
         return None
 
 
