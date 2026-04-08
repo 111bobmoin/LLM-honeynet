@@ -39,10 +39,8 @@ secrets/*
 # Generated data (optional - comment out if you want to track these)
 # shadow/*.json
 # deployments/
-benchmark_results/
-certs/
-deployments/*/certs/
-shadow/*.json
+benchmark_results/*
+shadow/*
 
 # Logs
 *.log
