@@ -1,6 +1,6 @@
 {
   "host": "0.0.0.0",
-  "port": 443,
+  "port": 8443,
   "certificate": "../certs/honeypot.crt",
   "private_key": "../certs/honeypot.key",
   "tls_versions": [
@@ -29,6 +29,15 @@
         "Content-Type": "application/json"
       },
       "body": "{\"service\": \"metrics\", \"version\": \"1.14.0\", \"build\": \"20240412\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/actuator/env",
+      "status": 200,
+      "response_headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "{\"activeProfiles\":[\"prod\"],\"propertySources\":[{\"name\":\"applicationConfig\",\"properties\":{\"spring.datasource.username\":{\"value\":\"readonly\"},\"spring.datasource.url\":{\"value\":\"jdbc:mysql://127.0.0.1:3306/appdb\"},\"management.endpoints.web.exposure.include\":{\"value\":\"health,info,env\"}}}]}"
     }
   ],
   "not_found": {

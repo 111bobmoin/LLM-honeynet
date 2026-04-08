@@ -1,4 +1,5 @@
 [
-  "Updated FTP service configuration to include user details and responses.",
-  "No changes were made to the existing filesystem structure, but confirmed the presence of relevant files."
+  "No template-backed network service changes were made because observed host exposure is SMB/NFS-centric and declared template services do not cover ports 445 or 2049.",
+  "Added and reinforced filesystem lures matching the observed finance, password leak, archive, and legacy key artifacts.",
+  "Included a light app-01 reference in backup metadata to align with chain-3 without changing ports or inventing unsupported services."
 ]

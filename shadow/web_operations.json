@@ -1,0 +1,3683 @@
+{
+  "full_pipeline_1775182924939": {
+    "id": "full_pipeline_1775182924939",
+    "type": "full_pipeline",
+    "status": "running",
+    "params": {
+      "openai": false,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 1.0
+    },
+    "result": {
+      "current_step": "perception",
+      "steps": [
+        {
+          "name": "perception",
+          "status": "running",
+          "command": [
+            "python3",
+            "run_perception.py"
+          ],
+          "output_tail": ""
+        }
+      ],
+      "openai": false,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 1.0
+    },
+    "error": null,
+    "timestamp": "2026-04-03T10:22:04.947404",
+    "created_at": "2026-04-03T10:22:04.939178"
+  },
+  "full_pipeline_1775182955513": {
+    "id": "full_pipeline_1775182955513",
+    "type": "full_pipeline",
+    "status": "running",
+    "params": {
+      "openai": true,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 10.0
+    },
+    "result": {
+      "current_step": "honey_agent",
+      "steps": [
+        {
+          "name": "perception",
+          "status": "completed",
+          "command": [
+            "python3",
+            "run_perception.py",
+            "--openai"
+          ],
+          "output_tail": "[app-01] max stage -> none\n[bastion-01] max stage -> none\n[db-01] max stage -> none\n[dmz-api-01] max stage -> none\n[dmz-web-01] max stage -> none\n[edge-fw] max stage -> none\n[fileserver-01] max stage -> none\n[jump-ops] max stage -> none\n\n[OpenAI Preference Summary]\n### Host Assessments\n\n- **app-01**\n  - Max Stage: 0\n  - Events: None observed\n  - **Objective & Capability**: No activity detected, likely not targeted.\n\n- **bastion-01**\n  - Max Stage: 0\n  - Events: None observed\n  - **Objective & Capability**: No activity detected, likely not targeted.\n\n- **db-01**\n  - Max Stage: 0\n  - Events: None observed\n  - **Objective & Capability**: No activity detected, likely not targeted.\n\n- **dmz-api-01**\n  - Max Stage: 0\n  - Events: None observed\n  - **Objective & Capability**: No activity detected, likely not targeted.\n\n- **dmz-web-01**\n  - Max Stage: 0\n  - Events: None observed\n  - **Objective & Capability**: No activity detected, likely not targeted.\n\n- **edge-fw**\n  - Max Stage: 0\n  - Events: None observed\n  - **Objective & Capability**: No activity detected, likely not targeted.\n\n- **fileserver-01**\n  - Max Stage: 0\n  - Events: None observed\n  - **Objective & Capability**: No activity detected, likely not targeted.\n\n- **jump-ops**\n  - Max Stage: 0\n  - Events: None observed\n  - **Objective & Capability**: No activity detected, likely not targeted.\n\n### Overall Assessment\n- **General Conclusion**: No active intrusions or attempted breaches observed across all hosts.\n- **Attacker Objectives and Capability Maturity**: \n  - No capabilities demonstrated; potential attackers may be assessing the environment with no engagements.\n- **Preferred Protocols & Exploited Services**: Not applicable; no data available.\n- **Lateral Movement & Data Theft**: Neither attempted nor successful; all systems remain untouched. \n\nThis environment currently appears secure and unbreached as per the data provided.\n\n[Attacker Preferences]\nSaved 40 preference(s) to shadow/attacker_preferences.json\n\n[Shadow Topology]\nSaved topology to /home/xiaowang/Desktop/llm_honeynet/shadow/shadow_topology.json\nSaved Mininet launcher to /home/xiaowang/Desktop/llm_honeynet/shadow/mininet_shadow.py\n",
+          "duration": 12.53139877319336
+        },
+        {
+          "name": "honey_agent",
+          "status": "running",
+          "command": [
+            "python3",
+            "run_honey_agent.py",
+            "--mode",
+            "initialization"
+          ],
+          "output_tail": ""
+        }
+      ],
+      "openai": true,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 10.0
+    },
+    "error": null,
+    "timestamp": "2026-04-03T10:22:48.047600",
+    "created_at": "2026-04-03T10:22:35.513731"
+  },
+  "full_pipeline_1775200514162": {
+    "id": "full_pipeline_1775200514162",
+    "type": "full_pipeline",
+    "status": "completed",
+    "params": {
+      "openai": false,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 1.0
+    },
+    "result": {
+      "current_step": "deception",
+      "steps": [
+        {
+          "name": "perception",
+          "status": "completed",
+          "command": [
+            "python3",
+            "run_perception.py"
+          ],
+          "output_tail": "ok python3 run_perception.py",
+          "duration": 1.2122812271118164
+        },
+        {
+          "name": "honey_agent",
+          "status": "completed",
+          "command": [
+            "python3",
+            "run_honey_agent.py",
+            "--mode",
+            "initialization"
+          ],
+          "output_tail": "ok python3 run_honey_agent.py --mode initialization",
+          "duration": 1.2018418312072754
+        },
+        {
+          "name": "trap_agent",
+          "status": "completed",
+          "command": [
+            "python3",
+            "run_trap_agent.py",
+            "all"
+          ],
+          "output_tail": "ok python3 run_trap_agent.py all",
+          "duration": 1.202014446258545
+        },
+        {
+          "name": "deception",
+          "status": "completed",
+          "command": [
+            "python3",
+            "run_deception.py",
+            "--mode",
+            "full"
+          ],
+          "output_tail": "ok python3 run_deception.py --mode full",
+          "duration": 1.2023439407348633
+        }
+      ],
+      "openai": false,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 1.0,
+      "heartbeat_at": "2026-04-03T15:15:18.986257",
+      "current_step_started_at": "2026-04-03T15:15:17.783898",
+      "finished_at": "2026-04-03T15:15:18.986850",
+      "summary": {
+        "step_count": 4,
+        "completed_steps": 4
+      }
+    },
+    "error": null,
+    "timestamp": "2026-04-03T15:15:18.987891",
+    "created_at": "2026-04-03T15:15:14.162849"
+  },
+  "full_pipeline_1775204838686": {
+    "id": "full_pipeline_1775204838686",
+    "type": "full_pipeline",
+    "status": "running",
+    "params": {
+      "openai": true,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 10.0
+    },
+    "result": {
+      "current_step": "honey_agent",
+      "steps": [
+        {
+          "name": "perception",
+          "status": "completed",
+          "command": [
+            "python3",
+            "run_perception.py",
+            "--openai"
+          ],
+          "output_tail": "[app-01] max stage -> none\n[bastion-01] max stage -> none\n[db-01] max stage -> none\n[dmz-api-01] max stage -> none\n[dmz-web-01] max stage -> none\n[edge-fw] max stage -> none\n[fileserver-01] max stage -> none\n[jump-ops] max stage -> none\n\n[OpenAI Preference Summary]\n### Host Analysis\n\n- **app-01:**\n  - Max Stage: 0\n  - Events: None\n  - **Assessment:** No activity detected.\n\n- **bastion-01:**\n  - Max Stage: 0\n  - Events: None\n  - **Assessment:** No activity detected.\n\n- **db-01:**\n  - Max Stage: 0\n  - Events: None\n  - **Assessment:** No activity detected.\n\n- **dmz-api-01:**\n  - Max Stage: 0\n  - Events: None\n  - **Assessment:** No activity detected.\n\n- **dmz-web-01:**\n  - Max Stage: 0\n  - Events: None\n  - **Assessment:** No activity detected.\n\n- **edge-fw:**\n  - Max Stage: 0\n  - Events: None\n  - **Assessment:** No activity detected.\n\n- **fileserver-01:**\n  - Max Stage: 0\n  - Events: None\n  - **Assessment:** No activity detected.\n\n- **jump-ops:**\n  - Max Stage: 0\n  - Events: None\n  - **Assessment:** No activity detected.\n\n### Overall Assessment\n- **Attacker's Objectives:** Currently indistinguishable; no activities indicate any intent or malicious actions.\n- **Capability Maturity:** Low; no evidence of attack progression or sophistication.\n- **Preferred Protocols/Exploited Services:** None identified as there are no recorded events.\n- **Lateral Movement/Data Theft:** Neither was successful as no stages of intrusion were initiated. \n\n**Conclusion:** The monitored hosts have not experienced any intrusion attempts or events, indicating either a lack of attempted attacks or successful defenses in place.\n\n[Attacker Preferences]\nSaved 39 preference(s) to shadow/attacker_preferences.json\n\n[Shadow Topology]\nSaved topology to /home/xiaowang/Desktop/llm_honeynet/shadow/shadow_topology.json\nSaved Mininet launcher to /home/xiaowang/Desktop/llm_honeynet/shadow/mininet_shadow.py\n",
+          "duration": 14.028594732284546
+        },
+        {
+          "name": "honey_agent",
+          "status": "running",
+          "command": [
+            "python3",
+            "run_honey_agent.py",
+            "--mode",
+            "initialization"
+          ],
+          "output_tail": ""
+        }
+      ],
+      "openai": true,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 10.0,
+      "heartbeat_at": "2026-04-03T16:27:32.719833",
+      "current_step_started_at": "2026-04-03T16:27:32.718019"
+    },
+    "error": null,
+    "timestamp": "2026-04-03T16:27:32.719847",
+    "created_at": "2026-04-03T16:27:18.686530"
+  },
+  "honey_agent_1775205761617": {
+    "id": "honey_agent_1775205761617",
+    "type": "honey_agent",
+    "status": "running",
+    "params": {
+      "mode": "initialization"
+    },
+    "result": null,
+    "error": null,
+    "timestamp": "2026-04-03T16:42:41.618413",
+    "created_at": "2026-04-03T16:42:41.617383"
+  },
+  "full_pipeline_1775206239194": {
+    "id": "full_pipeline_1775206239194",
+    "type": "full_pipeline",
+    "status": "running",
+    "params": {
+      "openai": false,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 10.0
+    },
+    "result": {
+      "current_step": "deception",
+      "steps": [
+        {
+          "name": "perception",
+          "status": "completed",
+          "command": [
+            "python3",
+            "run_perception.py"
+          ],
+          "output_tail": "[app-01] max stage -> none\n[bastion-01] max stage -> none\n[db-01] max stage -> none\n[dmz-api-01] max stage -> none\n[dmz-web-01] max stage -> none\n[edge-fw] max stage -> none\n[fileserver-01] max stage -> none\n[jump-ops] max stage -> none\n\n[Shadow Topology]\nSaved topology to /home/xiaowang/Desktop/llm_honeynet/shadow/shadow_topology.json\nSaved Mininet launcher to /home/xiaowang/Desktop/llm_honeynet/shadow/mininet_shadow.py\n",
+          "duration": 0.585606575012207
+        },
+        {
+          "name": "honey_agent",
+          "status": "completed",
+          "command": [
+            "python3",
+            "run_honey_agent.py",
+            "--mode",
+            "initialization"
+          ],
+          "output_tail": "[HoneyAgent] step 1/3: generating ports per host\n[HoneyAgent] step 2/3: generating files per host/port\n[HoneyAgent] step 3/3: generating vulns per host/port/file\n[+] Honey Agent initialization completed and saved to shadow/honey_agent.json\n",
+          "duration": 84.14893293380737
+        },
+        {
+          "name": "trap_agent",
+          "status": "completed",
+          "command": [
+            "python3",
+            "run_trap_agent.py",
+            "all"
+          ],
+          "output_tail": "\",\n            \"/var/lib/mysql/backup.sql\",\n            \"/var/lib/mysql/finance_data.csv\"\n          ]\n        ],\n        \"credential_chains\": [\n          {\n            \"name\": \"Chain 1\",\n            \"steps\": [\n              {\n                \"host\": \"edge-fw\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"bastion-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"dmz-web-01\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"app-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"edge-fw\",\n                \"tier\": \"low\"\n              }\n            ]\n          },\n          {\n            \"name\": \"Chain 2\",\n            \"steps\": [\n              {\n                \"host\": \"jump-ops\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"dmz-api-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"db-01\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"fileserver-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"jump-ops\",\n                \"tier\": \"low\"\n              }\n            ]\n          }\n        ]\n      },\n      \"vulnerabilities\": [\n        {\n          \"type\": \"config leak\",\n          \"target_file\": \"/var/lib/postgresql/data/passwords.txt\"\n        },\n        {\n          \"type\": \"weak creds\",\n          \"target_file\": \"/var/lib/mysql/finance_data.csv\"\n        }\n      ]\n    },\n    {\n      \"name\": \"fileserver-01\",\n      \"ports\": [\n        {\n          \"port\": 445,\n          \"service\": \"microsoft-ds\",\n          \"files\": [\n            {\n              \"path\": \"/shared/finance/2023_budget.xlsx\"\n            },\n            {\n              \"path\": \"/shared/backup/important_files.zip\"\n            }\n          ]\n        },\n        {\n          \"port\": 21,\n          \"service\": \"ftp\",\n          \"files\": [\n            {\n              \"path\": \"/ftp/backup/user_data.bak\"\n            },\n            {\n              \"path\": \"/ftp/finance/financial_report.pdf\"\n            }\n          ]\n        }\n      ],\n      \"traps\": {\n        \"host_loops\": [\n          [\n            \"/shared/finance/2023_budget.xlsx\",\n            \"/shared/backup/important_files.zip\",\n            \"/ftp/backup/user_data.bak\",\n            \"/ftp/finance/financial_report.pdf\"\n          ]\n        ],\n        \"credential_chains\": [\n          {\n            \"name\": \"Chain 1\",\n            \"steps\": [\n              {\n                \"host\": \"edge-fw\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"bastion-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"dmz-web-01\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"app-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"edge-fw\",\n                \"tier\": \"low\"\n              }\n            ]\n          },\n          {\n            \"name\": \"Chain 2\",\n            \"steps\": [\n              {\n                \"host\": \"jump-ops\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"dmz-api-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"db-01\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"fileserver-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"jump-ops\",\n                \"tier\": \"low\"\n              }\n            ]\n          }\n        ]\n      },\n      \"vulnerabilities\": [\n        {\n          \"type\": \"file upload\",\n          \"target_file\": \"/shared/finance/2023_budget.xlsx\"\n        },\n        {\n          \"type\": \"config leak\",\n          \"target_file\": \"/ftp/finance/financial_report.pdf\"\n        }\n      ]\n    }\n  ]\n}\n",
+          "duration": 14.748286724090576
+        },
+        {
+          "name": "deception",
+          "status": "running",
+          "command": [
+            "python3",
+            "run_deception.py",
+            "--mode",
+            "full"
+          ],
+          "output_tail": ""
+        }
+      ],
+      "openai": false,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 10.0,
+      "heartbeat_at": "2026-04-03T16:53:38.795812",
+      "current_step_started_at": "2026-04-03T16:52:18.681693"
+    },
+    "error": null,
+    "timestamp": "2026-04-03T16:53:38.795839",
+    "created_at": "2026-04-03T16:50:39.194351"
+  },
+  "full_pipeline_1775206540584": {
+    "id": "full_pipeline_1775206540584",
+    "type": "full_pipeline",
+    "status": "running",
+    "params": {
+      "openai": false,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 10.0
+    },
+    "result": {
+      "current_step": "honey_agent",
+      "steps": [
+        {
+          "name": "perception",
+          "status": "completed",
+          "command": [
+            "python3",
+            "run_perception.py"
+          ],
+          "output_tail": "[app-01] max stage -> none\n[bastion-01] max stage -> none\n[db-01] max stage -> none\n[dmz-api-01] max stage -> none\n[dmz-web-01] max stage -> none\n[edge-fw] max stage -> none\n[fileserver-01] max stage -> none\n[jump-ops] max stage -> none\n\n[Shadow Topology]\nSaved topology to /home/xiaowang/Desktop/llm_honeynet/shadow/shadow_topology.json\nSaved Mininet launcher to /home/xiaowang/Desktop/llm_honeynet/shadow/mininet_shadow.py\n",
+          "duration": 0.5631434917449951
+        },
+        {
+          "name": "honey_agent",
+          "status": "running",
+          "command": [
+            "python3",
+            "run_honey_agent.py",
+            "--mode",
+            "initialization"
+          ],
+          "output_tail": ""
+        }
+      ],
+      "openai": false,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 10.0,
+      "heartbeat_at": "2026-04-03T16:56:05.184409",
+      "current_step_started_at": "2026-04-03T16:55:41.150549"
+    },
+    "error": null,
+    "timestamp": "2026-04-03T16:56:05.184433",
+    "created_at": "2026-04-03T16:55:40.584194"
+  },
+  "full_pipeline_1775217873321": {
+    "id": "full_pipeline_1775217873321",
+    "type": "full_pipeline",
+    "status": "failed",
+    "params": {
+      "openai": false,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 10.0
+    },
+    "result": {
+      "current_step": "honey_agent",
+      "steps": [
+        {
+          "name": "perception",
+          "status": "completed",
+          "command": [
+            "python3",
+            "-u",
+            "run_perception.py"
+          ],
+          "output_tail": "[app-01] max stage -> none\n[bastion-01] max stage -> none\n[db-01] max stage -> none\n[dmz-api-01] max stage -> none\n[dmz-web-01] max stage -> none\n[edge-fw] max stage -> none\n[fileserver-01] max stage -> none\n[jump-ops] max stage -> none\n\n[Shadow Topology]\nSaved topology to /home/xiaowang/Desktop/llm_honeynet/shadow/shadow_topology.json\nSaved Mininet launcher to /home/xiaowang/Desktop/llm_honeynet/shadow/mininet_shadow.py\n",
+          "duration": 0.5506501197814941
+        },
+        {
+          "name": "honey_agent",
+          "status": "failed",
+          "command": [
+            "python3",
+            "-u",
+            "run_honey_agent.py",
+            "--mode",
+            "initialization"
+          ],
+          "output_tail": "rect cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/usr/local/lib/python3.10/dist-packages/openai/_base_client.py\", line 982, in request\n    response = self._client.send(\n  File \"/usr/local/lib/python3.10/dist-packages/httpx/_client.py\", line 914, in send\n    response = self._send_handling_auth(\n  File \"/usr/local/lib/python3.10/dist-packages/httpx/_client.py\", line 942, in _send_handling_auth\n    response = self._send_handling_redirects(\n  File \"/usr/local/lib/python3.10/dist-packages/httpx/_client.py\", line 979, in _send_handling_redirects\n    response = self._send_single_request(request)\n  File \"/usr/local/lib/python3.10/dist-packages/httpx/_client.py\", line 1014, in _send_single_request\n    response = transport.handle_request(request)\n  File \"/usr/local/lib/python3.10/dist-packages/httpx/_transports/default.py\", line 249, in handle_request\n    with map_httpcore_exceptions():\n  File \"/usr/lib/python3.10/contextlib.py\", line 153, in __exit__\n    self.gen.throw(typ, value, traceback)\n  File \"/usr/local/lib/python3.10/dist-packages/httpx/_transports/default.py\", line 118, in map_httpcore_exceptions\n    raise mapped_exc(message) from exc\nhttpx.ConnectError: [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1007)\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/xiaowang/Desktop/llm_honeynet/llm/openai_client.py\", line 86, in chat_completion\n    response = client.chat.completions.create(**params)\n  File \"/usr/local/lib/python3.10/dist-packages/openai/_utils/_utils.py\", line 286, in wrapper\n    return func(*args, **kwargs)\n  File \"/usr/local/lib/python3.10/dist-packages/openai/resources/chat/completions/completions.py\", line 1156, in create\n    return self._post(\n  File \"/usr/local/lib/python3.10/dist-packages/openai/_base_client.py\", line 1259, in post\n    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))\n  File \"/usr/local/lib/python3.10/dist-packages/openai/_base_client.py\", line 1014, in request\n    raise APIConnectionError(request=request) from err\nopenai.APIConnectionError: Connection error.\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/xiaowang/Desktop/llm_honeynet/orchestrator/honey_agent.py\", line 407, in _invoke_generation\n    response = client.chat_completion(\n  File \"/home/xiaowang/Desktop/llm_honeynet/llm/openai_client.py\", line 88, in chat_completion\n    raise RuntimeError(f\"Failed to call OpenAI API: {exc}\") from exc\nRuntimeError: Failed to call OpenAI API: Connection error.\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/xiaowang/Desktop/llm_honeynet/run_honey_agent.py\", line 116, in <module>\n    main()\n  File \"/home/xiaowang/Desktop/llm_honeynet/run_honey_agent.py\", line 105, in main\n    payload = run_pipeline(agent, args.mode)\n  File \"/home/xiaowang/Desktop/llm_honeynet/run_honey_agent.py\", line 97, in run_pipeline\n    return agent.run_initialization()\n  File \"/home/xiaowang/Desktop/llm_honeynet/orchestrator/honey_agent.py\", line 56, in run_initialization\n    hosts = self._generate_short_term(topology, preferences, baseline=None, mode=\"initialization\")\n  File \"/home/xiaowang/Desktop/llm_honeynet/orchestrator/honey_agent.py\", line 95, in _generate_short_term\n    ports_payload = self._generate_ports(topology, preferences, baseline, mode)\n  File \"/home/xiaowang/Desktop/llm_honeynet/orchestrator/honey_agent.py\", line 143, in _generate_ports\n    return self._invoke_generation(instructions, context, stage=\"ports-layer\")\n  File \"/home/xiaowang/Desktop/llm_honeynet/orchestrator/honey_agent.py\", line 415, in _invoke_generation\n    raise RuntimeError(f\"Failed to generate {stage} via OpenAI: {exc}\") from exc\nRuntimeError: Failed to generate ports-layer via OpenAI: Failed to call OpenAI API: Connection error.\n",
+          "duration": 17.06353497505188
+        }
+      ],
+      "openai": false,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 10.0,
+      "heartbeat_at": "2026-04-03T20:04:50.939388",
+      "current_step_started_at": "2026-04-03T20:04:33.875837",
+      "failed_at": "2026-04-03T20:04:50.940630"
+    },
+    "error": "honey_agent failed with exit code 1",
+    "timestamp": "2026-04-03T20:04:50.943344",
+    "created_at": "2026-04-03T20:04:33.321559"
+  },
+  "full_pipeline_1775218033107": {
+    "id": "full_pipeline_1775218033107",
+    "type": "full_pipeline",
+    "status": "running",
+    "params": {
+      "openai": true,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 10.0
+    },
+    "result": {
+      "current_step": "honey_agent",
+      "steps": [
+        {
+          "name": "perception",
+          "status": "completed",
+          "command": [
+            "python3",
+            "-u",
+            "run_perception.py",
+            "--openai"
+          ],
+          "output_tail": "[app-01] max stage -> none\n[bastion-01] max stage -> none\n[db-01] max stage -> none\n[dmz-api-01] max stage -> none\n[dmz-web-01] max stage -> none\n[edge-fw] max stage -> none\n[fileserver-01] max stage -> none\n[jump-ops] max stage -> none\n\n[OpenAI Preference Summary]\n### Individual Host Assessments\n\n- **app-01**\n  - Max Stage: 0\n  - Events: None\n\n- **bastion-01**\n  - Max Stage: 0\n  - Events: None\n\n- **db-01**\n  - Max Stage: 0\n  - Events: None\n\n- **dmz-api-01**\n  - Max Stage: 0\n  - Events: None\n\n- **dmz-web-01**\n  - Max Stage: 0\n  - Events: None\n\n- **edge-fw**\n  - Max Stage: 0\n  - Events: None\n\n- **fileserver-01**\n  - Max Stage: 0\n  - Events: None\n\n- **jump-ops**\n  - Max Stage: 0\n  - Events: None\n\n### Overall Assessment\n\n- **No Intrusion Detected**: All hosts show a maximum intrusion stage of 0, indicating no observed malicious activity or successful attacks.\n- **Capabilities**: The attacker appears to lack capabilities to penetrate the environment to any observable degree.\n- **Protocol Engagement**: No preferred protocols or exploited services have been identified due to the absence of activity.\n- **Lateral Movement and Data Theft**: Both lateral movement and data theft attempts are not applicable, given the current state of no events.\n- **Security Posture**: The defensive measures in place are effectively preventing intrusion or compromise across all monitored hosts.\n\n[Attacker Preferences]\nSaved 31 preference(s) to shadow/attacker_preferences.json\n\n[Shadow Topology]\nSaved topology to /home/xiaowang/Desktop/llm_honeynet/shadow/shadow_topology.json\nSaved Mininet launcher to /home/xiaowang/Desktop/llm_honeynet/shadow/mininet_shadow.py\n",
+          "duration": 11.591722011566162
+        },
+        {
+          "name": "honey_agent",
+          "status": "running",
+          "command": [
+            "python3",
+            "-u",
+            "run_honey_agent.py",
+            "--mode",
+            "initialization"
+          ],
+          "output_tail": ""
+        }
+      ],
+      "openai": true,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 10.0,
+      "heartbeat_at": "2026-04-03T20:07:24.704226",
+      "current_step_started_at": "2026-04-03T20:07:24.702750"
+    },
+    "error": null,
+    "timestamp": "2026-04-03T20:07:24.704236",
+    "created_at": "2026-04-03T20:07:13.107460"
+  },
+  "full_pipeline_1775218517378": {
+    "id": "full_pipeline_1775218517378",
+    "type": "full_pipeline",
+    "status": "running",
+    "params": {
+      "openai": false,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 10.0
+    },
+    "result": {
+      "current_step": "deception",
+      "steps": [
+        {
+          "name": "perception",
+          "status": "completed",
+          "command": [
+            "python3",
+            "-u",
+            "run_perception.py"
+          ],
+          "output_tail": "[app-01] max stage -> none\n[bastion-01] max stage -> none\n[db-01] max stage -> none\n[dmz-api-01] max stage -> none\n[dmz-web-01] max stage -> none\n[edge-fw] max stage -> none\n[fileserver-01] max stage -> none\n[jump-ops] max stage -> none\n\n[Shadow Topology]\nSaved topology to /home/xiaowang/Desktop/llm_honeynet/shadow/shadow_topology.json\nSaved Mininet launcher to /home/xiaowang/Desktop/llm_honeynet/shadow/mininet_shadow.py\n",
+          "duration": 0.5876762866973877
+        },
+        {
+          "name": "honey_agent",
+          "status": "completed",
+          "command": [
+            "python3",
+            "-u",
+            "run_honey_agent.py",
+            "--mode",
+            "initialization"
+          ],
+          "output_tail": "[HoneyAgent] step 1/3: generating ports per host\n[HoneyAgent] step 2/3: generating files per host/port\n[HoneyAgent] step 3/3: generating vulns per host/port/file\n[+] Honey Agent initialization completed and saved to shadow/honey_agent.json\n",
+          "duration": 118.25295066833496
+        },
+        {
+          "name": "trap_agent",
+          "status": "completed",
+          "command": [
+            "python3",
+            "-u",
+            "run_trap_agent.py",
+            "all"
+          ],
+          "output_tail": "_backup.sql\",\n            \"/etc/postgresql/pg_hba.conf\",\n            \"/var/lib/mysql/credentials.txt\",\n            \"/etc/mysql/my.cnf\"\n          ]\n        ],\n        \"credential_chains\": [\n          {\n            \"name\": \"Chain 1\",\n            \"steps\": [\n              {\n                \"host\": \"edge-fw\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"bastion-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"jump-ops\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"dmz-web-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"edge-fw\",\n                \"tier\": \"low\"\n              }\n            ]\n          },\n          {\n            \"name\": \"Chain 2\",\n            \"steps\": [\n              {\n                \"host\": \"dmz-api-01\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"app-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"db-01\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"fileserver-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"dmz-api-01\",\n                \"tier\": \"low\"\n              }\n            ]\n          }\n        ]\n      },\n      \"vulnerabilities\": [\n        {\n          \"type\": \"config leak\",\n          \"target_file\": \"/etc/postgresql/pg_hba.conf\"\n        },\n        {\n          \"type\": \"weak creds\",\n          \"target_file\": \"/var/lib/mysql/credentials.txt\"\n        }\n      ]\n    },\n    {\n      \"name\": \"fileserver-01\",\n      \"ports\": [\n        {\n          \"port\": 445,\n          \"service\": \"smb\",\n          \"files\": [\n            {\n              \"path\": \"/srv/files/private_files.zip\"\n            },\n            {\n              \"path\": \"/srv/files/finance_records.xlsx\"\n            }\n          ]\n        },\n        {\n          \"port\": 21,\n          \"service\": \"ftp\",\n          \"files\": [\n            {\n              \"path\": \"/srv/ftp/backups/ftp_backup.tar.gz\"\n            },\n            {\n              \"path\": \"/srv/ftp/credentials.txt\"\n            }\n          ]\n        }\n      ],\n      \"traps\": {\n        \"host_loops\": [\n          [\n            \"/srv/files/private_files.zip\",\n            \"/srv/files/finance_records.xlsx\",\n            \"/srv/ftp/backups/ftp_backup.tar.gz\",\n            \"/srv/ftp/credentials.txt\"\n          ]\n        ],\n        \"credential_chains\": [\n          {\n            \"name\": \"Chain 1\",\n            \"steps\": [\n              {\n                \"host\": \"edge-fw\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"bastion-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"jump-ops\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"dmz-web-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"edge-fw\",\n                \"tier\": \"low\"\n              }\n            ]\n          },\n          {\n            \"name\": \"Chain 2\",\n            \"steps\": [\n              {\n                \"host\": \"dmz-api-01\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"app-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"db-01\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"fileserver-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"dmz-api-01\",\n                \"tier\": \"low\"\n              }\n            ]\n          }\n        ]\n      },\n      \"vulnerabilities\": [\n        {\n          \"type\": \"file upload\",\n          \"target_file\": \"/srv/files/private_files.zip\"\n        },\n        {\n          \"type\": \"weak creds\",\n          \"target_file\": \"/srv/ftp/credentials.txt\"\n        }\n      ]\n    }\n  ]\n}\n",
+          "duration": 22.301626205444336
+        },
+        {
+          "name": "deception",
+          "status": "running",
+          "command": [
+            "python3",
+            "-u",
+            "run_deception.py",
+            "--mode",
+            "full"
+          ],
+          "output_tail": ""
+        }
+      ],
+      "openai": false,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 10.0,
+      "heartbeat_at": "2026-04-03T20:19:08.674930",
+      "current_step_started_at": "2026-04-03T20:17:38.527453"
+    },
+    "error": null,
+    "timestamp": "2026-04-03T20:19:08.674953",
+    "created_at": "2026-04-03T20:15:17.378767"
+  },
+  "full_pipeline_1775218765267": {
+    "id": "full_pipeline_1775218765267",
+    "type": "full_pipeline",
+    "status": "running",
+    "params": {
+      "openai": false,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 10.0
+    },
+    "result": {
+      "current_step": "deception",
+      "steps": [
+        {
+          "name": "perception",
+          "status": "completed",
+          "command": [
+            "python3",
+            "-u",
+            "run_perception.py"
+          ],
+          "output_tail": "[app-01] max stage -> none\n[bastion-01] max stage -> none\n[db-01] max stage -> none\n[dmz-api-01] max stage -> none\n[dmz-web-01] max stage -> none\n[edge-fw] max stage -> none\n[fileserver-01] max stage -> none\n[jump-ops] max stage -> none\n\n[Shadow Topology]\nSaved topology to /home/xiaowang/Desktop/llm_honeynet/shadow/shadow_topology.json\nSaved Mininet launcher to /home/xiaowang/Desktop/llm_honeynet/shadow/mininet_shadow.py\n",
+          "duration": 0.5675084590911865
+        },
+        {
+          "name": "honey_agent",
+          "status": "completed",
+          "command": [
+            "python3",
+            "-u",
+            "run_honey_agent.py",
+            "--mode",
+            "initialization"
+          ],
+          "output_tail": "[HoneyAgent] step 1/3: generating ports per host\n[HoneyAgent] step 2/3: generating files per host/port\n[HoneyAgent] step 3/3: generating vulns per host/port/file\n[+] Honey Agent initialization completed and saved to shadow/honey_agent.json\n",
+          "duration": 42.7915415763855
+        },
+        {
+          "name": "trap_agent",
+          "status": "completed",
+          "command": [
+            "python3",
+            "-u",
+            "run_trap_agent.py",
+            "all"
+          ],
+          "output_tail": "  {\n              \"path\": \"/var/lib/mysql/keys.txt\"\n            }\n          ]\n        }\n      ],\n      \"traps\": {\n        \"host_loops\": [\n          [\n            \"/var/lib/postgresql/data/backup.dump\",\n            \"/var/lib/postgresql/data/passwords.txt\",\n            \"/var/lib/mysql/finance_data.sql\",\n            \"/var/lib/mysql/keys.txt\"\n          ]\n        ],\n        \"credential_chains\": [\n          {\n            \"name\": \"Chain 1\",\n            \"steps\": [\n              {\n                \"host\": \"edge-fw\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"bastion-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"jump-ops\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"dmz-web-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"edge-fw\",\n                \"tier\": \"low\"\n              }\n            ]\n          },\n          {\n            \"name\": \"Chain 2\",\n            \"steps\": [\n              {\n                \"host\": \"dmz-api-01\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"app-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"db-01\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"fileserver-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"dmz-api-01\",\n                \"tier\": \"low\"\n              }\n            ]\n          }\n        ]\n      },\n      \"vulnerabilities\": [\n        {\n          \"type\": \"config leak\",\n          \"target_file\": \"/var/lib/postgresql/data/passwords.txt\"\n        }\n      ]\n    },\n    {\n      \"name\": \"fileserver-01\",\n      \"ports\": [\n        {\n          \"port\": 445,\n          \"service\": \"smb\",\n          \"files\": [\n            {\n              \"path\": \"/shared/finance/2023_budget.xlsx\"\n            },\n            {\n              \"path\": \"/shared/backup/important_files.zip\"\n            }\n          ]\n        },\n        {\n          \"port\": 21,\n          \"service\": \"ftp\",\n          \"files\": [\n            {\n              \"path\": \"/ftp/uploads/passwords.txt\"\n            },\n            {\n              \"path\": \"/ftp/uploads/backup.tar.gz\"\n            }\n          ]\n        }\n      ],\n      \"traps\": {\n        \"host_loops\": [\n          [\n            \"/shared/finance/2023_budget.xlsx\",\n            \"/shared/backup/important_files.zip\",\n            \"/ftp/uploads/passwords.txt\",\n            \"/ftp/uploads/backup.tar.gz\"\n          ]\n        ],\n        \"credential_chains\": [\n          {\n            \"name\": \"Chain 1\",\n            \"steps\": [\n              {\n                \"host\": \"edge-fw\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"bastion-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"jump-ops\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"dmz-web-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"edge-fw\",\n                \"tier\": \"low\"\n              }\n            ]\n          },\n          {\n            \"name\": \"Chain 2\",\n            \"steps\": [\n              {\n                \"host\": \"dmz-api-01\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"app-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"db-01\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"fileserver-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"dmz-api-01\",\n                \"tier\": \"low\"\n              }\n            ]\n          }\n        ]\n      },\n      \"vulnerabilities\": [\n        {\n          \"type\": \"weak creds\",\n          \"target_file\": \"/ftp/uploads/passwords.txt\"\n        }\n      ]\n    }\n  ]\n}\n",
+          "duration": 66.31470441818237
+        },
+        {
+          "name": "deception",
+          "status": "running",
+          "command": [
+            "python3",
+            "-u",
+            "run_deception.py",
+            "--mode",
+            "full"
+          ],
+          "output_tail": ""
+        }
+      ],
+      "openai": false,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 10.0,
+      "heartbeat_at": "2026-04-03T20:22:54.121211",
+      "current_step_started_at": "2026-04-03T20:21:14.948362"
+    },
+    "error": null,
+    "timestamp": "2026-04-03T20:22:54.121240",
+    "created_at": "2026-04-03T20:19:25.267353"
+  },
+  "full_pipeline_1775218793936": {
+    "id": "full_pipeline_1775218793936",
+    "type": "full_pipeline",
+    "status": "running",
+    "params": {
+      "openai": false,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 10.0
+    },
+    "result": {
+      "current_step": "deception",
+      "steps": [
+        {
+          "name": "perception",
+          "status": "completed",
+          "command": [
+            "python3",
+            "-u",
+            "run_perception.py"
+          ],
+          "output_tail": "[app-01] max stage -> none\n[bastion-01] max stage -> none\n[db-01] max stage -> none\n[dmz-api-01] max stage -> none\n[dmz-web-01] max stage -> none\n[edge-fw] max stage -> none\n[fileserver-01] max stage -> none\n[jump-ops] max stage -> none\n\n[Shadow Topology]\nSaved topology to /home/xiaowang/Desktop/llm_honeynet/shadow/shadow_topology.json\nSaved Mininet launcher to /home/xiaowang/Desktop/llm_honeynet/shadow/mininet_shadow.py\n",
+          "duration": 0.6011395454406738
+        },
+        {
+          "name": "honey_agent",
+          "status": "completed",
+          "command": [
+            "python3",
+            "-u",
+            "run_honey_agent.py",
+            "--mode",
+            "initialization"
+          ],
+          "output_tail": "[HoneyAgent] step 1/3: generating ports per host\n[HoneyAgent] step 2/3: generating files per host/port\n[HoneyAgent] step 3/3: generating vulns per host/port/file\n[+] Honey Agent initialization completed and saved to shadow/honey_agent.json\n",
+          "duration": 104.68882012367249
+        },
+        {
+          "name": "trap_agent",
+          "status": "completed",
+          "command": [
+            "python3",
+            "-u",
+            "run_trap_agent.py",
+            "all"
+          ],
+          "output_tail": "ar/lib/postgresql/data/backup_db.sql\",\n            \"/var/lib/mysql/backup_credentials.sql\",\n            \"/var/lib/mysql/finance_data.sql\"\n          ]\n        ],\n        \"credential_chains\": [\n          {\n            \"name\": \"Chain 1\",\n            \"steps\": [\n              {\n                \"host\": \"edge-fw\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"bastion-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"jump-ops\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"dmz-web-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"edge-fw\",\n                \"tier\": \"low\"\n              }\n            ]\n          },\n          {\n            \"name\": \"Chain 2\",\n            \"steps\": [\n              {\n                \"host\": \"dmz-api-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"app-01\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"db-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"fileserver-01\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"dmz-api-01\",\n                \"tier\": \"mid\"\n              }\n            ]\n          }\n        ]\n      },\n      \"vulnerabilities\": [\n        {\n          \"type\": \"config leak\",\n          \"target_file\": \"/var/lib/postgresql/data/pg_hba.conf\"\n        },\n        {\n          \"type\": \"weak creds\",\n          \"target_file\": \"/var/lib/mysql/backup_credentials.sql\"\n        }\n      ]\n    },\n    {\n      \"name\": \"fileserver-01\",\n      \"ports\": [\n        {\n          \"port\": 445,\n          \"service\": \"SMB\",\n          \"files\": [\n            {\n              \"path\": \"/srv/files/backup_files.zip\"\n            },\n            {\n              \"path\": \"/srv/files/passwords.txt\"\n            }\n          ]\n        },\n        {\n          \"port\": 21,\n          \"service\": \"FTP\",\n          \"files\": [\n            {\n              \"path\": \"/srv/ftp/finance_backup.tar.gz\"\n            },\n            {\n              \"path\": \"/srv/ftp/user_data.bak\"\n            }\n          ]\n        }\n      ],\n      \"traps\": {\n        \"host_loops\": [\n          [\n            \"/srv/files/backup_files.zip\",\n            \"/srv/files/passwords.txt\",\n            \"/srv/ftp/finance_backup.tar.gz\",\n            \"/srv/ftp/user_data.bak\"\n          ]\n        ],\n        \"credential_chains\": [\n          {\n            \"name\": \"Chain 1\",\n            \"steps\": [\n              {\n                \"host\": \"edge-fw\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"bastion-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"jump-ops\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"dmz-web-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"edge-fw\",\n                \"tier\": \"low\"\n              }\n            ]\n          },\n          {\n            \"name\": \"Chain 2\",\n            \"steps\": [\n              {\n                \"host\": \"dmz-api-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"app-01\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"db-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"fileserver-01\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"dmz-api-01\",\n                \"tier\": \"mid\"\n              }\n            ]\n          }\n        ]\n      },\n      \"vulnerabilities\": [\n        {\n          \"type\": \"file upload\",\n          \"target_file\": \"/srv/files/backup_files.zip\"\n        },\n        {\n          \"type\": \"path traversal\",\n          \"target_file\": \"/srv/ftp/finance_backup.tar.gz\"\n        }\n      ]\n    }\n  ]\n}\n",
+          "duration": 17.875631093978882
+        },
+        {
+          "name": "deception",
+          "status": "running",
+          "command": [
+            "python3",
+            "-u",
+            "run_deception.py",
+            "--mode",
+            "full"
+          ],
+          "output_tail": ""
+        }
+      ],
+      "openai": false,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 10.0,
+      "heartbeat_at": "2026-04-03T20:22:54.213642",
+      "current_step_started_at": "2026-04-03T20:21:57.110258"
+    },
+    "error": null,
+    "timestamp": "2026-04-03T20:22:54.213667",
+    "created_at": "2026-04-03T20:19:53.936665"
+  },
+  "full_pipeline_1775218994041": {
+    "id": "full_pipeline_1775218994041",
+    "type": "full_pipeline",
+    "status": "completed",
+    "params": {
+      "openai": true,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 10.0
+    },
+    "result": {
+      "current_step": "deception",
+      "steps": [
+        {
+          "name": "perception",
+          "status": "completed",
+          "command": [
+            "python3",
+            "-u",
+            "run_perception.py",
+            "--openai"
+          ],
+          "output_tail": "[app-01] max stage -> none\n[bastion-01] max stage -> none\n[db-01] max stage -> none\n[dmz-api-01] max stage -> none\n[dmz-web-01] max stage -> none\n[edge-fw] max stage -> none\n[fileserver-01] max stage -> none\n[jump-ops] max stage -> none\n\n[OpenAI Preference Summary]\n### Host Assessments\n\n- **app-01**\n  - **Max Stage**: 0\n  - **Events**: None\n  - **Objective**: Not targeted yet.\n  \n- **bastion-01**\n  - **Max Stage**: 0\n  - **Events**: None\n  - **Objective**: Not targeted yet.\n\n- **db-01**\n  - **Max Stage**: 0\n  - **Events**: None\n  - **Objective**: Not targeted yet.\n\n- **dmz-api-01**\n  - **Max Stage**: 0\n  - **Events**: None\n  - **Objective**: Not targeted yet.\n\n- **dmz-web-01**\n  - **Max Stage**: 0\n  - **Events**: None\n  - **Objective**: Not targeted yet.\n\n- **edge-fw**\n  - **Max Stage**: 0\n  - **Events**: None\n  - **Objective**: Not targeted yet.\n\n- **fileserver-01**\n  - **Max Stage**: 0\n  - **Events**: None\n  - **Objective**: Not targeted yet.\n\n- **jump-ops**\n  - **Max Stage**: 0\n  - **Events**: None\n  - **Objective**: Not targeted yet.\n\n### Overall Assessment\n- **Attacker's Objectives**: No clear objectives identified; no intrusion activity (stages) observed on any host.\n- **Capability Maturity**: Low; no evidence of attempted attacks or exploitation, indicating either a non-engaged attacker or lack of capability.\n- **Preferred Protocols and Exploited Services**: No preferred protocols or services indicated due to zero activity.\n- **Lateral Movement or Data Theft**: Not applicable; no lateral movement or data theft attempts were detected. \n\n**Conclusion**: The environment appears secure at this moment, with no current attack activity detected across hosts. Continued monitoring is advised.\n\n[Attacker Preferences]\nSaved 39 preference(s) to shadow/attacker_preferences.json\n\n[Shadow Topology]\nSaved topology to /home/xiaowang/Desktop/llm_honeynet/shadow/shadow_topology.json\nSaved Mininet launcher to /home/xiaowang/Desktop/llm_honeynet/shadow/mininet_shadow.py\n",
+          "duration": 9.947764873504639
+        },
+        {
+          "name": "honey_agent",
+          "status": "completed",
+          "command": [
+            "python3",
+            "-u",
+            "run_honey_agent.py",
+            "--mode",
+            "initialization"
+          ],
+          "output_tail": "[HoneyAgent] step 1/3: generating ports per host\n[HoneyAgent] step 2/3: generating files per host/port\n[HoneyAgent] step 3/3: generating vulns per host/port/file\n[+] Honey Agent initialization completed and saved to shadow/honey_agent.json\n",
+          "duration": 39.98537826538086
+        },
+        {
+          "name": "trap_agent",
+          "status": "completed",
+          "command": [
+            "python3",
+            "-u",
+            "run_trap_agent.py",
+            "all"
+          ],
+          "output_tail": "sql\"\n            },\n            {\n              \"path\": \"/var/lib/mysql/passwords.txt\"\n            }\n          ]\n        }\n      ],\n      \"traps\": {\n        \"host_loops\": [\n          [\n            \"/var/lib/postgresql/data/backup.sql\",\n            \"/var/lib/postgresql/data/users_backup.csv\",\n            \"/var/lib/mysql/finance_data.sql\",\n            \"/var/lib/mysql/passwords.txt\"\n          ]\n        ],\n        \"credential_chains\": [\n          {\n            \"name\": \"Chain 1\",\n            \"steps\": [\n              {\n                \"host\": \"edge-fw\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"bastion-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"jump-ops\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"dmz-web-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"edge-fw\",\n                \"tier\": \"low\"\n              }\n            ]\n          },\n          {\n            \"name\": \"Chain 2\",\n            \"steps\": [\n              {\n                \"host\": \"dmz-api-01\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"app-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"db-01\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"fileserver-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"dmz-api-01\",\n                \"tier\": \"high\"\n              }\n            ]\n          }\n        ]\n      },\n      \"vulnerabilities\": [\n        {\n          \"type\": \"outdated ssh\",\n          \"target_port\": 5432\n        }\n      ]\n    },\n    {\n      \"name\": \"fileserver-01\",\n      \"ports\": [\n        {\n          \"port\": 445,\n          \"service\": \"microsoft-ds\",\n          \"files\": [\n            {\n              \"path\": \"/shared/finance/2023_budget.xlsx\"\n            },\n            {\n              \"path\": \"/shared/backup/backup.zip\"\n            }\n          ]\n        },\n        {\n          \"port\": 21,\n          \"service\": \"ftp\",\n          \"files\": [\n            {\n              \"path\": \"/ftp/private/passwords.txt\"\n            },\n            {\n              \"path\": \"/ftp/private/backup.tar.gz\"\n            }\n          ]\n        }\n      ],\n      \"traps\": {\n        \"host_loops\": [\n          [\n            \"/shared/finance/2023_budget.xlsx\",\n            \"/shared/backup/backup.zip\",\n            \"/ftp/private/passwords.txt\",\n            \"/ftp/private/backup.tar.gz\"\n          ]\n        ],\n        \"credential_chains\": [\n          {\n            \"name\": \"Chain 1\",\n            \"steps\": [\n              {\n                \"host\": \"edge-fw\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"bastion-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"jump-ops\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"dmz-web-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"edge-fw\",\n                \"tier\": \"low\"\n              }\n            ]\n          },\n          {\n            \"name\": \"Chain 2\",\n            \"steps\": [\n              {\n                \"host\": \"dmz-api-01\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"app-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"db-01\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"fileserver-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"dmz-api-01\",\n                \"tier\": \"high\"\n              }\n            ]\n          }\n        ]\n      },\n      \"vulnerabilities\": [\n        {\n          \"type\": \"weak creds\",\n          \"target_file\": \"/ftp/private/passwords.txt\"\n        }\n      ]\n    }\n  ]\n}\n",
+          "duration": 17.611019372940063
+        },
+        {
+          "name": "deception",
+          "status": "completed",
+          "command": [
+            "python3",
+            "-u",
+            "run_deception.py",
+            "--mode",
+            "full"
+          ],
+          "output_tail": " \"2024-04-10T01:00:00Z\",\n                  \"content\": \"fake_credentials\\n\"\n                }\n              }\n            }\n          }\n        }\n      },\n      \"notes\": [\n        \"Updated FTP service configuration to include user details and responses.\",\n        \"Added credentials.txt to the backups directory to simulate weak credentials vulnerability.\"\n      ]\n    },\n    \"jump-ops\": {\n      \"host\": \"jump-ops\",\n      \"services\": {\n        \"ssh\": {\n          \"host\": \"0.0.0.0\",\n          \"port\": 22,\n          \"banner\": \"SSH-2.0-OpenSSH_8.4p1 Debian-5\",\n          \"pre_auth_messages\": [\n            \"Authorized access only.\",\n            \"All activities are monitored and recorded.\"\n          ],\n          \"users\": {\n            \"root\": {\n              \"passwords\": [\n                \"toor\",\n                \"changeme123\"\n              ],\n              \"home\": \"/root\",\n              \"motd\": [\n                \"Linux intranet 5.15.0-92-generic #102-Ubuntu SMP x86_64\",\n                \"Last login: Fri Apr 12 16:54:44 2024 from 10.54.17.23\"\n              ]\n            },\n            \"admin\": {\n              \"passwords\": [\n                \"P@ssw0rd!\",\n                \"admin2024\"\n              ],\n              \"home\": \"/home/admin\",\n              \"motd\": [\n                \"Welcome to the infrastructure bastion host.\"\n              ]\n            }\n          },\n          \"shell_prompt\": \"root@intranet:~# \",\n          \"fake_commands\": {\n            \"uname -a\": \"Linux intranet 5.15.0-92-generic #102-Ubuntu SMP Tue Jan 16 10:44:31 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux\",\n            \"id\": \"uid=0(root) gid=0(root) groups=0(root)\",\n            \"last\": \"root     pts/0        10.54.17.23     Fri Apr 12 06:54   still logged in\"\n          },\n          \"failure_message\": \"Permission denied, please try again.\",\n          \"max_auth_attempts\": 4,\n          \"log_file\": \"../logs/ssh.log\"\n        },\n        \"http-alt\": {\n          \"host\": \"0.0.0.0\",\n          \"port\": 8080,\n          \"server_header\": \"Apache/2.4.52 (Ubuntu)\",\n          \"default_status\": 404,\n          \"default_headers\": {\n            \"X-Powered-By\": \"PHP/7.4.3\"\n          },\n          \"routes\": [\n            {\n              \"method\": \"GET\",\n              \"path\": \"/\",\n              \"status\": 200,\n              \"response_headers\": {\n                \"Content-Type\": \"text/html; charset=utf-8\"\n              },\n              \"body_file\": \"../www/index.html\"\n            },\n            {\n              \"method\": \"GET\",\n              \"path\": \"/status\",\n              \"status\": 200,\n              \"response_headers\": {\n                \"Content-Type\": \"text/html; charset=utf-8\",\n                \"Cache-Control\": \"no-store\"\n              },\n              \"body_file\": \"../www/status.html\"\n            },\n            {\n              \"method\": \"POST\",\n              \"path\": \"/api/login\",\n              \"status\": 200,\n              \"response_headers\": {\n                \"Content-Type\": \"application/json\"\n              },\n              \"body\": \"{\\\"status\\\": \\\"ok\\\", \\\"token\\\": \\\"3f4dc3e8\\\", \\\"role\\\": \\\"viewer\\\"}\"\n            }\n          ],\n          \"not_found\": {\n            \"status\": 404,\n            \"response_headers\": {\n              \"Content-Type\": \"text/html; charset=utf-8\"\n            },\n            \"body_file\": \"../www/404.html\"\n          },\n          \"log_file\": \"../logs/http.log\"\n        }\n      },\n      \"filesystem\": {\n        \"etc\": {\n          \"ops\": {\n            \"secret_keys.json\": {\n              \"type\": \"file\",\n              \"mode\": \"0640\",\n              \"owner\": \"root\",\n              \"group\": \"root\",\n              \"modified\": \"2024-04-10T08:14:00Z\",\n              \"content\": \"{\\\"keys\\\": [\\\"key1\\\", \\\"key2\\\"]}\"\n            }\n          }\n        }\n      },\n      \"notes\": [\n        \"Updated SSH service to include realistic user credentials.\",\n        \"Maintained HTTP service configuration with existing routes.\",\n        \"Added secret_keys.json to the filesystem for deception purposes.\"\n      ]\n    }\n  }\n}\n",
+          "duration": 211.4813849925995
+        }
+      ],
+      "openai": true,
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 10.0,
+      "heartbeat_at": "2026-04-03T20:27:53.074583",
+      "current_step_started_at": "2026-04-03T20:24:21.593190",
+      "finished_at": "2026-04-03T20:27:53.075750",
+      "summary": {
+        "step_count": 4,
+        "completed_steps": 4
+      }
+    },
+    "error": null,
+    "timestamp": "2026-04-03T20:27:53.077004",
+    "created_at": "2026-04-03T20:23:14.041383"
+  },
+  "honey_agent_1775551047030": {
+    "id": "honey_agent_1775551047030",
+    "type": "honey_agent",
+    "status": "failed",
+    "params": {
+      "mode": "initialization"
+    },
+    "result": null,
+    "error": "Honey Agent failed: Failed to generate ports-layer via OpenAI: Failed to call OpenAI API: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead.\", 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'unsupported_parameter'}}",
+    "timestamp": "2026-04-07T16:37:30.573718",
+    "created_at": "2026-04-07T16:37:27.030488"
+  },
+  "honey_agent_1775551057867": {
+    "id": "honey_agent_1775551057867",
+    "type": "honey_agent",
+    "status": "failed",
+    "params": {
+      "mode": "initialization"
+    },
+    "result": null,
+    "error": "Honey Agent failed: Failed to generate ports-layer via OpenAI: Failed to call OpenAI API: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead.\", 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'unsupported_parameter'}}",
+    "timestamp": "2026-04-07T16:37:40.810841",
+    "created_at": "2026-04-07T16:37:37.867359"
+  },
+  "trap_agent_1775551078537": {
+    "id": "trap_agent_1775551078537",
+    "type": "trap_agent",
+    "status": "failed",
+    "params": {
+      "mode": "all"
+    },
+    "result": null,
+    "error": "Trap Agent failed: Failed to generate host trap loop via OpenAI: Failed to call OpenAI API: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead.\", 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'unsupported_parameter'}}",
+    "timestamp": "2026-04-07T16:38:01.373124",
+    "created_at": "2026-04-07T16:37:58.537430"
+  },
+  "honey_agent_1775551181005": {
+    "id": "honey_agent_1775551181005",
+    "type": "honey_agent",
+    "status": "completed",
+    "params": {
+      "mode": "initialization"
+    },
+    "result": {
+      "mode": "initialization",
+      "hosts_generated": 8,
+      "topology": {
+        "metadata": {
+          "name": "Enterprise Production Segment",
+          "description": "Canonical enterprise network used to derive shadow honeynet topology",
+          "version": "2024.10"
+        },
+        "switches": [
+          "core-sw",
+          "dmz-sw",
+          "corp-sw"
+        ],
+        "hosts": [
+          {
+            "name": "edge-fw",
+            "role": "firewall",
+            "connect": "core-sw"
+          },
+          {
+            "name": "bastion-01",
+            "role": "bastion",
+            "connect": "corp-sw"
+          },
+          {
+            "name": "jump-ops",
+            "role": "operations",
+            "connect": "corp-sw"
+          },
+          {
+            "name": "dmz-web-01",
+            "role": "public-web",
+            "connect": "dmz-sw"
+          },
+          {
+            "name": "dmz-api-01",
+            "role": "public-api",
+            "connect": "dmz-sw"
+          },
+          {
+            "name": "app-01",
+            "role": "application",
+            "connect": "corp-sw"
+          },
+          {
+            "name": "db-01",
+            "role": "database",
+            "connect": "corp-sw"
+          },
+          {
+            "name": "fileserver-01",
+            "role": "fileserver",
+            "connect": "corp-sw"
+          }
+        ],
+        "links": [
+          {
+            "node1": "core-sw",
+            "node2": "dmz-sw"
+          },
+          {
+            "node1": "core-sw",
+            "node2": "corp-sw"
+          },
+          {
+            "node1": "core-sw",
+            "node2": "edge-fw"
+          },
+          {
+            "node1": "dmz-sw",
+            "node2": "dmz-web-01"
+          },
+          {
+            "node1": "dmz-sw",
+            "node2": "dmz-api-01"
+          },
+          {
+            "node1": "corp-sw",
+            "node2": "bastion-01"
+          },
+          {
+            "node1": "corp-sw",
+            "node2": "jump-ops"
+          },
+          {
+            "node1": "corp-sw",
+            "node2": "app-01"
+          },
+          {
+            "node1": "corp-sw",
+            "node2": "db-01"
+          },
+          {
+            "node1": "corp-sw",
+            "node2": "fileserver-01"
+          }
+        ]
+      },
+      "preferences": [
+        "### Host Assessments",
+        "app-01**",
+        "Max Stage**: 0",
+        "Events**: None",
+        "Objective**: Not targeted yet.",
+        "bastion-01**",
+        "Max Stage**: 0",
+        "Events**: None",
+        "Objective**: Not targeted yet.",
+        "db-01**",
+        "Max Stage**: 0",
+        "Events**: None",
+        "Objective**: Not targeted yet.",
+        "dmz-api-01**",
+        "Max Stage**: 0",
+        "Events**: None",
+        "Objective**: Not targeted yet.",
+        "dmz-web-01**",
+        "Max Stage**: 0",
+        "Events**: None",
+        "Objective**: Not targeted yet.",
+        "edge-fw**",
+        "Max Stage**: 0",
+        "Events**: None",
+        "Objective**: Not targeted yet.",
+        "fileserver-01**",
+        "Max Stage**: 0",
+        "Events**: None",
+        "Objective**: Not targeted yet.",
+        "jump-ops**",
+        "Max Stage**: 0",
+        "Events**: None",
+        "Objective**: Not targeted yet.",
+        "### Overall Assessment",
+        "Attacker's Objectives**: No clear objectives identified; no intrusion activity (stages) observed on any host.",
+        "Capability Maturity**: Low; no evidence of attempted attacks or exploitation, indicating either a non-engaged attacker or lack of capability.",
+        "Preferred Protocols and Exploited Services**: No preferred protocols or services indicated due to zero activity.",
+        "Lateral Movement or Data Theft**: Not applicable; no lateral movement or data theft attempts were detected.",
+        "Conclusion**: The environment appears secure at this moment, with no current attack activity detected across hosts. Continued monitoring is advised."
+      ],
+      "short_memory": [
+        {
+          "name": "edge-fw",
+          "ports": [
+            {
+              "port": 443,
+              "service": "https",
+              "files": [
+                {
+                  "path": "/var/www/html/ssl-backup.zip"
+                },
+                {
+                  "path": "/var/www/html/admin-passwords.txt"
+                }
+              ]
+            },
+            {
+              "port": 22,
+              "service": "ssh",
+              "files": [
+                {
+                  "path": "/home/admin/.ssh/id_rsa.bak"
+                },
+                {
+                  "path": "/root/firewall-config-backup.tar.gz"
+                }
+              ]
+            }
+          ],
+          "vulnerabilities": [
+            {
+              "type": "config leak",
+              "target_file": "/var/www/html/admin-passwords.txt"
+            },
+            {
+              "type": "weak creds",
+              "target_port": 22,
+              "target_file": "/home/admin/.ssh/id_rsa.bak"
+            }
+          ]
+        },
+        {
+          "name": "bastion-01",
+          "ports": [
+            {
+              "port": 22,
+              "service": "ssh",
+              "files": [
+                {
+                  "path": "/home/ops/.ssh/authorized_keys.old"
+                },
+                {
+                  "path": "/home/ops/admin-passwords.xlsx"
+                }
+              ]
+            },
+            {
+              "port": 3389,
+              "service": "rdp",
+              "files": [
+                {
+                  "path": "C:\\Users\\Administrator\\Desktop\\VPN-Credentials.txt"
+                },
+                {
+                  "path": "C:\\IT\\Backups\\bastion-01-system-backup.zip"
+                }
+              ]
+            }
+          ],
+          "vulnerabilities": [
+            {
+              "type": "weak creds",
+              "target_file": "/home/ops/admin-passwords.xlsx"
+            },
+            {
+              "type": "config leak",
+              "target_file": "C:\\Users\\Administrator\\Desktop\\VPN-Credentials.txt"
+            }
+          ]
+        },
+        {
+          "name": "jump-ops",
+          "ports": [
+            {
+              "port": 22,
+              "service": "ssh",
+              "files": [
+                {
+                  "path": "/home/operator/.ssh/id_ed25519.bak"
+                },
+                {
+                  "path": "/opt/ops/maintenance-passwords.txt"
+                }
+              ]
+            },
+            {
+              "port": 5985,
+              "service": "winrm",
+              "files": [
+                {
+                  "path": "C:\\Ops\\Scripts\\prod-admin-creds.ps1"
+                },
+                {
+                  "path": "C:\\Users\\Public\\Documents\\server-access-backup.xlsx"
+                }
+              ]
+            }
+          ],
+          "vulnerabilities": [
+            {
+              "type": "weak creds",
+              "target_file": "/opt/ops/maintenance-passwords.txt"
+            },
+            {
+              "type": "config leak",
+              "target_file": "C:\\Ops\\Scripts\\prod-admin-creds.ps1"
+            }
+          ]
+        },
+        {
+          "name": "dmz-web-01",
+          "ports": [
+            {
+              "port": 80,
+              "service": "http",
+              "files": [
+                {
+                  "path": "/var/www/html/backup-site.zip"
+                },
+                {
+                  "path": "/var/www/html/db-passwords.txt"
+                }
+              ]
+            },
+            {
+              "port": 443,
+              "service": "https",
+              "files": [
+                {
+                  "path": "/etc/nginx/ssl/server.key.bak"
+                },
+                {
+                  "path": "/var/www/html/finance-report-q4.xlsx"
+                }
+              ]
+            }
+          ],
+          "vulnerabilities": [
+            {
+              "type": "config leak",
+              "target_file": "/var/www/html/db-passwords.txt"
+            },
+            {
+              "type": "path traversal",
+              "target_port": 80,
+              "target_file": "/var/www/html/backup-site.zip"
+            }
+          ]
+        },
+        {
+          "name": "dmz-api-01",
+          "ports": [
+            {
+              "port": 443,
+              "service": "https",
+              "files": [
+                {
+                  "path": "/opt/api/config-prod-backup.yml"
+                },
+                {
+                  "path": "/opt/api/service-account-key.json"
+                }
+              ]
+            },
+            {
+              "port": 8443,
+              "service": "https-alt",
+              "files": [
+                {
+                  "path": "/srv/api/secrets.tar.gz"
+                },
+                {
+                  "path": "/srv/api/customer-billing-export.csv"
+                }
+              ]
+            }
+          ],
+          "vulnerabilities": [
+            {
+              "type": "config leak",
+              "target_file": "/opt/api/config-prod-backup.yml"
+            },
+            {
+              "type": "file upload",
+              "target_port": 8443,
+              "target_file": "/srv/api/secrets.tar.gz"
+            }
+          ]
+        },
+        {
+          "name": "app-01",
+          "ports": [
+            {
+              "port": 8080,
+              "service": "http-alt",
+              "files": [
+                {
+                  "path": "/opt/app/appsettings-prod.bak"
+                },
+                {
+                  "path": "/opt/app/db-credentials.txt"
+                }
+              ]
+            },
+            {
+              "port": 8443,
+              "service": "https-alt",
+              "files": [
+                {
+                  "path": "/etc/app/tls/private.key"
+                },
+                {
+                  "path": "/var/backups/app-01-full-backup.zip"
+                }
+              ]
+            }
+          ],
+          "vulnerabilities": [
+            {
+              "type": "config leak",
+              "target_file": "/opt/app/db-credentials.txt"
+            },
+            {
+              "type": "RCE",
+              "target_port": 8080,
+              "target_file": "/opt/app/appsettings-prod.bak"
+            }
+          ]
+        },
+        {
+          "name": "db-01",
+          "ports": [
+            {
+              "port": 5432,
+              "service": "postgresql",
+              "files": [
+                {
+                  "path": "/var/lib/postgresql/backups/prod_dump.sql"
+                },
+                {
+                  "path": "/var/lib/postgresql/.pgpass.bak"
+                }
+              ]
+            },
+            {
+              "port": 3306,
+              "service": "mysql",
+              "files": [
+                {
+                  "path": "/var/backups/mysql-finance.sql.gz"
+                },
+                {
+                  "path": "/root/.my.cnf.old"
+                }
+              ]
+            }
+          ],
+          "vulnerabilities": [
+            {
+              "type": "weak creds",
+              "target_file": "/var/lib/postgresql/.pgpass.bak"
+            },
+            {
+              "type": "config leak",
+              "target_file": "/root/.my.cnf.old"
+            }
+          ]
+        },
+        {
+          "name": "fileserver-01",
+          "ports": [
+            {
+              "port": 445,
+              "service": "smb",
+              "files": [
+                {
+                  "path": "\\\\fileserver-01\\Finance\\payroll-2024.xlsx"
+                },
+                {
+                  "path": "\\\\fileserver-01\\Backups\\domain-admin-passwords.txt"
+                }
+              ]
+            },
+            {
+              "port": 139,
+              "service": "netbios-ssn",
+              "files": [
+                {
+                  "path": "\\\\fileserver-01\\Shared\\service-accounts.csv"
+                },
+                {
+                  "path": "\\\\fileserver-01\\Archive\\executive-laptops-backup.zip"
+                }
+              ]
+            }
+          ],
+          "vulnerabilities": [
+            {
+              "type": "config leak",
+              "target_file": "\\\\fileserver-01\\Backups\\domain-admin-passwords.txt"
+            },
+            {
+              "type": "weak perms",
+              "target_port": 445,
+              "target_file": "\\\\fileserver-01\\Shared\\service-accounts.csv"
+            }
+          ]
+        }
+      ],
+      "timestamp": "2026-04-07T16:40:06.290050"
+    },
+    "error": null,
+    "timestamp": "2026-04-07T16:40:06.290129",
+    "created_at": "2026-04-07T16:39:41.005374"
+  },
+  "trap_agent_1775551211136": {
+    "id": "trap_agent_1775551211136",
+    "type": "trap_agent",
+    "status": "completed",
+    "params": {
+      "mode": "all"
+    },
+    "result": {
+      "mode": "all",
+      "hosts": [
+        {
+          "name": "edge-fw",
+          "ports": [
+            {
+              "port": 443,
+              "service": "https",
+              "files": [
+                {
+                  "path": "/var/www/html/ssl-backup.zip"
+                },
+                {
+                  "path": "/var/www/html/admin-passwords.txt"
+                }
+              ]
+            },
+            {
+              "port": 22,
+              "service": "ssh",
+              "files": [
+                {
+                  "path": "/home/admin/.ssh/id_rsa.bak"
+                },
+                {
+                  "path": "/root/firewall-config-backup.tar.gz"
+                }
+              ]
+            }
+          ],
+          "traps": {
+            "host_loops": [],
+            "credential_chains": [
+              {
+                "name": "dmz_to_core_loop",
+                "steps": [
+                  {
+                    "host": "dmz-web-01",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "app-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "db-01",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "dmz-web-01",
+                    "tier": "low"
+                  }
+                ]
+              },
+              {
+                "name": "access_admin_loop",
+                "steps": [
+                  {
+                    "host": "edge-fw",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "bastion-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "jump-ops",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "edge-fw",
+                    "tier": "low"
+                  }
+                ]
+              },
+              {
+                "name": "api_file_loop",
+                "steps": [
+                  {
+                    "host": "dmz-api-01",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "fileserver-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "jump-ops",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "dmz-api-01",
+                    "tier": "low"
+                  }
+                ]
+              }
+            ]
+          },
+          "vulnerabilities": [
+            {
+              "type": "config leak",
+              "target_file": "/var/www/html/admin-passwords.txt"
+            },
+            {
+              "type": "weak creds",
+              "target_port": 22,
+              "target_file": "/home/admin/.ssh/id_rsa.bak"
+            }
+          ]
+        },
+        {
+          "name": "bastion-01",
+          "ports": [
+            {
+              "port": 22,
+              "service": "ssh",
+              "files": [
+                {
+                  "path": "/home/ops/.ssh/authorized_keys.old"
+                },
+                {
+                  "path": "/home/ops/admin-passwords.xlsx"
+                }
+              ]
+            },
+            {
+              "port": 3389,
+              "service": "rdp",
+              "files": [
+                {
+                  "path": "C:\\Users\\Administrator\\Desktop\\VPN-Credentials.txt"
+                },
+                {
+                  "path": "C:\\IT\\Backups\\bastion-01-system-backup.zip"
+                }
+              ]
+            }
+          ],
+          "traps": {
+            "host_loops": [],
+            "credential_chains": [
+              {
+                "name": "dmz_to_core_loop",
+                "steps": [
+                  {
+                    "host": "dmz-web-01",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "app-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "db-01",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "dmz-web-01",
+                    "tier": "low"
+                  }
+                ]
+              },
+              {
+                "name": "access_admin_loop",
+                "steps": [
+                  {
+                    "host": "edge-fw",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "bastion-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "jump-ops",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "edge-fw",
+                    "tier": "low"
+                  }
+                ]
+              },
+              {
+                "name": "api_file_loop",
+                "steps": [
+                  {
+                    "host": "dmz-api-01",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "fileserver-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "jump-ops",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "dmz-api-01",
+                    "tier": "low"
+                  }
+                ]
+              }
+            ]
+          },
+          "vulnerabilities": [
+            {
+              "type": "weak creds",
+              "target_file": "/home/ops/admin-passwords.xlsx"
+            },
+            {
+              "type": "config leak",
+              "target_file": "C:\\Users\\Administrator\\Desktop\\VPN-Credentials.txt"
+            }
+          ]
+        },
+        {
+          "name": "jump-ops",
+          "ports": [
+            {
+              "port": 22,
+              "service": "ssh",
+              "files": [
+                {
+                  "path": "/home/operator/.ssh/id_ed25519.bak"
+                },
+                {
+                  "path": "/opt/ops/maintenance-passwords.txt"
+                }
+              ]
+            },
+            {
+              "port": 5985,
+              "service": "winrm",
+              "files": [
+                {
+                  "path": "C:\\Ops\\Scripts\\prod-admin-creds.ps1"
+                },
+                {
+                  "path": "C:\\Users\\Public\\Documents\\server-access-backup.xlsx"
+                }
+              ]
+            }
+          ],
+          "traps": {
+            "host_loops": [],
+            "credential_chains": [
+              {
+                "name": "dmz_to_core_loop",
+                "steps": [
+                  {
+                    "host": "dmz-web-01",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "app-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "db-01",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "dmz-web-01",
+                    "tier": "low"
+                  }
+                ]
+              },
+              {
+                "name": "access_admin_loop",
+                "steps": [
+                  {
+                    "host": "edge-fw",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "bastion-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "jump-ops",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "edge-fw",
+                    "tier": "low"
+                  }
+                ]
+              },
+              {
+                "name": "api_file_loop",
+                "steps": [
+                  {
+                    "host": "dmz-api-01",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "fileserver-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "jump-ops",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "dmz-api-01",
+                    "tier": "low"
+                  }
+                ]
+              }
+            ]
+          },
+          "vulnerabilities": [
+            {
+              "type": "weak creds",
+              "target_file": "/opt/ops/maintenance-passwords.txt"
+            },
+            {
+              "type": "config leak",
+              "target_file": "C:\\Ops\\Scripts\\prod-admin-creds.ps1"
+            }
+          ]
+        },
+        {
+          "name": "dmz-web-01",
+          "ports": [
+            {
+              "port": 80,
+              "service": "http",
+              "files": [
+                {
+                  "path": "/var/www/html/backup-site.zip"
+                },
+                {
+                  "path": "/var/www/html/db-passwords.txt"
+                }
+              ]
+            },
+            {
+              "port": 443,
+              "service": "https",
+              "files": [
+                {
+                  "path": "/etc/nginx/ssl/server.key.bak"
+                },
+                {
+                  "path": "/var/www/html/finance-report-q4.xlsx"
+                }
+              ]
+            }
+          ],
+          "traps": {
+            "host_loops": [],
+            "credential_chains": [
+              {
+                "name": "dmz_to_core_loop",
+                "steps": [
+                  {
+                    "host": "dmz-web-01",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "app-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "db-01",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "dmz-web-01",
+                    "tier": "low"
+                  }
+                ]
+              },
+              {
+                "name": "access_admin_loop",
+                "steps": [
+                  {
+                    "host": "edge-fw",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "bastion-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "jump-ops",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "edge-fw",
+                    "tier": "low"
+                  }
+                ]
+              },
+              {
+                "name": "api_file_loop",
+                "steps": [
+                  {
+                    "host": "dmz-api-01",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "fileserver-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "jump-ops",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "dmz-api-01",
+                    "tier": "low"
+                  }
+                ]
+              }
+            ]
+          },
+          "vulnerabilities": [
+            {
+              "type": "config leak",
+              "target_file": "/var/www/html/db-passwords.txt"
+            },
+            {
+              "type": "path traversal",
+              "target_port": 80,
+              "target_file": "/var/www/html/backup-site.zip"
+            }
+          ]
+        },
+        {
+          "name": "dmz-api-01",
+          "ports": [
+            {
+              "port": 443,
+              "service": "https",
+              "files": [
+                {
+                  "path": "/opt/api/config-prod-backup.yml"
+                },
+                {
+                  "path": "/opt/api/service-account-key.json"
+                }
+              ]
+            },
+            {
+              "port": 8443,
+              "service": "https-alt",
+              "files": [
+                {
+                  "path": "/srv/api/secrets.tar.gz"
+                },
+                {
+                  "path": "/srv/api/customer-billing-export.csv"
+                }
+              ]
+            }
+          ],
+          "traps": {
+            "host_loops": [],
+            "credential_chains": [
+              {
+                "name": "dmz_to_core_loop",
+                "steps": [
+                  {
+                    "host": "dmz-web-01",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "app-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "db-01",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "dmz-web-01",
+                    "tier": "low"
+                  }
+                ]
+              },
+              {
+                "name": "access_admin_loop",
+                "steps": [
+                  {
+                    "host": "edge-fw",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "bastion-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "jump-ops",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "edge-fw",
+                    "tier": "low"
+                  }
+                ]
+              },
+              {
+                "name": "api_file_loop",
+                "steps": [
+                  {
+                    "host": "dmz-api-01",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "fileserver-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "jump-ops",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "dmz-api-01",
+                    "tier": "low"
+                  }
+                ]
+              }
+            ]
+          },
+          "vulnerabilities": [
+            {
+              "type": "config leak",
+              "target_file": "/opt/api/config-prod-backup.yml"
+            },
+            {
+              "type": "file upload",
+              "target_port": 8443,
+              "target_file": "/srv/api/secrets.tar.gz"
+            }
+          ]
+        },
+        {
+          "name": "app-01",
+          "ports": [
+            {
+              "port": 8080,
+              "service": "http-alt",
+              "files": [
+                {
+                  "path": "/opt/app/appsettings-prod.bak"
+                },
+                {
+                  "path": "/opt/app/db-credentials.txt"
+                }
+              ]
+            },
+            {
+              "port": 8443,
+              "service": "https-alt",
+              "files": [
+                {
+                  "path": "/etc/app/tls/private.key"
+                },
+                {
+                  "path": "/var/backups/app-01-full-backup.zip"
+                }
+              ]
+            }
+          ],
+          "traps": {
+            "host_loops": [],
+            "credential_chains": [
+              {
+                "name": "dmz_to_core_loop",
+                "steps": [
+                  {
+                    "host": "dmz-web-01",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "app-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "db-01",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "dmz-web-01",
+                    "tier": "low"
+                  }
+                ]
+              },
+              {
+                "name": "access_admin_loop",
+                "steps": [
+                  {
+                    "host": "edge-fw",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "bastion-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "jump-ops",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "edge-fw",
+                    "tier": "low"
+                  }
+                ]
+              },
+              {
+                "name": "api_file_loop",
+                "steps": [
+                  {
+                    "host": "dmz-api-01",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "fileserver-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "jump-ops",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "dmz-api-01",
+                    "tier": "low"
+                  }
+                ]
+              }
+            ]
+          },
+          "vulnerabilities": [
+            {
+              "type": "config leak",
+              "target_file": "/opt/app/db-credentials.txt"
+            },
+            {
+              "type": "RCE",
+              "target_port": 8080,
+              "target_file": "/opt/app/appsettings-prod.bak"
+            }
+          ]
+        },
+        {
+          "name": "db-01",
+          "ports": [
+            {
+              "port": 5432,
+              "service": "postgresql",
+              "files": [
+                {
+                  "path": "/var/lib/postgresql/backups/prod_dump.sql"
+                },
+                {
+                  "path": "/var/lib/postgresql/.pgpass.bak"
+                }
+              ]
+            },
+            {
+              "port": 3306,
+              "service": "mysql",
+              "files": [
+                {
+                  "path": "/var/backups/mysql-finance.sql.gz"
+                },
+                {
+                  "path": "/root/.my.cnf.old"
+                }
+              ]
+            }
+          ],
+          "traps": {
+            "host_loops": [],
+            "credential_chains": [
+              {
+                "name": "dmz_to_core_loop",
+                "steps": [
+                  {
+                    "host": "dmz-web-01",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "app-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "db-01",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "dmz-web-01",
+                    "tier": "low"
+                  }
+                ]
+              },
+              {
+                "name": "access_admin_loop",
+                "steps": [
+                  {
+                    "host": "edge-fw",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "bastion-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "jump-ops",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "edge-fw",
+                    "tier": "low"
+                  }
+                ]
+              },
+              {
+                "name": "api_file_loop",
+                "steps": [
+                  {
+                    "host": "dmz-api-01",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "fileserver-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "jump-ops",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "dmz-api-01",
+                    "tier": "low"
+                  }
+                ]
+              }
+            ]
+          },
+          "vulnerabilities": [
+            {
+              "type": "weak creds",
+              "target_file": "/var/lib/postgresql/.pgpass.bak"
+            },
+            {
+              "type": "config leak",
+              "target_file": "/root/.my.cnf.old"
+            }
+          ]
+        },
+        {
+          "name": "fileserver-01",
+          "ports": [
+            {
+              "port": 445,
+              "service": "smb",
+              "files": [
+                {
+                  "path": "\\\\fileserver-01\\Finance\\payroll-2024.xlsx"
+                },
+                {
+                  "path": "\\\\fileserver-01\\Backups\\domain-admin-passwords.txt"
+                }
+              ]
+            },
+            {
+              "port": 139,
+              "service": "netbios-ssn",
+              "files": [
+                {
+                  "path": "\\\\fileserver-01\\Shared\\service-accounts.csv"
+                },
+                {
+                  "path": "\\\\fileserver-01\\Archive\\executive-laptops-backup.zip"
+                }
+              ]
+            }
+          ],
+          "traps": {
+            "host_loops": [],
+            "credential_chains": [
+              {
+                "name": "dmz_to_core_loop",
+                "steps": [
+                  {
+                    "host": "dmz-web-01",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "app-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "db-01",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "dmz-web-01",
+                    "tier": "low"
+                  }
+                ]
+              },
+              {
+                "name": "access_admin_loop",
+                "steps": [
+                  {
+                    "host": "edge-fw",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "bastion-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "jump-ops",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "edge-fw",
+                    "tier": "low"
+                  }
+                ]
+              },
+              {
+                "name": "api_file_loop",
+                "steps": [
+                  {
+                    "host": "dmz-api-01",
+                    "tier": "low"
+                  },
+                  {
+                    "host": "fileserver-01",
+                    "tier": "mid"
+                  },
+                  {
+                    "host": "jump-ops",
+                    "tier": "high"
+                  },
+                  {
+                    "host": "dmz-api-01",
+                    "tier": "low"
+                  }
+                ]
+              }
+            ]
+          },
+          "vulnerabilities": [
+            {
+              "type": "config leak",
+              "target_file": "\\\\fileserver-01\\Backups\\domain-admin-passwords.txt"
+            },
+            {
+              "type": "weak perms",
+              "target_port": 445,
+              "target_file": "\\\\fileserver-01\\Shared\\service-accounts.csv"
+            }
+          ]
+        }
+      ],
+      "timestamp": "2026-04-07T16:40:18.173263"
+    },
+    "error": null,
+    "timestamp": "2026-04-07T16:40:18.173294",
+    "created_at": "2026-04-07T16:40:11.136190"
+  },
+  "deception_1775551226954": {
+    "id": "deception_1775551226954",
+    "type": "deception",
+    "status": "completed",
+    "params": {
+      "mode": "consistency",
+      "hosts": null
+    },
+    "result": {
+      "mode": "consistency",
+      "results": {
+        "consistency_report": {
+          "summary": "Several minor plausibility and trap-design issues were found, but the tree is mostly internally consistent.",
+          "issues": [
+            "edge-fw: port 22 SSH files include /root/firewall-config-backup.tar.gz, which is plausible, but /home/admin/.ssh/id_rsa.bak is a weak-creds lure rather than a file-backed credential chain; no explicit loopback path is defined.",
+            "bastion-01: RDP port 3389 is paired with Windows-style files, but the SSH port 22 also uses Linux-style paths; this mixed OS presentation is plausible for a bastion, though slightly noisy.",
+            "jump-ops: WinRM on 5985 is plausible, but the attached Windows PowerShell credential file is not referenced by a vulnerability that clearly leads to a follow-on host or loopback.",
+            "dmz-web-01: path traversal vulnerability targets /var/www/html/backup-site.zip, which is a file under the web root and fits the service, but the trap does not indicate a concrete attacker progression beyond the same host.",
+            "dmz-api-01: file upload vulnerability targets /srv/api/secrets.tar.gz, but the file is presented as a preexisting secret archive rather than an upload destination or planted lure, making the trap semantics a bit weak.",
+            "app-01: RCE on 8080 references /opt/app/appsettings-prod.bak, which is plausible, but there is no attached credential or pivot chain to ensure attacker continuation.",
+            "db-01: PostgreSQL and MySQL on the same host are plausible for a decoy, but the MySQL decoy files do not align with the long_term_port_facts suggestion of /etc/mysql/my.cnf and /var/lib/mysql, reducing realism slightly.",
+            "fileserver-01: UNC-style paths are appropriate for SMB/NetBIOS, but the vulnerability references weak perms on a share file without a defined credential or access chain to another host.",
+            "Trap chains exist and loop back to their starting hosts, but the host_loops arrays are empty, so the loop structure is only partially encoded and may not be actionable.",
+            "No impossible banners were present, and the long_term_port_facts generally match the declared services; the main concern is missing explicit attacker progression references rather than hard conflicts."
+          ],
+          "confidence": 0.84
+        }
+      },
+      "timestamp": "2026-04-07T16:40:33.685683"
+    },
+    "error": null,
+    "timestamp": "2026-04-07T16:40:33.685774",
+    "created_at": "2026-04-07T16:40:26.954161"
+  },
+  "deception_1775551236283": {
+    "id": "deception_1775551236283",
+    "type": "deception",
+    "status": "completed",
+    "params": {
+      "mode": "generate-configs",
+      "hosts": null
+    },
+    "result": {
+      "mode": "generate-configs",
+      "results": {
+        "host_configs": {
+          "generated": 8,
+          "hosts": [
+            "app-01",
+            "bastion-01",
+            "db-01",
+            "dmz-api-01",
+            "dmz-web-01",
+            "edge-fw",
+            "fileserver-01",
+            "jump-ops"
+          ]
+        }
+      },
+      "timestamp": "2026-04-07T16:41:26.451848"
+    },
+    "error": null,
+    "timestamp": "2026-04-07T16:41:26.451956",
+    "created_at": "2026-04-07T16:40:36.284000"
+  },
+  "full_pipeline_1775551556310": {
+    "id": "full_pipeline_1775551556310",
+    "type": "full_pipeline",
+    "status": "completed",
+    "params": {
+      "openai": true,
+      "openai_model": "gpt-5.4",
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 10.0
+    },
+    "result": {
+      "current_step": "deception",
+      "steps": [
+        {
+          "name": "perception",
+          "status": "completed",
+          "command": [
+            "python3",
+            "-u",
+            "run_perception.py",
+            "--openai",
+            "--openai-model",
+            "gpt-5.4"
+          ],
+          "output_tail": "[app-01] max stage -> none\n[bastion-01] max stage -> none\n[db-01] max stage -> none\n[dmz-api-01] max stage -> none\n[dmz-web-01] max stage -> none\n[edge-fw] max stage -> none\n[fileserver-01] max stage -> none\n[jump-ops] max stage -> none\n\n[OpenAI Preference Summary]\n- **app-01**\n  - No intrusion stages observed.\n  - No attacker objective inferred from this host.\n  - No preferred protocols or exploited services identified.\n  - No evidence of lateral movement to or from this host.\n  - No evidence of data theft.\n\n- **bastion-01**\n  - No intrusion stages observed.\n  - No attacker objective inferred from this host.\n  - No preferred protocols or exploited services identified.\n  - No evidence of lateral movement to or from this host.\n  - No evidence of data theft.\n\n- **db-01**\n  - No intrusion stages observed.\n  - No attacker objective inferred from this host.\n  - No preferred protocols or exploited services identified.\n  - No evidence of lateral movement to or from this host.\n  - No evidence of data theft.\n\n- **dmz-api-01**\n  - No intrusion stages observed.\n  - No attacker objective inferred from this host.\n  - No preferred protocols or exploited services identified.\n  - No evidence of lateral movement to or from this host.\n  - No evidence of data theft.\n\n- **dmz-web-01**\n  - No intrusion stages observed.\n  - No attacker objective inferred from this host.\n  - No preferred protocols or exploited services identified.\n  - No evidence of lateral movement to or from this host.\n  - No evidence of data theft.\n\n- **edge-fw**\n  - No intrusion stages observed.\n  - No attacker objective inferred from this host.\n  - No preferred protocols or exploited services identified.\n  - No evidence of lateral movement to or from this host.\n  - No evidence of data theft.\n\n- **fileserver-01**\n  - No intrusion stages observed.\n  - No attacker objective inferred from this host.\n  - No preferred protocols or exploited services identified.\n  - No evidence of lateral movement to or from this host.\n  - No evidence of data theft.\n\n- **jump-ops**\n  - No intrusion stages observed.\n  - No attacker objective inferred from this host.\n  - No preferred protocols or exploited services identified.\n  - No evidence of lateral movement to or from this host.\n  - No evidence of data theft.\n\n- **Overall assessment**\n  - Across all listed hosts, there are no observed intrusion events or progression beyond stage 0.\n  - Attacker objectives cannot be determined from the available data.\n  - Capability maturity cannot be assessed; no tradecraft or operational patterns are present.\n  - No preferred protocols, exploited services, lateral movement, persistence, or exfiltration activity observed.\n  - Current dataset indicates either no attack activity or insufficient telemetry.\n\n[Attacker Preferences]\nSaved 54 preference(s) to shadow/attacker_preferences.json\n\n[Shadow Topology]\nSaved topology to /home/xiaowang/Desktop/llm_honeynet/shadow/shadow_topology.json\nSaved Mininet launcher to /home/xiaowang/Desktop/llm_honeynet/shadow/mininet_shadow.py\n",
+          "duration": 10.55983591079712
+        },
+        {
+          "name": "honey_agent",
+          "status": "completed",
+          "command": [
+            "python3",
+            "-u",
+            "run_honey_agent.py",
+            "--mode",
+            "initialization",
+            "--openai-model",
+            "gpt-5.4"
+          ],
+          "output_tail": "[HoneyAgent] step 1/3: generating ports per host\n[HoneyAgent] step 2/3: generating files per host/port\n[HoneyAgent] step 3/3: generating vulns per host/port/file\n[+] Honey Agent initialization completed and saved to shadow/honey_agent.json\n",
+          "duration": 22.586443662643433
+        },
+        {
+          "name": "trap_agent",
+          "status": "completed",
+          "command": [
+            "python3",
+            "-u",
+            "run_trap_agent.py",
+            "all",
+            "--openai-model",
+            "gpt-5.4"
+          ],
+          "output_tail": "z-web-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"app-01\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"edge-fw\",\n                \"tier\": \"low\"\n              }\n            ]\n          },\n          {\n            \"name\": \"chain-2\",\n            \"steps\": [\n              {\n                \"host\": \"bastion-01\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"jump-ops\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"db-01\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"bastion-01\",\n                \"tier\": \"low\"\n              }\n            ]\n          },\n          {\n            \"name\": \"chain-3\",\n            \"steps\": [\n              {\n                \"host\": \"dmz-api-01\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"fileserver-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"app-01\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"dmz-api-01\",\n                \"tier\": \"low\"\n              }\n            ]\n          }\n        ]\n      },\n      \"vulnerabilities\": [\n        {\n          \"type\": \"weak creds\",\n          \"target_file\": \"/root/mysql-root-passwords.txt\"\n        },\n        {\n          \"type\": \"config leak\",\n          \"target_file\": \"/var/lib/postgresql/.pgpass.bak\"\n        }\n      ]\n    },\n    {\n      \"name\": \"fileserver-01\",\n      \"ports\": [\n        {\n          \"port\": 445,\n          \"service\": \"microsoft-ds\",\n          \"files\": [\n            {\n              \"path\": \"C:\\\\Shares\\\\Finance\\\\Q4-payroll.xlsx\"\n            },\n            {\n              \"path\": \"C:\\\\IT\\\\service-account-passwords.txt\"\n            }\n          ]\n        },\n        {\n          \"port\": 2049,\n          \"service\": \"nfs\",\n          \"files\": [\n            {\n              \"path\": \"/srv/nfs/backups/fileserver-archive.tar.gz\"\n            },\n            {\n              \"path\": \"/srv/nfs/keys/backup_rsa.old\"\n            }\n          ]\n        }\n      ],\n      \"traps\": {\n        \"host_loops\": [],\n        \"credential_chains\": [\n          {\n            \"name\": \"chain-1\",\n            \"steps\": [\n              {\n                \"host\": \"edge-fw\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"dmz-web-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"app-01\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"edge-fw\",\n                \"tier\": \"low\"\n              }\n            ]\n          },\n          {\n            \"name\": \"chain-2\",\n            \"steps\": [\n              {\n                \"host\": \"bastion-01\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"jump-ops\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"db-01\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"bastion-01\",\n                \"tier\": \"low\"\n              }\n            ]\n          },\n          {\n            \"name\": \"chain-3\",\n            \"steps\": [\n              {\n                \"host\": \"dmz-api-01\",\n                \"tier\": \"low\"\n              },\n              {\n                \"host\": \"fileserver-01\",\n                \"tier\": \"mid\"\n              },\n              {\n                \"host\": \"app-01\",\n                \"tier\": \"high\"\n              },\n              {\n                \"host\": \"dmz-api-01\",\n                \"tier\": \"low\"\n              }\n            ]\n          }\n        ]\n      },\n      \"vulnerabilities\": [\n        {\n          \"type\": \"config leak\",\n          \"target_file\": \"C:\\\\IT\\\\service-account-passwords.txt\"\n        },\n        {\n          \"type\": \"weak creds\",\n          \"target_port\": 445\n        }\n      ]\n    }\n  ]\n}\n",
+          "duration": 9.94153094291687
+        },
+        {
+          "name": "deception",
+          "status": "running",
+          "command": [
+            "python3",
+            "-u",
+            "run_deception.py",
+            "--mode",
+            "full",
+            "--openai-model",
+            "gpt-5.4"
+          ],
+          "output_tail": "       }\n                    },\n                    \"notes.txt\": {\n                      \"type\": \"file\",\n                      \"mode\": \"0640\",\n                      \"owner\": \"ops\",\n                      \"group\": \"ops\",\n                      \"modified\": \"2024-04-12T09:40:00Z\",\n                      \"content\": \"- Restore jump-ops config from /opt/backups/jump-ops-config.tar.gz if SSH policy changes fail.\\n- WinRM service accounts tracked separately by opsadmin on Windows side.\\n\"\n                    }\n                  }\n                }\n              }\n            },\n            \"opt\": {\n              \"type\": \"directory\",\n              \"mode\": \"0755\",\n              \"owner\": \"root\",\n              \"group\": \"root\",\n              \"children\": {\n                \"backups\": {\n                  \"type\": \"directory\",\n                  \"mode\": \"0750\",\n                  \"owner\": \"root\",\n                  \"group\": \"root\",\n                  \"children\": {\n                    \"jump-ops-config.tar.gz\": {\n                      \"type\": \"file\",\n                      \"mode\": \"0640\",\n                      \"owner\": \"root\",\n                      \"group\": \"root\",\n                      \"modified\": \"2024-04-12T08:55:00Z\",\n                      \"content\": \"placeholder-jump-ops-config-backup\\n\"\n                    }\n                  }\n                }\n              }\n            },\n            \"C:\": {\n              \"type\": \"directory\",\n              \"mode\": \"0755\",\n              \"owner\": \"root\",\n              \"group\": \"root\",\n              \"children\": {\n                \"Ops\": {\n                  \"type\": \"directory\",\n                  \"mode\": \"0755\",\n                  \"owner\": \"root\",\n                  \"group\": \"root\",\n                  \"children\": {\n                    \"winrm-service-accounts.txt\": {\n                      \"type\": \"file\",\n                      \"mode\": \"0644\",\n                      \"owner\": \"root\",\n                      \"group\": \"root\",\n                      \"modified\": \"2024-04-12T10:10:00Z\",\n                      \"content\": \"svc-ops-remote\\nsvc-patch\\nopsadmin\\n\"\n                    }\n                  }\n                },\n                \"Users\": {\n                  \"type\": \"directory\",\n                  \"mode\": \"0755\",\n                  \"owner\": \"root\",\n                  \"group\": \"root\",\n                  \"children\": {\n                    \"opsadmin\": {\n                      \"type\": \"directory\",\n                      \"mode\": \"0755\",\n                      \"owner\": \"root\",\n                      \"group\": \"root\",\n                      \"children\": {\n                        \"Documents\": {\n                          \"type\": \"directory\",\n                          \"mode\": \"0755\",\n                          \"owner\": \"root\",\n                          \"group\": \"root\",\n                          \"children\": {\n                            \"admin-passwords.csv\": {\n                              \"type\": \"file\",\n                              \"mode\": \"0644\",\n                              \"owner\": \"root\",\n                              \"group\": \"root\",\n                              \"modified\": \"2024-04-12T10:12:00Z\",\n                              \"content\": \"system,username,password\\njump-ops,opsadmin,P@ssw0rd!\\nwinrm,svc-ops-remote,Winter2024!\\ndb-01,dbadmin,DBAdmin!2024\\n\"\n                            }\n                          }\n                        }\n                      }\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      },\n      \"notes\": [\n        \"Preserved SSH on port 22 using long-term OpenSSH 8.4p1 facts.\",\n        \"Added ops SSH user and Linux-side artifacts to align with memory paths under /home/ops and /opt/backups.\",\n        \"Added Windows-side WinRM-related files only as filesystem lures; no unsupported winrm service config was emitted.\",\n        \"Kept hybrid Linux/Windows artifact mix because memory explicitly references both SSH and WinRM on this host.\"\n      ]\n    }\n  }\n}\n",
+          "duration": 178.67460417747498
+        }
+      ],
+      "openai": true,
+      "openai_model": "gpt-5.4",
+      "honey_mode": "initialization",
+      "trap_mode": "all",
+      "deception_mode": "full",
+      "skip_network": true,
+      "network_no_cli": true,
+      "network_duration": 10.0,
+      "heartbeat_at": "2026-04-07T16:49:39.947216",
+      "current_step_started_at": "2026-04-07T16:46:39.417901",
+      "finished_at": "2026-04-07T16:49:38.109842",
+      "summary": {
+        "step_count": 4,
+        "completed_steps": 3
+      }
+    },
+    "error": null,
+    "timestamp": "2026-04-07T16:49:39.947232",
+    "created_at": "2026-04-07T16:45:56.310915"
+  },
+  "perception_1775551963710": {
+    "id": "perception_1775551963710",
+    "type": "perception",
+    "status": "completed",
+    "params": {
+      "hosts": null,
+      "use_openai": true,
+      "openai_model": "gpt-5.4"
+    },
+    "result": {
+      "analyses": [
+        {
+          "host": "app-01",
+          "max_stage": 0,
+          "stage_label": "none",
+          "event_count": 19,
+          "events": [
+            {
+              "timestamp": "2026-04-02T06:34:31+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-02T06:35:53+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-02T06:35:53+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-02T06:35:53+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-02T06:35:53+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-02T06:35:53+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-02T06:35:53+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            }
+          ]
+        },
+        {
+          "host": "bastion-01",
+          "max_stage": 0,
+          "stage_label": "none",
+          "event_count": 14,
+          "events": [
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=rdp"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=rdp"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            }
+          ]
+        },
+        {
+          "host": "db-01",
+          "max_stage": 0,
+          "stage_label": "none",
+          "event_count": 14,
+          "events": [
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=postgresql"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=postgresql"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            }
+          ]
+        },
+        {
+          "host": "dmz-api-01",
+          "max_stage": 0,
+          "stage_label": "none",
+          "event_count": 12,
+          "events": [
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            }
+          ]
+        },
+        {
+          "host": "dmz-web-01",
+          "max_stage": 0,
+          "stage_label": "none",
+          "event_count": 12,
+          "events": [
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            }
+          ]
+        },
+        {
+          "host": "edge-fw",
+          "max_stage": 0,
+          "stage_label": "none",
+          "event_count": 12,
+          "events": [
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            }
+          ]
+        },
+        {
+          "host": "fileserver-01",
+          "max_stage": 0,
+          "stage_label": "none",
+          "event_count": 12,
+          "events": [
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            }
+          ]
+        },
+        {
+          "host": "jump-ops",
+          "max_stage": 0,
+          "stage_label": "none",
+          "event_count": 12,
+          "events": [
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            }
+          ]
+        }
+      ],
+      "total_hosts": 8,
+      "timestamp": "2026-04-07T16:52:43.747171",
+      "openai_summary": "- **app-01**\n  - No intrusion stages observed (`max_stage: 0`); no events recorded.\n  - **Attacker objective:** No evidence of targeting or follow-on activity against this host.\n  - **Capability maturity:** Cannot assess from this host.\n  - **Preferred protocols / exploited services:** None observed.\n  - **Lateral movement:** No evidence.\n  - **Data theft:** No evidence.\n\n- **bastion-01**\n  - No intrusion stages observed (`max_stage: 0`); no events recorded.\n  - **Attacker objective:** No evidence of access attempts or use as a pivot point.\n  - **Capability maturity:** Cannot assess from this host.\n  - **Preferred protocols / exploited services:** None observed.\n  - **Lateral movement:** No evidence.\n  - **Data theft:** No evidence.\n\n- **db-01**\n  - No intrusion stages observed (`max_stage: 0`); no events recorded.\n  - **Attacker objective:** No indication of database targeting, credential abuse, or collection activity.\n  - **Capability maturity:** Cannot assess from this host.\n  - **Preferred protocols / exploited services:** None observed.\n  - **Lateral movement:** No evidence.\n  - **Data theft:** No evidence.\n\n- **dmz-api-01**\n  - No intrusion stages observed (`max_stage: 0`); no events recorded.\n  - **Attacker objective:** No evidence of API probing, exploitation, or staging behavior.\n  - **Capability maturity:** Cannot assess from this host.\n  - **Preferred protocols / exploited services:** None observed.\n  - **Lateral movement:** No evidence.\n  - **Data theft:** No evidence.\n\n- **dmz-web-01**\n  - No intrusion stages observed (`max_stage: 0`); no events recorded.\n  - **Attacker objective:** No evidence of web exploitation attempts or foothold establishment.\n  - **Capability maturity:** Cannot assess from this host.\n  - **Preferred protocols / exploited services:** None observed.\n  - **Lateral movement:** No evidence.\n  - **Data theft:** No evidence.\n\n- **edge-fw**\n  - No intrusion stages observed (`max_stage: 0`); no events recorded.\n  - **Attacker objective:** No evidence of perimeter probing or blocked exploit traffic in the provided data.\n  - **Capability maturity:** Cannot assess from this host.\n  - **Preferred protocols / exploited services:** None observed.\n  - **Lateral movement:** No evidence.\n  - **Data theft:** No evidence.\n\n- **fileserver-01**\n  - No intrusion stages observed (`max_stage: 0`); no events recorded.\n  - **Attacker objective:** No indication of file collection, ransomware-like behavior, or share access.\n  - **Capability maturity:** Cannot assess from this host.\n  - **Preferred protocols / exploited services:** None observed.\n  - **Lateral movement:** No evidence.\n  - **Data theft:** No evidence.\n\n- **jump-ops**\n  - No intrusion stages observed (`max_stage: 0`); no events recorded.\n  - **Attacker objective:** No evidence of administrative access abuse or pivoting from this system.\n  - **Capability maturity:** Cannot assess from this host.\n  - **Preferred protocols / exploited services:** None observed.\n  - **Lateral movement:** No evidence.\n  - **Data theft:** No evidence.\n\n- **Overall assessment**\n  - Across all hosts, the dataset shows **no observed intrusion activity**.\n  - **Attacker objectives:** Not inferable from current telemetry.\n  - **Capability maturity:** Not assessable; no behaviors or tradecraft present.\n  - **Preferred protocols / exploited services:** None identified.\n  - **Lateral movement:** No evidence of successful movement between hosts.\n  - **Data theft:** No evidence of collection or exfiltration.\n  - This appears consistent with either **no attack observed**, **telemetry gaps**, or a time window with no captured malicious activity.",
+      "token_usage": {
+        "prompt_tokens": 244,
+        "completion_tokens": 824,
+        "total_tokens": 1068
+      }
+    },
+    "error": null,
+    "timestamp": "2026-04-07T16:52:57.911636",
+    "created_at": "2026-04-07T16:52:43.710090"
+  },
+  "deception_1775552013671": {
+    "id": "deception_1775552013671",
+    "type": "deception",
+    "status": "completed",
+    "params": {
+      "mode": "generate-configs",
+      "hosts": null,
+      "openai_model": "gpt-5.4"
+    },
+    "result": {
+      "mode": "generate-configs",
+      "results": {
+        "host_configs": {
+          "generated": 8,
+          "hosts": [
+            "app-01",
+            "bastion-01",
+            "db-01",
+            "dmz-api-01",
+            "dmz-web-01",
+            "edge-fw",
+            "fileserver-01",
+            "jump-ops"
+          ],
+          "_token_usage": {
+            "prompt_tokens": 88992,
+            "completion_tokens": 11668,
+            "total_tokens": 100660
+          }
+        }
+      },
+      "token_usage": {
+        "prompt_tokens": 88992,
+        "completion_tokens": 11668,
+        "total_tokens": 100660
+      },
+      "timestamp": "2026-04-07T16:56:14.297082"
+    },
+    "error": null,
+    "timestamp": "2026-04-07T16:56:14.297215",
+    "created_at": "2026-04-07T16:53:33.671131"
+  },
+  "deception_1775552265182": {
+    "id": "deception_1775552265182",
+    "type": "deception",
+    "status": "completed",
+    "params": {
+      "mode": "consistency",
+      "hosts": null,
+      "openai_model": "gpt-5.4"
+    },
+    "result": {
+      "mode": "consistency",
+      "results": {
+        "consistency_report": {
+          "summary": "Mostly plausible honeynet memory with coherent host/service/file pairings and valid host-loop trap chains. Main deception signals are weak credential/trap linkage gaps, a few service/file mismatches by platform realism, and one long-term fact inconsistency for dmz-web-01:80 banner/server identity.",
+          "issues": [
+            "No file-level trap references are present, so file-to-file loop validation is impossible and credential artifacts do not explicitly drive attackers into the defined chains.",
+            "Credential chain gap: edge-fw exposes SSH creds/password files but chain-1 does not show how those credentials pivot to dmz-web-01/app-01 beyond host ordering.",
+            "Credential chain gap: bastion-01 and jump-ops expose multiple credential files, but chain-2 lacks explicit artifact references tying those files to the next host in the loop.",
+            "Credential chain gap: dmz-api-01/fileserver-01/app-01 chain exists, but exposed files do not clearly reference the next host, reducing believability of attacker guidance.",
+            "edge-fw firewall role with /var/www/html and nginx VPN portal on 443 is possible but slightly appliance/Linux hybrid; could look synthetic without stronger firewall-specific artifacts.",
+            "bastion-01 mixes Linux SSH artifacts and Windows RDP filesystem artifacts on one host; possible, but without dual-platform context it may feel contrived.",
+            "jump-ops mixes Linux SSH artifacts and Windows WinRM filesystem artifacts on one host; possible, but same dual-platform realism issue as bastion-01.",
+            "dmz-web-01:443 contains /var/www/html/finance-report-2024.xlsx, which is a weak fit for a public web server and may look like planted bait unless linked to an application path.",
+            "db-01 vulnerability type 'weak creds' targets file /root/mysql-root-passwords.txt rather than target_port 3306; not invalid, but inconsistent with the schema used elsewhere and may weaken internal consistency.",
+            "Long-term fact conflict on dmz-web-01:80: version says nginx/1.18.0 while server_header says Apache/2.4.52 (Ubuntu); contradictory banner identity is a deception tell if surfaced.",
+            "No impossible port/service banners detected from the provided short-term memory itself.",
+            "All vulnerability target_file references resolve to existing files, and all target_port references resolve to existing ports.",
+            "All trap chains reference existing hosts and correctly loop back to their starting host; no non-existent host references found."
+          ],
+          "confidence": "0.89",
+          "token_usage": {
+            "prompt_tokens": 3408,
+            "completion_tokens": 498,
+            "total_tokens": 3906
+          }
+        }
+      },
+      "token_usage": {
+        "prompt_tokens": 3408,
+        "completion_tokens": 498,
+        "total_tokens": 3906
+      },
+      "timestamp": "2026-04-07T16:58:14.314961"
+    },
+    "error": null,
+    "timestamp": "2026-04-07T16:58:14.315057",
+    "created_at": "2026-04-07T16:57:45.182632"
+  },
+  "perception_1775562216244": {
+    "id": "perception_1775562216244",
+    "type": "perception",
+    "status": "completed",
+    "params": {
+      "hosts": null,
+      "use_openai": true,
+      "openai_model": "gpt-5.4-mini"
+    },
+    "result": {
+      "analyses": [
+        {
+          "host": "app-01",
+          "max_stage": 0,
+          "stage_label": "none",
+          "event_count": 19,
+          "events": [
+            {
+              "timestamp": "2026-04-02T06:34:31+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-02T06:35:53+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-02T06:35:53+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-02T06:35:53+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-02T06:35:53+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-02T06:35:53+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-02T06:35:53+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            }
+          ]
+        },
+        {
+          "host": "bastion-01",
+          "max_stage": 0,
+          "stage_label": "none",
+          "event_count": 14,
+          "events": [
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=rdp"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=rdp"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            }
+          ]
+        },
+        {
+          "host": "db-01",
+          "max_stage": 0,
+          "stage_label": "none",
+          "event_count": 14,
+          "events": [
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=postgresql"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=postgresql"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            }
+          ]
+        },
+        {
+          "host": "dmz-api-01",
+          "max_stage": 0,
+          "stage_label": "none",
+          "event_count": 12,
+          "events": [
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            }
+          ]
+        },
+        {
+          "host": "dmz-web-01",
+          "max_stage": 0,
+          "stage_label": "none",
+          "event_count": 12,
+          "events": [
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            }
+          ]
+        },
+        {
+          "host": "edge-fw",
+          "max_stage": 0,
+          "stage_label": "none",
+          "event_count": 12,
+          "events": [
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            }
+          ]
+        },
+        {
+          "host": "fileserver-01",
+          "max_stage": 0,
+          "stage_label": "none",
+          "event_count": 12,
+          "events": [
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            }
+          ]
+        },
+        {
+          "host": "jump-ops",
+          "max_stage": 0,
+          "stage_label": "none",
+          "event_count": 12,
+          "events": [
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-02T07:06:18+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ftp"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=http"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=https"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=mysql"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=ssh"
+            },
+            {
+              "timestamp": "2026-04-03T12:17:03+00:00",
+              "stage": null,
+              "summary": "startup svc=telnet"
+            }
+          ]
+        }
+      ],
+      "total_hosts": 8,
+      "timestamp": "2026-04-07T19:43:36.312704",
+      "openai_summary": "- **app-01**\n  - No observed intrusion activity.\n  - No evidence of targeting, execution, lateral movement, or exfiltration.\n\n- **bastion-01**\n  - No observed intrusion activity.\n  - No indication of credential use, remote access abuse, or pivoting.\n\n- **db-01**\n  - No observed intrusion activity.\n  - No evidence of database targeting or data theft attempts.\n\n- **dmz-api-01**\n  - No observed intrusion activity.\n  - No signs of API abuse, web exploitation, or service enumeration.\n\n- **dmz-web-01**\n  - No observed intrusion activity.\n  - No evidence of web exploitation or initial access.\n\n- **edge-fw**\n  - No observed intrusion activity.\n  - No indication of perimeter probing or exploitation.\n\n- **fileserver-01**\n  - No observed intrusion activity.\n  - No evidence of SMB/file-share abuse or staging.\n\n- **jump-ops**\n  - No observed intrusion activity.\n  - No sign of operator console compromise or internal pivoting.\n\n**Overall assessment**\n- No intrusion stages were observed on any host (`max_stage = 0` everywhere).\n- Attacker objectives cannot be inferred from the provided data due to lack of events.\n- No visible capability maturity, preferred protocols, exploited services, lateral movement, or data theft can be assessed from this dataset.\n- Current posture appears clean or unobserved; further telemetry would be needed to determine whether the environment was probed but not logged.",
+      "token_usage": {
+        "prompt_tokens": 244,
+        "completion_tokens": 311,
+        "total_tokens": 555
+      }
+    },
+    "error": null,
+    "timestamp": "2026-04-07T19:43:41.537701",
+    "created_at": "2026-04-07T19:43:36.244363"
+  }
+}

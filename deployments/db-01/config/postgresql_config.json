@@ -6,11 +6,15 @@
   "notes": [
     "Default PostgreSQL port",
     "Often has weak postgres user password",
-    "pg_hba.conf may have trust authentication"
+    "pg_hba.conf may have trust authentication",
+    "Primary production database host appearance",
+    "Credential-bearing backup artifacts intentionally present"
   ],
   "effective_decoys": [
     "Config at /etc/postgresql/13/main/pg_hba.conf",
     "Data directory at /var/lib/postgresql",
-    "Backup files with credentials"
+    "Backup files with credentials",
+    "Backup at /var/backups/postgres/prod-db-2024-10.sql.gz",
+    "Leaked credential file at /var/lib/postgresql/.pgpass.bak"
   ]
 }

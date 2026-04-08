@@ -5,9 +5,10 @@ from pathlib import Path
 from typing import Iterable, Optional
 
 from .analyzer import HostAnalysis
+from llm.openai_client import normalize_usage
 
 DEFAULT_KEY_PATH = Path("secrets/openai_api_key.txt")
-DEFAULT_MODEL = "gpt-4o-mini"
+DEFAULT_MODEL = "gpt-5.4-mini"
 
 
 class OpenAISummarizer:
@@ -20,13 +21,17 @@ class OpenAISummarizer:
         return self.api_key_path.exists() and self.api_key_path.read_text(encoding="utf-8").strip() != ""
 
     def summarize(self, analyses: Iterable[HostAnalysis]) -> str:
+        return self.summarize_with_usage(analyses)["summary"]
+
+    def summarize_with_usage(self, analyses: Iterable[HostAnalysis]) -> dict:
         analyses = list(analyses)
         if not analyses:
-            return "No host analyses provided."
+            return {"summary": "No host analyses provided.", "usage": {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}}
         if not self.is_configured():
-            return (
-                "OpenAI API key not configured. Populate secrets/openai_api_key.txt to enable preference summaries."
-            )
+            return {
+                "summary": "OpenAI API key not configured. Populate secrets/openai_api_key.txt to enable preference summaries.",
+                "usage": {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0},
+            }
 
         client = self._lazy_client()
         prompt = self._build_prompt(analyses)
@@ -35,9 +40,15 @@ class OpenAISummarizer:
                 model=self.model,
                 input=prompt,
             )
-            return response.output_text.strip()
+            return {
+                "summary": response.output_text.strip(),
+                "usage": normalize_usage(getattr(response, "usage", None)),
+            }
         except Exception as exc:  # noqa: BLE001
-            return f"Failed to contact OpenAI API: {exc}"
+            return {
+                "summary": f"Failed to contact OpenAI API: {exc}",
+                "usage": {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0},
+            }
 
     def _lazy_client(self):
         if self._client is not None:

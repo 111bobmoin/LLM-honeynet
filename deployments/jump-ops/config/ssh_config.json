@@ -27,13 +27,29 @@
       "motd": [
         "Welcome to the infrastructure bastion host."
       ]
+    },
+    "ops": {
+      "passwords": [
+        "Spring2024!",
+        "opsadmin2024"
+      ],
+      "home": "/home/ops",
+      "motd": [
+        "Welcome to jump-ops.",
+        "Operational access is monitored."
+      ]
     }
   },
   "shell_prompt": "root@intranet:~# ",
   "fake_commands": {
     "uname -a": "Linux intranet 5.15.0-92-generic #102-Ubuntu SMP Tue Jan 16 10:44:31 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux",
     "id": "uid=0(root) gid=0(root) groups=0(root)",
-    "last": "root     pts/0        10.54.17.23     Fri Apr 12 06:54   still logged in"
+    "last": "root     pts/0        10.54.17.23     Fri Apr 12 06:54   still logged in",
+    "hostname": "jump-ops",
+    "ls /home/ops/.ssh": "authorized_keys\nid_ed25519.old\nknown_hosts",
+    "ls /opt/backups": "jump-ops-config.tar.gz",
+    "cat /home/ops/notes.txt": "- Restore jump-ops config from /opt/backups/jump-ops-config.tar.gz if SSH policy changes fail.\n- WinRM service accounts tracked separately by opsadmin on Windows side.\n",
+    "cat /opt/ops/maintenance-passwords.txt": "operator: Spring2024!\nadmin: admin2024\nroot: toor\n"
   },
   "failure_message": "Permission denied, please try again.",
   "max_auth_attempts": 4,

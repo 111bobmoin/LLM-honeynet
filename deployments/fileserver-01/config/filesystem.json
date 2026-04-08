@@ -102,8 +102,8 @@
                 "mode": "0640",
                 "owner": "admin",
                 "group": "admin",
-                "modified": "2024-04-05T13:15:00Z",
-                "content": "- Rotate bastion passwords monthly.\n- Update VPN ACL before next deployment.\n"
+                "modified": "2024-04-12T09:30:00Z",
+                "content": "- Finance share permissions still too broad for quarterly payroll review.\n- Move service-account-passwords.txt out of shared storage after backup validation.\n- NFS archive cleanup pending for legacy key material.\n- API export for app-01 still expects fileserver-archive.tar.gz in the backup set.\n"
               },
               ".ssh": {
                 "type": "directory",
@@ -182,6 +182,38 @@
                     "group": "ftp",
                     "modified": "2024-04-10T03:10:00Z",
                     "content": "April 2024 release introduces improved telemetry collection and updated API schemas.\n"
+                  },
+                  "finance": {
+                    "type": "directory",
+                    "mode": "0755",
+                    "owner": "ftp",
+                    "group": "ftp",
+                    "children": {
+                      "payroll-2024.xlsx": {
+                        "type": "file",
+                        "mode": "0644",
+                        "owner": "ftp",
+                        "group": "ftp",
+                        "modified": "2024-04-12T09:00:00Z",
+                        "content": "placeholder\n"
+                      }
+                    }
+                  },
+                  "Finance": {
+                    "type": "directory",
+                    "mode": "0775",
+                    "owner": "ftp",
+                    "group": "ftp",
+                    "children": {
+                      "Q4-payroll.xlsx": {
+                        "type": "file",
+                        "mode": "0664",
+                        "owner": "ftp",
+                        "group": "ftp",
+                        "modified": "2024-04-12T09:20:00Z",
+                        "content": "placeholder\n"
+                      }
+                    }
                   }
                 }
               },
@@ -198,6 +230,118 @@
                     "group": "deploy",
                     "modified": "2024-04-10T01:00:00Z",
                     "content": "placeholder\n"
+                  },
+                  "domain-admin-passwords.txt": {
+                    "type": "file",
+                    "mode": "0640",
+                    "owner": "deploy",
+                    "group": "deploy",
+                    "modified": "2024-04-12T09:05:00Z",
+                    "content": "placeholder\n"
+                  },
+                  "fileserver-archive.tar.gz": {
+                    "type": "file",
+                    "mode": "0640",
+                    "owner": "deploy",
+                    "group": "deploy",
+                    "modified": "2024-04-10T01:15:00Z",
+                    "content": "placeholder\n"
+                  },
+                  "app-01-sync-manifest.txt": {
+                    "type": "file",
+                    "mode": "0640",
+                    "owner": "deploy",
+                    "group": "deploy",
+                    "modified": "2024-04-12T09:35:00Z",
+                    "content": "sync_target=app-01\nexport_path=/srv/nfs/backups/fileserver-archive.tar.gz\nservice_account=svc_app01_export\nlast_success=2024-04-11T23:40:12Z\n"
+                  }
+                }
+              },
+              "shared": {
+                "type": "directory",
+                "mode": "0775",
+                "owner": "ftp",
+                "group": "ftp",
+                "children": {
+                  "service-accounts.csv": {
+                    "type": "file",
+                    "mode": "0664",
+                    "owner": "ftp",
+                    "group": "ftp",
+                    "modified": "2024-04-12T09:10:00Z",
+                    "content": "placeholder\n"
+                  },
+                  "service-account-passwords.txt": {
+                    "type": "file",
+                    "mode": "0664",
+                    "owner": "ftp",
+                    "group": "ftp",
+                    "modified": "2024-04-12T09:25:00Z",
+                    "content": "svc_backup: Winter2024!\nsvc_sync: SyncNow#2024\nsvc_reports: Reports!23\nsvc_app01_export: App01-Export#2024\n"
+                  }
+                }
+              },
+              "archive": {
+                "type": "directory",
+                "mode": "0755",
+                "owner": "ftp",
+                "group": "ftp",
+                "children": {
+                  "executive-laptops-backup.zip": {
+                    "type": "file",
+                    "mode": "0644",
+                    "owner": "ftp",
+                    "group": "ftp",
+                    "modified": "2024-04-12T09:15:00Z",
+                    "content": "placeholder\n"
+                  },
+                  "backup_rsa.old": {
+                    "type": "file",
+                    "mode": "0644",
+                    "owner": "ftp",
+                    "group": "ftp",
+                    "modified": "2024-03-28T22:10:00Z",
+                    "content": "-----BEGIN OPENSSH PRIVATE KEY-----\nplaceholder\n-----END OPENSSH PRIVATE KEY-----\n"
+                  }
+                }
+              }
+            }
+          },
+          "nfs": {
+            "type": "directory",
+            "mode": "0755",
+            "owner": "root",
+            "group": "root",
+            "children": {
+              "backups": {
+                "type": "directory",
+                "mode": "0750",
+                "owner": "deploy",
+                "group": "deploy",
+                "children": {
+                  "fileserver-archive.tar.gz": {
+                    "type": "file",
+                    "mode": "0640",
+                    "owner": "deploy",
+                    "group": "deploy",
+                    "modified": "2024-04-10T01:15:00Z",
+                    "content": "placeholder\n"
+                  }
+                }
+              },
+              "keys": {
+                "type": "directory",
+                "mode": "0750",
+                "owner": "deploy",
+                "group": "deploy",
+                "children": {
+                  "backup_rsa.old": {
+                    "type": "file",
+                    "mode": "0640",
+                    "owner": "deploy",
+                    "group": "deploy",
+                    "modified": "2024-03-28T22:10:00Z",
+                    "content": "-----BEGIN OPENSSH PRIVATE KEY-----\nplaceholder\n-----END OPENSSH PRIVATE KEY-----\n"
                   }
                 }
               }
@@ -352,6 +496,34 @@
           "modified": "2024-04-10T03:10:00Z",
           "content": "April 2024 release introduces improved telemetry collection and updated API schemas.\n"
         }
+      },
+      "backups": {
+        "snapshot-2024-04-10.tar.gz": {
+          "type": "file",
+          "mode": "0640",
+          "owner": "deploy",
+          "group": "deploy",
+          "modified": "2024-04-10T01:00:00Z",
+          "content": "placeholder\n"
+        },
+        "children": {
+          "ftp_backup.tar.gz": {
+            "type": "file",
+            "mode": "0640",
+            "owner": "deploy",
+            "group": "deploy",
+            "modified": "2024-04-10T01:00:00Z",
+            "content": "placeholder\n"
+          },
+          "credentials.txt": {
+            "type": "file",
+            "mode": "0640",
+            "owner": "deploy",
+            "group": "deploy",
+            "modified": "2024-04-10T01:00:00Z",
+            "content": "fake_credentials\n"
+          }
+        }
       }
     }
   },
@@ -370,5 +542,10 @@
         "content": "Service escalation steps:\n1. Check systemd unit status.\n2. Review journal logs for errors.\n3. Contact on-call engineer if outage exceeds 15 minutes.\n"
       }
     }
-  }
+  },
+  "notes": [
+    "Kept SMB/NetBIOS focus unchanged; no service updates were needed.",
+    "Added filesystem lures matching the observed UNC paths and vulnerabilities.",
+    "Used permissive share/file modes to support the weak-permissions and config-leak traps."
+  ]
 }

@@ -38,6 +38,11 @@ def parse_args() -> argparse.Namespace:
         help="Call OpenAI API for preference summarisation (requires secrets/openai_api_key.txt).",
     )
     parser.add_argument(
+        "--openai-model",
+        default="gpt-5.4-mini",
+        help="OpenAI model name for preference summarisation (default: gpt-5.4-mini)",
+    )
+    parser.add_argument(
         "--preferences-output",
         type=Path,
         default=Path("shadow/attacker_preferences.json"),
@@ -154,7 +159,7 @@ def main() -> None:
         print_analysis(analysis)
 
     if args.openai and analyses:
-        summarizer = OpenAISummarizer()
+        summarizer = OpenAISummarizer(model=args.openai_model)
         summary = summarizer.summarize(analyses)
         print("\n[OpenAI Preference Summary]")
         print(summary)

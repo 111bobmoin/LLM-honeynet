@@ -33,13 +33,16 @@ ENV/
 *~
 
 # Secrets - NEVER commit API keys
-secrets/*.txt
-secrets/*.key
+secrets/*
 !secrets/*.example
 
 # Generated data (optional - comment out if you want to track these)
 # shadow/*.json
 # deployments/
+benchmark_results/
+certs/
+deployments/*/certs/
+shadow/*.json
 
 # Logs
 *.log

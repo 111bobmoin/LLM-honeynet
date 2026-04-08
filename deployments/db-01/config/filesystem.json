@@ -42,6 +42,78 @@
                 "content": "Port 22\nPermitRootLogin prohibit-password\nPasswordAuthentication yes\nSubsystem sftp /usr/lib/openssh/sftp-server\n"
               }
             }
+          },
+          "mysql": {
+            "type": "directory",
+            "mode": "0755",
+            "owner": "root",
+            "group": "root",
+            "children": {
+              "my.cnf": {
+                "type": "file",
+                "mode": "0644",
+                "owner": "root",
+                "group": "root",
+                "modified": "2026-04-07T08:40:59Z",
+                "content": "[client]\nport=3306\nsocket=/var/run/mysqld/mysqld.sock\n\n[mysqld]\nuser=mysql\nbind-address=0.0.0.0\nport=3306\nserver-id=101\ndatadir=/var/lib/mysql\nsocket=/var/run/mysqld/mysqld.sock\nlog_error=/var/log/mysql/error.log\nslow_query_log=1\nslow_query_log_file=/var/log/mysql/mysql-slow.log\n"
+              },
+              "debian.cnf": {
+                "type": "file",
+                "mode": "0600",
+                "owner": "root",
+                "group": "root",
+                "modified": "2026-04-06T23:10:00Z",
+                "content": "# Automatically generated for maintenance\n[client]\nhost=localhost\nuser=debian-sys-maint\npassword=Maint#2024!\nsocket=/var/run/mysqld/mysqld.sock\n"
+              }
+            }
+          },
+          "postgresql": {
+            "type": "directory",
+            "mode": "0755",
+            "owner": "root",
+            "group": "root",
+            "children": {
+              "13": {
+                "type": "directory",
+                "mode": "0755",
+                "owner": "postgres",
+                "group": "postgres",
+                "children": {
+                  "main": {
+                    "type": "directory",
+                    "mode": "0750",
+                    "owner": "postgres",
+                    "group": "postgres",
+                    "children": {
+                      "pg_hba.conf": {
+                        "type": "file",
+                        "mode": "0640",
+                        "owner": "postgres",
+                        "group": "postgres",
+                        "modified": "2026-04-07T08:40:59Z",
+                        "content": "# PostgreSQL Client Authentication Configuration File\nlocal   all             postgres                                peer\nlocal   all             all                                     md5\nhost    all             all             127.0.0.1/32            md5\nhost    all             all             10.20.0.0/16            md5\nhost    replication     replicator      10.20.5.0/24            md5\n"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "hostname": {
+            "type": "file",
+            "mode": "0644",
+            "owner": "root",
+            "group": "root",
+            "modified": "2026-04-07T08:48:03Z",
+            "content": "db-01\n"
+          },
+          "hosts": {
+            "type": "file",
+            "mode": "0644",
+            "owner": "root",
+            "group": "root",
+            "modified": "2026-04-07T08:48:03Z",
+            "content": "127.0.0.1 localhost\n127.0.1.1 db-01\n10.20.5.21 db-01\n10.20.4.18 app-01\n10.20.1.10 bastion-01\n10.20.1.14 jump-ops\n"
           }
         }
       },
@@ -64,6 +136,38 @@
                 "group": "adm",
                 "modified": "2024-04-12T06:30:00Z",
                 "content": "Apr 12 06:26:44 intranet sshd[2031]: Accepted password for admin from 10.54.17.23 port 52844 ssh2\nApr 12 06:27:18 intranet sshd[2044]: Failed password for root from 203.0.113.41 port 44112 ssh2\nApr 12 06:29:02 intranet vsftpd[2140]: CONNECT: Client \"198.51.100.77\"\n"
+              },
+              "mysql": {
+                "type": "directory",
+                "mode": "0755",
+                "owner": "mysql",
+                "group": "adm",
+                "children": {
+                  "error.log": {
+                    "type": "file",
+                    "mode": "0640",
+                    "owner": "mysql",
+                    "group": "adm",
+                    "modified": "2026-04-07T08:46:00Z",
+                    "content": "2026-04-07T08:09:11.221431Z 0 [System] [MY-010116] /usr/sbin/mysqld starting as process 1184\n2026-04-07T08:09:12.004812Z 0 [System] [MY-010229] Starting XA crash recovery...\n2026-04-07T08:09:12.118004Z 0 [System] [MY-010232] XA crash recovery finished.\n2026-04-07T08:31:44.551002Z 12 [Warning] [MY-010068] CA certificate ca.pem is self signed.\n2026-04-07T08:33:09.114220Z 15 [Note] Access denied for user 'readonly'@'10.20.4.18' (using password: YES)\n2026-04-07T08:41:27.882901Z 18 [Note] Access denied for user 'backup_admin'@'localhost' (using password: YES)\n"
+                  }
+                }
+              },
+              "postgresql": {
+                "type": "directory",
+                "mode": "0755",
+                "owner": "postgres",
+                "group": "adm",
+                "children": {
+                  "postgresql-13-main.log": {
+                    "type": "file",
+                    "mode": "0640",
+                    "owner": "postgres",
+                    "group": "adm",
+                    "modified": "2026-04-07T08:44:00Z",
+                    "content": "2026-04-07 08:12:14.102 UTC [991] LOG:  starting PostgreSQL 13.10 on x86_64-pc-linux-gnu\n2026-04-07 08:12:14.109 UTC [991] LOG:  listening on IPv4 address \"0.0.0.0\", port 5432\n2026-04-07 08:12:14.121 UTC [991] LOG:  database system is ready to accept connections\n2026-04-07 08:28:55.441 UTC [1142] FATAL:  password authentication failed for user \"postgres\"\n2026-04-07 08:28:55.441 UTC [1142] DETAIL:  Connection matched pg_hba.conf line 4: \"host    all             all             10.20.0.0/16            md5\"\n2026-04-07 08:39:03.772 UTC [1218] LOG:  connection authorized: user=app_sync database=appdb application_name=psql\n"
+                  }
+                }
               }
             }
           },
@@ -108,8 +212,104 @@
                         "group": "root",
                         "modified": "2024-04-10T08:14:00Z",
                         "content": "/* backup.sql */"
+                      },
+                      "finance_data.csv": {
+                        "type": "file",
+                        "mode": "0644",
+                        "owner": "root",
+                        "group": "root",
+                        "modified": "2024-04-10T08:14:00Z",
+                        "content": "/* finance_data.csv */"
+                      },
+                      "credentials.txt": {
+                        "type": "file",
+                        "mode": "0640",
+                        "owner": "root",
+                        "group": "root",
+                        "modified": "2024-04-10T08:14:00Z",
+                        "content": "/* MySQL credentials placeholder */"
+                      },
+                      "finance_data.sql": {
+                        "type": "file",
+                        "mode": "0644",
+                        "owner": "root",
+                        "group": "root",
+                        "modified": "2024-04-10T08:14:00Z",
+                        "content": "/* finance_data.sql */"
+                      },
+                      "keys.txt": {
+                        "type": "file",
+                        "mode": "0640",
+                        "owner": "root",
+                        "group": "root",
+                        "modified": "2024-04-10T08:14:00Z",
+                        "content": "/* MySQL keys placeholder */"
+                      },
+                      "backup_credentials.sql": {
+                        "type": "file",
+                        "mode": "0640",
+                        "owner": "root",
+                        "group": "root",
+                        "modified": "2024-04-10T08:14:00Z",
+                        "content": "/* MySQL credentials placeholder */"
                       }
                     }
+                  }
+                }
+              },
+              "postgresql": {
+                "type": "directory",
+                "mode": "0755",
+                "owner": "postgres",
+                "group": "postgres",
+                "children": {
+                  ".pgpass.bak": {
+                    "type": "file",
+                    "mode": "0600",
+                    "owner": "postgres",
+                    "group": "postgres",
+                    "modified": "2026-04-04T19:12:00Z",
+                    "content": "localhost:5432:*:postgres:Winter2024!\napp-01:5432:appdb:app_sync:SyncApp#2024\n"
+                  }
+                }
+              }
+            }
+          },
+          "backups": {
+            "type": "directory",
+            "mode": "0750",
+            "owner": "root",
+            "group": "root",
+            "children": {
+              "mysql": {
+                "type": "directory",
+                "mode": "0750",
+                "owner": "root",
+                "group": "root",
+                "children": {
+                  "full-backup.sql": {
+                    "type": "file",
+                    "mode": "0640",
+                    "owner": "root",
+                    "group": "root",
+                    "modified": "2026-04-06T02:15:00Z",
+                    "content": "-- MySQL dump 10.13  Distrib 8.0.26\n-- Host: localhost    Database: prod_ledger\nCREATE DATABASE IF NOT EXISTS prod_ledger;\nUSE prod_ledger;\nCREATE TABLE accounts (id int primary key, account_name varchar(128), status varchar(32));\nINSERT INTO accounts VALUES (1,'northwind-payments','active');\n"
+                  }
+                }
+              },
+              "postgres": {
+                "type": "directory",
+                "mode": "0750",
+                "owner": "postgres",
+                "group": "postgres",
+                "children": {
+                  "prod-db-2024-10.sql.gz": {
+                    "type": "file",
+                    "mode": "0640",
+                    "owner": "postgres",
+                    "group": "postgres",
+                    "modified": "2026-04-05T01:20:00Z",
+                    "content": "gzip placeholder: pg_dump of prod database cluster"
                   }
                 }
               }
@@ -134,8 +334,8 @@
                 "mode": "0640",
                 "owner": "admin",
                 "group": "admin",
-                "modified": "2024-04-05T13:15:00Z",
-                "content": "- Rotate bastion passwords monthly.\n- Update VPN ACL before next deployment.\n"
+                "modified": "2026-04-06T18:20:00Z",
+                "content": "- db-01 promoted as primary reporting replica source.\n- app-01 sync user still uses app_sync for postgres jobs.\n- Remove /var/lib/postgresql/.pgpass.bak after audit sign-off.\n"
               },
               ".ssh": {
                 "type": "directory",
@@ -168,8 +368,8 @@
             "mode": "0600",
             "owner": "root",
             "group": "root",
-            "modified": "2024-04-11T21:42:00Z",
-            "content": "apt update\napt upgrade\ncat /var/log/auth.log\n"
+            "modified": "2026-04-06T22:55:00Z",
+            "content": "systemctl status mysql\nsystemctl status postgresql\ncat /root/mysql-root-passwords.txt\nls -l /var/backups/mysql\nvi /etc/postgresql/13/main/pg_hba.conf\n"
           },
           "readme.md": {
             "type": "file",
@@ -178,6 +378,14 @@
             "group": "root",
             "modified": "2024-03-01T08:00:00Z",
             "content": "# Internal bastion host\n\nDo not store secrets locally. All changes must be tracked in Git.\n"
+          },
+          "mysql-root-passwords.txt": {
+            "type": "file",
+            "mode": "0600",
+            "owner": "root",
+            "group": "root",
+            "modified": "2026-04-03T22:41:00Z",
+            "content": "# emergency reference only\nroot@localhost: root123\nbackup_admin: Backup!2024\nreadonly: readonly\n"
           }
         }
       },
@@ -316,6 +524,46 @@
                     "group": "root",
                     "modified": "2024-04-10T08:14:00Z",
                     "content": "/* backup.sql */"
+                  },
+                  "finance_data.csv": {
+                    "type": "file",
+                    "mode": "0644",
+                    "owner": "root",
+                    "group": "root",
+                    "modified": "2024-04-10T08:14:00Z",
+                    "content": "/* finance_data.csv */"
+                  },
+                  "credentials.txt": {
+                    "type": "file",
+                    "mode": "0640",
+                    "owner": "root",
+                    "group": "root",
+                    "modified": "2024-04-10T08:14:00Z",
+                    "content": "/* MySQL credentials placeholder */"
+                  },
+                  "finance_data.sql": {
+                    "type": "file",
+                    "mode": "0644",
+                    "owner": "root",
+                    "group": "root",
+                    "modified": "2024-04-10T08:14:00Z",
+                    "content": "/* finance_data.sql */"
+                  },
+                  "keys.txt": {
+                    "type": "file",
+                    "mode": "0640",
+                    "owner": "root",
+                    "group": "root",
+                    "modified": "2024-04-10T08:14:00Z",
+                    "content": "/* MySQL keys placeholder */"
+                  },
+                  "backup_credentials.sql": {
+                    "type": "file",
+                    "mode": "0640",
+                    "owner": "root",
+                    "group": "root",
+                    "modified": "2024-04-10T08:14:00Z",
+                    "content": "/* MySQL credentials placeholder */"
                   }
                 }
               }

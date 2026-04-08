@@ -21,7 +21,7 @@
       "path": "/status",
       "status": 200,
       "response_headers": {
-        "Content-Type": "text/html; charset=utf-8",
+        "Content-Type": "text/html",
         "Cache-Control": "no-store"
       },
       "body_file": "../www/status.html"

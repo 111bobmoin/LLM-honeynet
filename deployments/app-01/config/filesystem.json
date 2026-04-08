@@ -42,6 +42,30 @@
                 "content": "Port 22\nPermitRootLogin prohibit-password\nPasswordAuthentication yes\nSubsystem sftp /usr/lib/openssh/sftp-server\n"
               }
             }
+          },
+          "app": {
+            "type": "directory",
+            "mode": "0755",
+            "owner": "root",
+            "group": "root",
+            "children": {
+              "ssl": {
+                "type": "directory",
+                "mode": "0755",
+                "owner": "root",
+                "group": "root",
+                "children": {
+                  "app01-keystore.p12.old": {
+                    "type": "file",
+                    "mode": "0600",
+                    "owner": "root",
+                    "group": "root",
+                    "modified": "2026-04-07T08:40:48Z",
+                    "content": "PKCS12 placeholder for retired app-01 certificate bundle\nalias=app01-prod\n"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -96,6 +120,46 @@
                 "group": "root",
                 "modified": "2024-04-10T08:14:00Z",
                 "content": "Deny from all\n"
+              },
+              "upload.html": {
+                "type": "file",
+                "mode": "0644",
+                "owner": "root",
+                "group": "root",
+                "modified": "2026-04-07T08:41:05Z",
+                "content": "<html><body><h1>Upload Center</h1><form method=\"post\" enctype=\"multipart/form-data\" action=\"/upload\"><input type=\"file\" name=\"file\" /><button type=\"submit\">Upload</button></form><p>Accepted formats: zip, jar, yml</p></body></html>"
+              },
+              "index.html": {
+                "type": "file",
+                "mode": "0644",
+                "owner": "root",
+                "group": "root",
+                "modified": "2026-04-07T08:47:20Z",
+                "content": "<html><body><h1>app-01 portal</h1><p>Environment: production</p><p>Use /status for health checks.</p></body></html>"
+              },
+              "status.html": {
+                "type": "file",
+                "mode": "0644",
+                "owner": "root",
+                "group": "root",
+                "modified": "2026-04-07T08:47:20Z",
+                "content": "<html><body><h1>Status: OK</h1><ul><li>profile=prod</li><li>uploads=enabled</li><li>db=readonly</li></ul></body></html>"
+              },
+              "404.html": {
+                "type": "file",
+                "mode": "0644",
+                "owner": "root",
+                "group": "root",
+                "modified": "2026-04-07T08:47:20Z",
+                "content": "<html><body><h1>404 Not Found</h1></body></html>"
+              },
+              "https_index.html": {
+                "type": "file",
+                "mode": "0644",
+                "owner": "root",
+                "group": "root",
+                "modified": "2026-04-07T08:47:20Z",
+                "content": "<html><body><h1>app-01 secure endpoint</h1><p>nginx frontend active</p><p>Build 20240412</p></body></html>"
               }
             }
           }
@@ -252,12 +316,157 @@
             "content": "Deny from all\n"
           }
         }
+      },
+      "opt": {
+        "type": "directory",
+        "mode": "0755",
+        "owner": "root",
+        "group": "root",
+        "children": {
+          "app": {
+            "type": "directory",
+            "mode": "0755",
+            "owner": "root",
+            "group": "root",
+            "children": {
+              "appsettings-prod.bak": {
+                "type": "file",
+                "mode": "0640",
+                "owner": "root",
+                "group": "root",
+                "modified": "2026-04-03T12:27:52Z",
+                "content": "[app]\nname=app-01\nmode=production\napi_base=https://127.0.0.1:8443\nfeature_flags=metrics,uploads,admin\n\n[database]\nhost=127.0.0.1\nport=3306\nuser=readonly\npassword=AppDb!2024\nschema=appdb\n\n[secrets]\nbackup_key=7f2c9a1d4b8e\n"
+              },
+              "config": {
+                "type": "directory",
+                "mode": "0755",
+                "owner": "root",
+                "group": "root",
+                "children": {
+                  "application-prod.yml.bak": {
+                    "type": "file",
+                    "mode": "0640",
+                    "owner": "root",
+                    "group": "root",
+                    "modified": "2026-04-07T08:40:48Z",
+                    "content": "server:\n  port: 8443\n  forward-headers-strategy: native\nspring:\n  application:\n    name: app-01\n  datasource:\n    url: jdbc:mysql://127.0.0.1:3306/appdb\n    username: readonly\n    password: AppDb!2024\nmanagement:\n  endpoints:\n    web:\n      exposure:\n        include: health,info,env\napp:\n  upload:\n    enabled: true\n    temp-dir: /opt/app/uploads\n  backup:\n    export-path: /opt/app/backups/customer-data-export.zip\n"
+                  }
+                }
+              },
+              "secrets": {
+                "type": "directory",
+                "mode": "0750",
+                "owner": "root",
+                "group": "root",
+                "children": {
+                  "db-passwords.txt": {
+                    "type": "file",
+                    "mode": "0640",
+                    "owner": "root",
+                    "group": "root",
+                    "modified": "2026-04-07T08:40:48Z",
+                    "content": "appdb\nreadonly=AppDb!2024\nreporting=RptUser!2024\nadmin=AppAdmin!2024\n"
+                  }
+                }
+              },
+              "backups": {
+                "type": "directory",
+                "mode": "0750",
+                "owner": "root",
+                "group": "root",
+                "children": {
+                  "customer-data-export.zip": {
+                    "type": "file",
+                    "mode": "0640",
+                    "owner": "root",
+                    "group": "root",
+                    "modified": "2026-04-07T08:41:05Z",
+                    "content": "PK\u0003\u0004 customer export placeholder\ncustomers.csv\norders.csv\n"
+                  }
+                }
+              },
+              "uploads": {
+                "type": "directory",
+                "mode": "0770",
+                "owner": "root",
+                "group": "root",
+                "children": {
+                  ".keep": {
+                    "type": "file",
+                    "mode": "0640",
+                    "owner": "root",
+                    "group": "root",
+                    "modified": "2026-04-07T08:47:20Z",
+                    "content": "temporary upload staging\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "var": {
+          "type": "directory",
+          "mode": "0755",
+          "owner": "root",
+          "group": "root",
+          "children": {
+            "backups": {
+              "type": "directory",
+              "mode": "0750",
+              "owner": "root",
+              "group": "root",
+              "children": {
+                "app-01-full-backup.zip": {
+                  "type": "file",
+                  "mode": "0640",
+                  "owner": "root",
+                  "group": "root",
+                  "modified": "2026-04-03T12:27:52Z",
+                  "content": "PK\u0003\u0004 placeholder archive contents\n"
+                }
+              }
+            }
+          }
+        },
+        "etc": {
+          "type": "directory",
+          "mode": "0755",
+          "owner": "root",
+          "group": "root",
+          "children": {
+            "app": {
+              "type": "directory",
+              "mode": "0755",
+              "owner": "root",
+              "group": "root",
+              "children": {
+                "tls": {
+                  "type": "directory",
+                  "mode": "0755",
+                  "owner": "root",
+                  "group": "root",
+                  "children": {
+                    "private.key": {
+                      "type": "file",
+                      "mode": "0600",
+                      "owner": "root",
+                      "group": "root",
+                      "modified": "2026-04-03T12:27:52Z",
+                      "content": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqh...\n-----END PRIVATE KEY-----\n"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
   "notes": [
-    "Updated HTTP and HTTPS services with new routes and headers.",
-    "Modified filesystem to reflect current service configurations."
+    "Kept the declared 8080/8443 web services and aligned them with the host's existing HTTP/HTTPS decoys.",
+    "Added only the filesystem nodes referenced by the host memory: appsettings backup, DB credentials, TLS private key, and backup archive.",
+    "Used plausible app-specific content to support the config-leak and RCE lure without changing unrelated services."
   ],
   "app": {
     "type": "directory",
@@ -348,6 +557,68 @@
             "content": "<html><body><h1>404 Not Found</h1></body></html>"
           }
         }
+      }
+    },
+    "lib": {
+      "mysql": {
+        "my.cnf": {
+          "type": "file",
+          "mode": "0644",
+          "owner": "mysql",
+          "group": "mysql",
+          "modified": "2024-04-10T08:14:00Z",
+          "content": "[mysqld]\ndatadir=/var/lib/mysql\n"
+        }
+      }
+    },
+    "app": {
+      "config.yaml": {
+        "type": "file",
+        "mode": "0644",
+        "owner": "root",
+        "group": "root",
+        "modified": "2024-04-10T08:14:00Z",
+        "content": "configuration settings"
+      },
+      "secrets.json": {
+        "type": "file",
+        "mode": "0600",
+        "owner": "root",
+        "group": "root",
+        "modified": "2024-04-10T08:14:00Z",
+        "content": "{\"secret_key\": \"example_secret\"}"
+      }
+    }
+  },
+  "www": {
+    "type": "directory",
+    "mode": "0755",
+    "owner": "root",
+    "group": "root",
+    "children": {
+      "index.html": {
+        "type": "file",
+        "mode": "0644",
+        "owner": "root",
+        "group": "root",
+        "modified": "2024-04-10T08:14:00Z",
+        "content": "<html><body><h1>Welcome to the app!</h1></body></html>"
+      },
+      "status.html": {
+        "type": "file",
+        "mode": "0644",
+        "owner": "root",
+        "group": "root",
+        "modified": "2024-04-10T08:14:00Z",
+        "content": "<html><body><h1>Status: OK</h1></body></html>"
+      },
+      "404.html": {
+        "type": "file",
+        "mode": "0644",
+        "owner": "root",
+        "group": "root",
+        "modified": "2024-04-10T08:14:00Z",
+        "content": "<html><body><h1>404 Not Found</h1></body></html>"
       }
     }
   }

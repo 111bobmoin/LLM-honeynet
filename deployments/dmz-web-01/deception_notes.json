@@ -1,5 +1,6 @@
 [
-  "Updated HTTP and HTTPS services to match the latest configurations.",
-  "Ensured filesystem reflects the necessary HTML files for honeypot deception.",
-  "Maintained existing ports for HTTP and HTTPS as they are standard and expected."
+  "Preserved ports 80 and 443 as declared in host memory.",
+  "Kept HTTP aligned to Apache server header from long-term facts and HTTPS aligned to nginx template/TLS 1.2.",
+  "Retained existing lure files and config-leak exposure; no filesystem changes needed because referenced artifacts already exist.",
+  "Added a sparse /admin 403 route on HTTP to support light reconnaissance without overexposing hidden paths."
 ]

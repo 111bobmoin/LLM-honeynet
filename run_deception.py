@@ -52,6 +52,29 @@ def parse_args() -> argparse.Namespace:
         help="Fallback base config directory (default: config/)",
     )
     parser.add_argument(
+        "--openai-key",
+        type=Path,
+        default=Path("secrets/openai_api_key.txt"),
+        help="OpenAI API key file path",
+    )
+    parser.add_argument(
+        "--openai-model",
+        default="gpt-5.4-mini",
+        help="OpenAI model name (default: gpt-5.4-mini)",
+    )
+    parser.add_argument(
+        "--openai-temperature",
+        type=float,
+        default=0.1,
+        help="OpenAI decoding temperature",
+    )
+    parser.add_argument(
+        "--openai-top-p",
+        type=float,
+        default=0.9,
+        help="OpenAI top_p nucleus sampling parameter",
+    )
+    parser.add_argument(
         "--output",
         type=Path,
         help="Optional path to write combined JSON output (default: stdout only)",
@@ -66,6 +89,10 @@ def build_config(args: argparse.Namespace) -> DeceptionAgentConfig:
         short_memory_path=args.short_memory,
         long_memory_path=args.long_memory,
         trap_memory_path=args.trap_memory,
+        openai_key_path=args.openai_key,
+        openai_model=args.openai_model,
+        openai_temperature=args.openai_temperature,
+        openai_top_p=args.openai_top_p,
     )
 
 

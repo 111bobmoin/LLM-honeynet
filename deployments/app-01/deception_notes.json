@@ -1,4 +1,5 @@
 [
-  "Updated HTTP and MySQL services with new configurations.",
-  "Modified filesystem to include new HTML files for HTTP responses."
+  "Preserved the declared 8080 and 8443 ports and aligned headers with long-term port facts.",
+  "Updated only HTTP and HTTPS to reinforce the observed upload lure on 8080 and config-leak lure on 8443.",
+  "Added minimal web content and an uploads directory to support referenced routes and filesystem artifacts already present in host memory."
 ]

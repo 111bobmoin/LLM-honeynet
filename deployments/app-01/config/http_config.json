@@ -1,6 +1,6 @@
 {
   "host": "0.0.0.0",
-  "port": 5000,
+  "port": 8080,
   "server_header": "Apache/2.4.52 (Ubuntu)",
   "default_status": 404,
   "default_headers": {
@@ -34,6 +34,33 @@
         "Content-Type": "application/json"
       },
       "body": "{\"status\": \"ok\", \"token\": \"3f4dc3e8\", \"role\": \"viewer\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/upload",
+      "status": 200,
+      "response_headers": {
+        "Content-Type": "text/html; charset=utf-8"
+      },
+      "body_file": "../www/upload.html"
+    },
+    {
+      "method": "POST",
+      "path": "/upload",
+      "status": 200,
+      "response_headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "{\"status\":\"uploaded\",\"path\":\"/opt/app/uploads/tmp-9f3a1b.jar\",\"scan\":\"queued\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/uploads/",
+      "status": 403,
+      "response_headers": {
+        "Content-Type": "text/html; charset=utf-8"
+      },
+      "body": "<html><body><h1>403 Forbidden</h1><p>Directory listing denied.</p></body></html>"
     }
   ],
   "not_found": {

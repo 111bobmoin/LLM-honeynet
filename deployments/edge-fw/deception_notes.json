@@ -1,5 +1,7 @@
 [
-  "Updated https service to use correct server header and TLS versions.",
-  "Adjusted ssh service to include realistic user credentials.",
-  "Modified filesystem to include placeholder content for sensitive files."
+  "Kept SSH on 22 and HTTPS on 443 to match host memory and long-term port facts.",
+  "Retained weak SSH credentials because memory explicitly marks port 22 as a weak-cred lure.",
+  "Aligned SSH identity and prompts to edge-fw rather than generic bastion naming.",
+  "Preserved filesystem lures referenced in memory: /root/network-passwords.txt, /home/admin/.ssh/id_rsa.bak, /var/www/html/ssl-backup.zip, and /etc/nginx/conf.d/vpn-portal.conf.bak.",
+  "Kept HTTPS as nginx/1.18.0 with TLSv1.2 only for plausible slight obsolescence."
 ]

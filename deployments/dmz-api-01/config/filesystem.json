@@ -114,6 +114,38 @@
                 "content": "Service escalation steps:\n1. Check systemd unit status.\n2. Review journal logs for errors.\n3. Contact on-call engineer if outage exceeds 15 minutes.\n"
               }
             }
+          },
+          "www": {
+            "type": "directory",
+            "mode": "0755",
+            "owner": "www-data",
+            "group": "www-data",
+            "children": {
+              "api": {
+                "type": "directory",
+                "mode": "0755",
+                "owner": "www-data",
+                "group": "www-data",
+                "children": {
+                  "config.production.json.bak": {
+                    "type": "file",
+                    "mode": "0644",
+                    "owner": "www-data",
+                    "group": "www-data",
+                    "modified": "2024-04-10T08:14:00Z",
+                    "content": "{\n  \"env\": \"production\",\n  \"listen\": \"0.0.0.0:443\",\n  \"upstream\": \"http://app-01.internal:8080\",\n  \"jwt_issuer\": \"dmz-api-01\",\n  \"log_level\": \"info\"\n}"
+                  },
+                  "secrets.env.old": {
+                    "type": "file",
+                    "mode": "0644",
+                    "owner": "www-data",
+                    "group": "www-data",
+                    "modified": "2024-04-09T23:18:00Z",
+                    "content": "API_ENV=production\nJWT_SECRET=legacy-signing-secret\nDB_HOST=db-01.internal\nDB_USER=api_service\nDB_PASSWORD=Spring2024!\nREDIS_URL=redis://cache.internal:6379/0\n"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -234,6 +266,94 @@
                 }
               }
             }
+          },
+          "api": {
+            "type": "directory",
+            "mode": "0755",
+            "owner": "root",
+            "group": "root",
+            "children": {
+              "secrets.tar.gz": {
+                "type": "file",
+                "mode": "0640",
+                "owner": "root",
+                "group": "root",
+                "modified": "2024-04-10T08:14:00Z",
+                "content": "placeholder"
+              },
+              "customer-billing-export.csv": {
+                "type": "file",
+                "mode": "0640",
+                "owner": "root",
+                "group": "root",
+                "modified": "2024-04-10T08:14:00Z",
+                "content": "placeholder"
+              },
+              "backup": {
+                "type": "directory",
+                "mode": "0750",
+                "owner": "root",
+                "group": "root",
+                "children": {
+                  "api-gateway-backup.tar.gz": {
+                    "type": "file",
+                    "mode": "0640",
+                    "owner": "root",
+                    "group": "root",
+                    "modified": "2024-04-08T02:10:00Z",
+                    "content": "placeholder"
+                  }
+                }
+              },
+              "keys": {
+                "type": "directory",
+                "mode": "0750",
+                "owner": "root",
+                "group": "root",
+                "children": {
+                  "jwt-signing.key.bak": {
+                    "type": "file",
+                    "mode": "0600",
+                    "owner": "root",
+                    "group": "root",
+                    "modified": "2024-04-07T19:42:00Z",
+                    "content": "-----BEGIN PRIVATE KEY-----\nplaceholder\n-----END PRIVATE KEY-----"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "opt": {
+          "type": "directory",
+          "mode": "0755",
+          "owner": "root",
+          "group": "root",
+          "children": {
+            "api": {
+              "type": "directory",
+              "mode": "0755",
+              "owner": "root",
+              "group": "root",
+              "children": {
+                "config-prod-backup.yml": {
+                  "type": "file",
+                  "mode": "0640",
+                  "owner": "root",
+                  "group": "root",
+                  "modified": "2024-04-10T08:14:00Z",
+                  "content": "placeholder"
+                },
+                "service-account-key.json": {
+                  "type": "file",
+                  "mode": "0600",
+                  "owner": "root",
+                  "group": "root",
+                  "modified": "2024-04-10T08:14:00Z",
+                  "content": "placeholder"
+                }
+              }
+            }
           }
         }
       },
@@ -250,6 +370,38 @@
             "group": "service",
             "modified": "2024-02-18T09:30:00Z",
             "content": "Service escalation steps:\n1. Check systemd unit status.\n2. Review journal logs for errors.\n3. Contact on-call engineer if outage exceeds 15 minutes.\n"
+          }
+        }
+      },
+      "opt": {
+        "type": "directory",
+        "mode": "0755",
+        "owner": "root",
+        "group": "root",
+        "children": {
+          "api": {
+            "type": "directory",
+            "mode": "0755",
+            "owner": "root",
+            "group": "root",
+            "children": {
+              "config.production.json.bak": {
+                "type": "file",
+                "mode": "0640",
+                "owner": "root",
+                "group": "root",
+                "modified": "2024-04-10T08:14:00Z",
+                "content": "{\n  \"env\": \"production\",\n  \"listen\": \"0.0.0.0:443\",\n  \"upstream\": \"http://app-01.internal:8080\",\n  \"jwt_issuer\": \"dmz-api-01\",\n  \"log_level\": \"info\"\n}"
+              },
+              "secrets.env.old": {
+                "type": "file",
+                "mode": "0600",
+                "owner": "root",
+                "group": "root",
+                "modified": "2024-04-09T23:18:00Z",
+                "content": "API_ENV=production\nJWT_SECRET=legacy-signing-secret\nDB_HOST=db-01.internal\nDB_USER=api_service\nDB_PASSWORD=Spring2024!\nREDIS_URL=redis://cache.internal:6379/0\n"
+              }
+            }
           }
         }
       }
@@ -286,6 +438,38 @@
             "group": "root",
             "modified": "2024-04-10T08:14:00Z",
             "content": "placeholder"
+          },
+          "keys.json": {
+            "type": "file",
+            "mode": "0600",
+            "owner": "root",
+            "group": "root",
+            "modified": "2024-04-10T08:14:00Z",
+            "content": "Sensitive API keys should not be stored in plaintext."
+          },
+          "finance_report.pdf": {
+            "type": "file",
+            "mode": "0600",
+            "owner": "root",
+            "group": "root",
+            "modified": "2024-04-10T08:14:00Z",
+            "content": "Sensitive financial report."
+          },
+          "config_backup.tar.gz": {
+            "type": "file",
+            "mode": "0640",
+            "owner": "root",
+            "group": "root",
+            "modified": "2024-04-10T08:14:00Z",
+            "content": "Backup configuration files."
+          },
+          "finance_data.json": {
+            "type": "file",
+            "mode": "0600",
+            "owner": "root",
+            "group": "root",
+            "modified": "2024-04-10T08:14:00Z",
+            "content": "Sensitive financial data should not be stored in plaintext."
           }
         }
       },
@@ -330,5 +514,10 @@
         }
       }
     }
-  }
+  },
+  "notes": [
+    "Kept HTTPS on 443 and added lure routes for the leaked config and service account key.",
+    "Added filesystem nodes for the two referenced files under /opt/api and the upload-target archive/export under /srv/api.",
+    "Reduced TLS to 1.2 only to match the stated slightly obsolete profile."
+  ]
 }

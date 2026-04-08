@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generated_at": "2026-04-02T07:00:05Z",
+    "generated_at": "2026-04-07T08:46:29Z",
     "mode": "initialization"
   },
   "hosts": [
@@ -8,26 +8,26 @@
       "name": "edge-fw",
       "ports": [
         {
-          "port": 443,
-          "service": "https",
-          "files": [
-            {
-              "path": "/etc/ssl/private/server.key"
-            },
-            {
-              "path": "/var/www/html/backup.tar.gz"
-            }
-          ]
-        },
-        {
           "port": 22,
           "service": "ssh",
           "files": [
             {
-              "path": "/root/.ssh/id_rsa"
+              "path": "/home/admin/.ssh/id_rsa.bak"
             },
             {
-              "path": "/etc/passwd.bak"
+              "path": "/root/network-passwords.txt"
+            }
+          ]
+        },
+        {
+          "port": 443,
+          "service": "https",
+          "files": [
+            {
+              "path": "/var/www/html/ssl-backup.zip"
+            },
+            {
+              "path": "/etc/nginx/conf.d/vpn-portal.conf.bak"
             }
           ]
         }
@@ -35,11 +35,11 @@
       "vulnerabilities": [
         {
           "type": "config leak",
-          "target_file": "/etc/ssl/private/server.key"
+          "target_file": "/root/network-passwords.txt"
         },
         {
           "type": "weak creds",
-          "target_file": "/etc/passwd.bak"
+          "target_port": 22
         }
       ]
     },
@@ -51,22 +51,22 @@
           "service": "ssh",
           "files": [
             {
-              "path": "/home/user/.ssh/authorized_keys"
+              "path": "/home/ops/.ssh/authorized_keys.old"
             },
             {
-              "path": "/etc/backup/config_backup.conf"
+              "path": "/home/admin/passwords.xlsx"
             }
           ]
         },
         {
-          "port": 80,
-          "service": "http",
+          "port": 3389,
+          "service": "rdp",
           "files": [
             {
-              "path": "/var/www/html/admin_credentials.txt"
+              "path": "C:\\Users\\Administrator\\Desktop\\RDP-Access-List.xlsx"
             },
             {
-              "path": "/var/www/html/finance_report.xlsx"
+              "path": "C:\\Backup\\bastion-credentials.zip"
             }
           ]
         }
@@ -74,11 +74,11 @@
       "vulnerabilities": [
         {
           "type": "config leak",
-          "target_file": "/etc/backup/config_backup.conf"
+          "target_file": "/home/admin/passwords.xlsx"
         },
         {
           "type": "weak creds",
-          "target_file": "/var/www/html/admin_credentials.txt"
+          "target_port": 3389
         }
       ]
     },
@@ -90,30 +90,34 @@
           "service": "ssh",
           "files": [
             {
-              "path": "/home/ops/.ssh/id_rsa"
+              "path": "/home/ops/.ssh/id_ed25519.old"
             },
             {
-              "path": "/etc/ops/secret_keys.json"
+              "path": "/opt/backups/jump-ops-config.tar.gz"
             }
           ]
         },
         {
-          "port": 8080,
-          "service": "http",
+          "port": 5985,
+          "service": "winrm",
           "files": [
             {
-              "path": "/var/www/html/operations_backup.zip"
+              "path": "C:\\Ops\\winrm-service-accounts.txt"
             },
             {
-              "path": "/var/www/html/credentials.txt"
+              "path": "C:\\Users\\opsadmin\\Documents\\admin-passwords.csv"
             }
           ]
         }
       ],
       "vulnerabilities": [
         {
+          "type": "config leak",
+          "target_file": "C:\\Users\\opsadmin\\Documents\\admin-passwords.csv"
+        },
+        {
           "type": "weak creds",
-          "target_file": "/etc/ops/secret_keys.json"
+          "target_port": 5985
         }
       ]
     },
@@ -125,10 +129,10 @@
           "service": "http",
           "files": [
             {
-              "path": "/var/www/html/user_data.json"
+              "path": "/var/www/html/backup-site.zip"
             },
             {
-              "path": "/var/www/html/backup.sql"
+              "path": "/var/www/html/db-credentials.php.bak"
             }
           ]
         },
@@ -137,18 +141,22 @@
           "service": "https",
           "files": [
             {
-              "path": "/etc/ssl/certs/certificate.crt"
+              "path": "/etc/ssl/private/web-prod.key.old"
             },
             {
-              "path": "/var/www/html/private_keys.pem"
+              "path": "/var/www/html/finance-report-2024.xlsx"
             }
           ]
         }
       ],
       "vulnerabilities": [
         {
+          "type": "config leak",
+          "target_file": "/var/www/html/db-credentials.php.bak"
+        },
+        {
           "type": "path traversal",
-          "target_file": "/var/www/html/user_data.json"
+          "target_port": 80
         }
       ]
     },
@@ -156,34 +164,38 @@
       "name": "dmz-api-01",
       "ports": [
         {
-          "port": 8080,
-          "service": "http",
-          "files": [
-            {
-              "path": "/var/www/html/api_keys.txt"
-            },
-            {
-              "path": "/var/www/html/backup_api_data.json"
-            }
-          ]
-        },
-        {
           "port": 443,
           "service": "https",
           "files": [
             {
-              "path": "/etc/ssl/private/api_key.pem"
+              "path": "/opt/api/config.production.json.bak"
             },
             {
-              "path": "/var/www/html/finance_data.csv"
+              "path": "/opt/api/secrets.env.old"
+            }
+          ]
+        },
+        {
+          "port": 8443,
+          "service": "https-alt",
+          "files": [
+            {
+              "path": "/srv/api/backup/api-gateway-backup.tar.gz"
+            },
+            {
+              "path": "/srv/api/keys/jwt-signing.key.bak"
             }
           ]
         }
       ],
       "vulnerabilities": [
         {
+          "type": "config leak",
+          "target_file": "/opt/api/secrets.env.old"
+        },
+        {
           "type": "RCE",
-          "target_file": "/var/www/html/api_keys.txt"
+          "target_port": 8443
         }
       ]
     },
@@ -191,34 +203,38 @@
       "name": "app-01",
       "ports": [
         {
-          "port": 5000,
-          "service": "http",
+          "port": 8080,
+          "service": "http-alt",
           "files": [
             {
-              "path": "/var/www/html/app_config.yaml"
+              "path": "/opt/app/config/application-prod.yml.bak"
             },
             {
-              "path": "/var/www/html/finance_backup.zip"
+              "path": "/opt/app/backups/customer-data-export.zip"
             }
           ]
         },
         {
-          "port": 3306,
-          "service": "mysql",
+          "port": 8443,
+          "service": "https-alt",
           "files": [
             {
-              "path": "/var/lib/mysql/user_credentials.sql"
+              "path": "/etc/app/ssl/app01-keystore.p12.old"
             },
             {
-              "path": "/var/lib/mysql/finance_data.sql"
+              "path": "/opt/app/secrets/db-passwords.txt"
             }
           ]
         }
       ],
       "vulnerabilities": [
         {
+          "type": "config leak",
+          "target_file": "/opt/app/secrets/db-passwords.txt"
+        },
+        {
           "type": "file upload",
-          "target_file": "/var/www/html/app_config.yaml"
+          "target_port": 8080
         }
       ]
     },
@@ -230,10 +246,10 @@
           "service": "postgresql",
           "files": [
             {
-              "path": "/var/lib/postgresql/data/backup.sql"
+              "path": "/var/backups/postgres/prod-db-2024-10.sql.gz"
             },
             {
-              "path": "/var/lib/postgresql/data/passwords.txt"
+              "path": "/var/lib/postgresql/.pgpass.bak"
             }
           ]
         },
@@ -242,18 +258,22 @@
           "service": "mysql",
           "files": [
             {
-              "path": "/var/lib/mysql/db_backup.sql"
+              "path": "/var/backups/mysql/full-backup.sql"
             },
             {
-              "path": "/var/lib/mysql/finance_keys.txt"
+              "path": "/root/mysql-root-passwords.txt"
             }
           ]
         }
       ],
       "vulnerabilities": [
         {
+          "type": "weak creds",
+          "target_file": "/root/mysql-root-passwords.txt"
+        },
+        {
           "type": "config leak",
-          "target_file": "/var/lib/postgresql/data/passwords.txt"
+          "target_file": "/var/lib/postgresql/.pgpass.bak"
         }
       ]
     },
@@ -262,33 +282,37 @@
       "ports": [
         {
           "port": 445,
-          "service": "smb",
+          "service": "microsoft-ds",
           "files": [
             {
-              "path": "/srv/files/finance_reports.xlsx"
+              "path": "C:\\Shares\\Finance\\Q4-payroll.xlsx"
             },
             {
-              "path": "/srv/files/user_passwords.txt"
+              "path": "C:\\IT\\service-account-passwords.txt"
             }
           ]
         },
         {
-          "port": 21,
-          "service": "ftp",
+          "port": 2049,
+          "service": "nfs",
           "files": [
             {
-              "path": "/srv/ftp/backup.zip"
+              "path": "/srv/nfs/backups/fileserver-archive.tar.gz"
             },
             {
-              "path": "/srv/ftp/finance_data.csv"
+              "path": "/srv/nfs/keys/backup_rsa.old"
             }
           ]
         }
       ],
       "vulnerabilities": [
         {
-          "type": "file upload",
-          "target_file": "/srv/ftp/backup.zip"
+          "type": "config leak",
+          "target_file": "C:\\IT\\service-account-passwords.txt"
+        },
+        {
+          "type": "weak creds",
+          "target_port": 445
         }
       ]
     }

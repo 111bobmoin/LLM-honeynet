@@ -4,10 +4,9 @@
   "certificate": "../certs/honeypot.crt",
   "private_key": "../certs/honeypot.key",
   "tls_versions": [
-    "TLSv1.2",
-    "TLSv1.3"
+    "TLSv1.2"
   ],
-  "server_header": "nginx/1.22.1",
+  "server_header": "nginx/1.18.0",
   "default_headers": {
     "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload"
   },
@@ -28,7 +27,25 @@
       "response_headers": {
         "Content-Type": "application/json"
       },
-      "body": "{\"service\": \"metrics\", \"version\": \"1.14.0\", \"build\": \"20240412\"}"
+      "body": "{\"service\":\"api-gateway\",\"version\":\"2.8.4\",\"build\":\"20240412\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/opt/api/config.production.json.bak",
+      "status": 200,
+      "response_headers": {
+        "Content-Type": "application/json"
+      },
+      "body_file": "../www/api/config.production.json.bak"
+    },
+    {
+      "method": "GET",
+      "path": "/opt/api/secrets.env.old",
+      "status": 200,
+      "response_headers": {
+        "Content-Type": "text/plain; charset=utf-8"
+      },
+      "body_file": "../www/api/secrets.env.old"
     }
   ],
   "not_found": {

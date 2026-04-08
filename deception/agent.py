@@ -7,6 +7,7 @@ from typing import Any, Dict, Iterable, List, Optional
 
 from orchestrator import LongTermMemory, ShortTermMemory, default_long_term
 from llm import OpenAIClient, OpenAIClientConfig
+from llm.openai_client import add_usage_totals
 
 
 def _read_json(path: Path) -> Optional[Dict[str, Any]]:
@@ -48,7 +49,7 @@ class DeceptionAgentConfig:
     deployments_root: Path = Path("deployments")
     base_config_dir: Path = Path("config")
     openai_key_path: Path = Path("secrets/openai_api_key.txt")
-    openai_model: str = "gpt-4o-mini"
+    openai_model: str = "gpt-5.4-mini"
     openai_temperature: float = 0.1
     openai_top_p: float = 0.9
     openai_max_tokens: int = 8192  # Higher limit for complex config generation
@@ -63,6 +64,7 @@ class DeceptionAgent:
         self.long_memory = LongTermMemory(self.config.long_memory_path, builtin=default_long_term())
         self.trap_memory = self._load_trap_memory(self.config.trap_memory_path)
         self.preferences = self._load_preferences(self.config.preferences_path)
+        self._token_usage: Dict[str, int] = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
 
     # ------------------------------------------------------------------ public API
 
@@ -79,6 +81,7 @@ class DeceptionAgent:
                 json.dumps(report, indent=2, ensure_ascii=False) + "\n",
                 encoding="utf-8",
             )
+        report["token_usage"] = dict(self._token_usage)
         return report
 
     def generate_host_configs(self, hosts: Optional[Iterable[str]] = None) -> Dict[str, Dict[str, Any]]:
@@ -100,6 +103,7 @@ class DeceptionAgent:
             )
             self._apply_host_config(host_name, host_dir, response)
             outputs[host_name] = response
+        outputs["_token_usage"] = dict(self._token_usage)
         return outputs
 
     # ------------------------------------------------------------------ helpers
@@ -311,6 +315,7 @@ class DeceptionAgent:
             raise RuntimeError(f"Failed to run deception {stage} via OpenAI: {exc}") from exc
 
         raw = response.get("content", "").strip()
+        self._token_usage = add_usage_totals(self._token_usage, response.get("usage"))
         if not raw:
             raise RuntimeError(f"OpenAI returned empty content for {stage}.")
         try:

@@ -118,8 +118,64 @@
                     "group": "admin",
                     "modified": "2024-03-29T09:00:00Z",
                     "content": "intranet bastion rsa AAAAB3Nza..."
+                  },
+                  "authorized_keys": {
+                    "type": "file",
+                    "mode": "0600",
+                    "owner": "admin",
+                    "group": "admin",
+                    "modified": "2024-04-12T08:00:00Z",
+                    "content": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC..."
                   }
                 }
+              },
+              "passwords.xlsx": {
+                "type": "file",
+                "mode": "0640",
+                "owner": "admin",
+                "group": "admin",
+                "modified": "2024-04-12T08:12:00Z",
+                "content": "Bastion credential review worksheet\n- admin / P@ssw0rd!\n- ops / OpsTemp2024!\n- jump-ops emergency access noted in quarterly review\n"
+              }
+            }
+          },
+          "ops": {
+            "type": "directory",
+            "mode": "0750",
+            "owner": "ops",
+            "group": "ops",
+            "children": {
+              "admin-passwords.xlsx": {
+                "type": "file",
+                "mode": "0640",
+                "owner": "ops",
+                "group": "ops",
+                "modified": "2024-04-12T08:10:00Z",
+                "content": "Credential review worksheet for bastion administration.\nContains rotated admin passwords and emergency access notes.\n"
+              },
+              ".ssh": {
+                "type": "directory",
+                "mode": "0700",
+                "owner": "ops",
+                "group": "ops",
+                "children": {
+                  "authorized_keys.old": {
+                    "type": "file",
+                    "mode": "0600",
+                    "owner": "ops",
+                    "group": "ops",
+                    "modified": "2024-04-12T08:05:00Z",
+                    "content": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDoldkeyplaceholder"
+                  }
+                }
+              },
+              "passwords.xlsx": {
+                "type": "file",
+                "mode": "0640",
+                "owner": "ops",
+                "group": "ops",
+                "modified": "2024-04-12T08:10:00Z",
+                "content": "Operations credential tracker for bastion-01\n- local admin review complete\n- jump-ops listed for emergency relay access\n- db-01 access requires approved handoff from jump-ops\n"
               }
             }
           }
@@ -258,5 +314,10 @@
         }
       }
     }
-  }
+  },
+  "notes": [
+    "Kept SSH and RDP ports unchanged to match observed exposure.",
+    "Added /home/ops lure files to support the weak-creds path without altering existing SSH realism.",
+    "Preserved the mixed Linux/Windows bastion presentation for plausibility."
+  ]
 }

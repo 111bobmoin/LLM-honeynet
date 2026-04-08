@@ -8,8 +8,10 @@ from __future__ import annotations
 import asyncio
 import json
 import os
+import subprocess
 import threading
 import time
+from collections import deque
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -33,6 +35,7 @@ CORS(app)
 # Global state for async operations
 operations: Dict[str, Dict[str, Any]] = {}
 operations_lock = threading.Lock()
+operations_store_path = project_root / "shadow" / "web_operations.json"
 
 
 class OperationStatus:
@@ -40,6 +43,25 @@ class OperationStatus:
     RUNNING = "running"
     COMPLETED = "completed"
     FAILED = "failed"
+
+
+def load_persisted_operations() -> None:
+    if not operations_store_path.exists():
+        return
+    try:
+        data = json.loads(operations_store_path.read_text(encoding="utf-8"))
+    except Exception:
+        return
+    if isinstance(data, dict):
+        operations.update(data)
+
+
+def persist_operations() -> None:
+    operations_store_path.parent.mkdir(parents=True, exist_ok=True)
+    operations_store_path.write_text(
+        json.dumps(operations, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
 
 
 def update_operation_status(op_id: str, status: str, result: Any = None, error: str = None):
@@ -51,6 +73,27 @@ def update_operation_status(op_id: str, status: str, result: Any = None, error: 
                 operations[op_id]["result"] = result
             if error is not None:
                 operations[op_id]["error"] = error
+            persist_operations()
+
+
+def merge_operation_result(op_id: str, updates: Dict[str, Any]) -> None:
+    with operations_lock:
+        if op_id not in operations:
+            return
+        current = operations[op_id].get("result")
+        if not isinstance(current, dict):
+            current = {}
+        current.update(updates)
+        operations[op_id]["result"] = current
+        operations[op_id]["timestamp"] = datetime.now().isoformat()
+        persist_operations()
+
+
+def get_operation_result(op_id: str) -> Any:
+    with operations_lock:
+        if op_id not in operations:
+            return None
+        return operations[op_id].get("result")
 
 
 def create_operation(operation_type: str, params: Dict = None) -> str:
@@ -66,6 +109,7 @@ def create_operation(operation_type: str, params: Dict = None) -> str:
             "timestamp": datetime.now().isoformat(),
             "created_at": datetime.now().isoformat()
         }
+        persist_operations()
     return op_id
 
 
@@ -98,6 +142,9 @@ def run_sync_task(func, op_id: str):
 
     thread = threading.Thread(target=run_in_thread, daemon=True)
     thread.start()
+
+
+load_persisted_operations()
 
 
 # ========== API Routes ==========
@@ -232,6 +279,7 @@ def run_perception():
     data = request.json or {}
     hosts = data.get('hosts')  # None means auto-discover
     use_openai = data.get('use_openai', False)
+    openai_model = data.get('openai_model', 'gpt-5.4-mini')
 
     def perception_task():
         try:
@@ -282,7 +330,7 @@ def run_perception():
             if use_openai:
                 try:
                     from perception import OpenAISummarizer
-                    summarizer = OpenAISummarizer()
+                    summarizer = OpenAISummarizer(model=openai_model)
                     # Convert to HostAnalysis objects
                     from perception.analyzer import HostAnalysis, HostEvent
                     host_analyses = []
@@ -299,8 +347,9 @@ def run_perception():
                             max_stage=a["max_stage"],
                             events=events
                         ))
-                    summary = summarizer.summarize(host_analyses)
-                    result["openai_summary"] = summary
+                    summary_result = summarizer.summarize_with_usage(host_analyses)
+                    result["openai_summary"] = summary_result.get("summary")
+                    result["token_usage"] = summary_result.get("usage")
                 except Exception as e:
                     result["openai_error"] = str(e)
 
@@ -309,7 +358,7 @@ def run_perception():
         except Exception as e:
             raise Exception(f"Perception analysis failed: {e}")
 
-    op_id = create_operation("perception", {"hosts": hosts, "use_openai": use_openai})
+    op_id = create_operation("perception", {"hosts": hosts, "use_openai": use_openai, "openai_model": openai_model})
     run_sync_task(perception_task, op_id)
 
     return jsonify({"operation_id": op_id, "status": "started"})
@@ -332,7 +381,7 @@ def run_honey_agent():
                 fallback_topology_path=project_root / "enterprise/enterprise_topology.json",
                 preferences_path=project_root / "shadow/attacker_preferences.json",
                 openai_key_path=project_root / "secrets/openai_api_key.txt",
-                openai_model=data.get('openai_model', 'gpt-4o-mini'),
+                openai_model=data.get('openai_model', 'gpt-5.4-mini'),
                 openai_temperature=data.get('openai_temperature', 0.1),
                 openai_top_p=data.get('openai_top_p', 0.9)
             )
@@ -350,6 +399,7 @@ def run_honey_agent():
                 "topology": result.get("topology", {}),
                 "preferences": result.get("preferences", []),
                 "short_memory": result.get("short_memory", []),
+                "token_usage": result.get("token_usage", {}),
                 "timestamp": datetime.now().isoformat()
             }
 
@@ -377,7 +427,7 @@ def run_trap_agent():
                 fallback_topology_path=project_root / "enterprise/enterprise_topology.json",
                 preferences_path=project_root / "shadow/attacker_preferences.json",
                 openai_key_path=project_root / "secrets/openai_api_key.txt",
-                openai_model=data.get('openai_model', 'gpt-4o-mini'),
+                openai_model=data.get('openai_model', 'gpt-5.4-mini'),
                 openai_temperature=data.get('openai_temperature', 0.15),
                 openai_top_p=data.get('openai_top_p', 0.85)
             )
@@ -394,6 +444,7 @@ def run_trap_agent():
             return {
                 "mode": mode,
                 "hosts": result.get("hosts", []),
+                "token_usage": result.get("token_usage", {}),
                 "timestamp": datetime.now().isoformat()
             }
 
@@ -467,6 +518,191 @@ def get_orchestration_status():
     return jsonify(status)
 
 
+# ========== Full Pipeline ==========
+
+@app.route('/api/pipeline/full', methods=['POST'])
+def run_full_pipeline_api():
+    """Run the end-to-end pipeline mirroring run_full_pipeline.py."""
+    data = request.json or {}
+
+    openai = bool(data.get('openai', False))
+    openai_model = data.get('openai_model', 'gpt-5.4-mini')
+    honey_mode = data.get('honey_mode', 'initialization')
+    trap_mode = data.get('trap_mode', 'all')
+    deception_mode = data.get('deception_mode', 'full')
+    skip_network = bool(data.get('skip_network', True))
+    network_no_cli = bool(data.get('network_no_cli', True))
+    network_duration = float(data.get('network_duration', 10) or 0)
+
+    if honey_mode not in {"initialization", "finetune"}:
+        return jsonify({"error": "Invalid honey_mode"}), 400
+    if trap_mode not in {"host", "interhost", "all"}:
+        return jsonify({"error": "Invalid trap_mode"}), 400
+    if deception_mode not in {"consistency", "generate-configs", "full"}:
+        return jsonify({"error": "Invalid deception_mode"}), 400
+
+    # The web UI cannot attach to an interactive Mininet CLI session.
+    if not skip_network and not network_no_cli:
+        return jsonify({"error": "Interactive shadow network CLI is not supported from the web UI"}), 400
+
+    def full_pipeline_task(op_id: str):
+        steps: List[Dict[str, Any]] = []
+
+        def set_step(name: str, status: str, command: List[str], output: str = "", duration: float | None = None):
+            existing = next((step for step in steps if step["name"] == name), None)
+            payload = {
+                "name": name,
+                "status": status,
+                "command": command,
+                "output_tail": output[-4000:] if output else "",
+            }
+            if duration is not None:
+                payload["duration"] = duration
+            if existing:
+                existing.update(payload)
+            else:
+                steps.append(payload)
+            merge_operation_result(op_id, {
+                "current_step": name,
+                "steps": steps,
+                "openai": openai,
+                "openai_model": openai_model,
+                "honey_mode": honey_mode,
+                "trap_mode": trap_mode,
+                "deception_mode": deception_mode,
+                "skip_network": skip_network,
+                "network_no_cli": network_no_cli,
+                "network_duration": network_duration,
+                "heartbeat_at": datetime.now().isoformat(),
+            })
+
+        def run_command(step_name: str, command: List[str]) -> None:
+            started = time.time()
+            started_at = datetime.now().isoformat()
+            set_step(step_name, "running", command)
+
+            process = subprocess.Popen(
+                command,
+                cwd=project_root,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                bufsize=1,
+            )
+
+            output_lines: deque[str] = deque(maxlen=200)
+            read_done = threading.Event()
+            read_error: Dict[str, Exception] = {}
+
+            def read_output() -> None:
+                try:
+                    assert process.stdout is not None
+                    for line in process.stdout:
+                        output_lines.append(line)
+                        set_step(
+                            step_name,
+                            "running",
+                            command,
+                            "".join(output_lines),
+                        )
+                except Exception as exc:
+                    read_error["error"] = exc
+                finally:
+                    read_done.set()
+
+            reader = threading.Thread(target=read_output, daemon=True)
+            reader.start()
+
+            while process.poll() is None:
+                merge_operation_result(op_id, {
+                    "current_step": step_name,
+                    "current_step_started_at": started_at,
+                    "heartbeat_at": datetime.now().isoformat(),
+                })
+                read_done.wait(timeout=1.0)
+
+            reader.join(timeout=2.0)
+
+            if "error" in read_error:
+                raise read_error["error"]
+
+            combined_output = "".join(output_lines)
+            duration = time.time() - started
+            if process.returncode != 0:
+                set_step(step_name, "failed", command, combined_output, duration)
+                raise RuntimeError(f"{step_name} failed with exit code {process.returncode}")
+            set_step(step_name, "completed", command, combined_output, duration)
+
+        try:
+            update_operation_status(op_id, OperationStatus.RUNNING, result={})
+
+            perception_command = ["python3", "-u", "run_perception.py"]
+            if openai:
+                perception_command.append("--openai")
+                perception_command.extend(["--openai-model", openai_model])
+            run_command("perception", perception_command)
+
+            run_command(
+                "honey_agent",
+                ["python3", "-u", "run_honey_agent.py", "--mode", honey_mode, "--openai-model", openai_model],
+            )
+
+            run_command(
+                "trap_agent",
+                ["python3", "-u", "run_trap_agent.py", trap_mode, "--openai-model", openai_model],
+            )
+
+            run_command(
+                "deception",
+                ["python3", "-u", "run_deception.py", "--mode", deception_mode, "--openai-model", openai_model],
+            )
+
+            if not skip_network:
+                network_command = [
+                    "python3",
+                    "-u",
+                    "shadow/mininet_shadow.py",
+                    "--topology",
+                    "shadow/shadow_topology.json",
+                    "--start-honeypots",
+                    "--project-root",
+                    str(project_root),
+                ]
+                if network_no_cli:
+                    network_command.append("--no-cli")
+                if network_duration > 0:
+                    network_command.extend(["--duration", str(network_duration)])
+                run_command("shadow_network", network_command)
+
+            merge_operation_result(op_id, {
+                "finished_at": datetime.now().isoformat(),
+                "summary": {
+                    "step_count": len(steps),
+                    "completed_steps": sum(1 for step in steps if step.get("status") == "completed"),
+                }
+            })
+            update_operation_status(op_id, OperationStatus.COMPLETED, result=get_operation_result(op_id))
+        except Exception as exc:
+            merge_operation_result(op_id, {"failed_at": datetime.now().isoformat()})
+            update_operation_status(op_id, OperationStatus.FAILED, result=get_operation_result(op_id), error=str(exc))
+
+    op_id = create_operation("full_pipeline", {
+        "openai": openai,
+        "openai_model": openai_model,
+        "honey_mode": honey_mode,
+        "trap_mode": trap_mode,
+        "deception_mode": deception_mode,
+        "skip_network": skip_network,
+        "network_no_cli": network_no_cli,
+        "network_duration": network_duration,
+    })
+
+    thread = threading.Thread(target=full_pipeline_task, args=(op_id,), daemon=True)
+    thread.start()
+
+    return jsonify({"operation_id": op_id, "status": "started"})
+
+
 # ========== Phase 3: Deception ==========
 
 @app.route('/api/deception/run', methods=['POST'])
@@ -475,6 +711,7 @@ def run_deception():
     data = request.json or {}
     mode = data.get('mode', 'full')  # consistency, generate-configs, or full
     hosts = data.get('hosts')  # Optional host filter
+    openai_model = data.get('openai_model', 'gpt-5.4-mini')
 
     def deception_task():
         try:
@@ -483,7 +720,8 @@ def run_deception():
                 base_config_dir=project_root / "config",
                 short_memory_path=project_root / "shadow/honey_agent.json",
                 long_memory_path=project_root / "shadow/long_memory.json",
-                trap_memory_path=project_root / "shadow/trap_agent.json"
+                trap_memory_path=project_root / "shadow/trap_agent.json",
+                openai_model=openai_model,
             )
 
             agent = DeceptionAgent(config)
@@ -506,21 +744,40 @@ def run_deception():
                     host_set = None
 
                 host_configs = agent.generate_host_configs(hosts=host_set)
+                generated_hosts = [
+                    name for name in host_configs.keys()
+                    if isinstance(name, str) and not name.startswith("_")
+                ] if isinstance(host_configs, dict) else []
                 results["host_configs"] = {
-                    "generated": len(host_configs) if isinstance(host_configs, dict) else 0,
-                    "hosts": list(host_configs.keys()) if isinstance(host_configs, dict) else []
+                    "generated": len(generated_hosts),
+                    "hosts": generated_hosts,
+                    "_token_usage": host_configs.get("_token_usage", {}) if isinstance(host_configs, dict) else {}
                 }
 
             return {
                 "mode": mode,
                 "results": results,
+                "token_usage": {
+                    "prompt_tokens": sum(
+                        int((block or {}).get("token_usage", {}).get("prompt_tokens", 0))
+                        for block in [results.get("consistency_report"), {"token_usage": results.get("host_configs", {}).get("_token_usage", {})}]
+                    ),
+                    "completion_tokens": sum(
+                        int((block or {}).get("token_usage", {}).get("completion_tokens", 0))
+                        for block in [results.get("consistency_report"), {"token_usage": results.get("host_configs", {}).get("_token_usage", {})}]
+                    ),
+                    "total_tokens": sum(
+                        int((block or {}).get("token_usage", {}).get("total_tokens", 0))
+                        for block in [results.get("consistency_report"), {"token_usage": results.get("host_configs", {}).get("_token_usage", {})}]
+                    ),
+                },
                 "timestamp": datetime.now().isoformat()
             }
 
         except Exception as e:
             raise Exception(f"Deception Agent failed: {e}")
 
-    op_id = create_operation("deception", {"mode": mode, "hosts": hosts})
+    op_id = create_operation("deception", {"mode": mode, "hosts": hosts, "openai_model": openai_model})
     run_sync_task(deception_task, op_id)
 
     return jsonify({"operation_id": op_id, "status": "started"})
@@ -649,7 +906,11 @@ def main():
     print("Starting LLM Honeynet Web API...")
     print("Dashboard will be available at: http://localhost:5000")
     print("API endpoints: http://localhost:5000/api/")
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # Disable the Werkzeug reloader here. The frontend launches long-running
+    # background tasks that continuously write shadow/runtime artifacts; with
+    # the reloader enabled those file changes can restart the process and leave
+    # the web UI stuck on a stale in-memory operation state.
+    app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False, threaded=True)
 
 
 if __name__ == '__main__':

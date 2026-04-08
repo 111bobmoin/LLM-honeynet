@@ -42,6 +42,30 @@
                 "content": "Port 22\nPermitRootLogin prohibit-password\nPasswordAuthentication yes\nSubsystem sftp /usr/lib/openssh/sftp-server\n"
               }
             }
+          },
+          "ssl": {
+            "type": "directory",
+            "mode": "0755",
+            "owner": "root",
+            "group": "root",
+            "children": {
+              "private": {
+                "type": "directory",
+                "mode": "0700",
+                "owner": "root",
+                "group": "root",
+                "children": {
+                  "web-prod.key.old": {
+                    "type": "file",
+                    "mode": "0600",
+                    "owner": "root",
+                    "group": "root",
+                    "modified": "2024-04-07T09:55:00Z",
+                    "content": "-----BEGIN PRIVATE KEY-----\nMIIE...placeholder-old-web-key...\n-----END PRIVATE KEY-----\n"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -80,6 +104,86 @@
                 "group": "service",
                 "modified": "2024-02-18T09:30:00Z",
                 "content": "Service escalation steps:\n1. Check systemd unit status.\n2. Review journal logs for errors.\n3. Contact on-call engineer if outage exceeds 15 minutes.\n"
+              }
+            }
+          },
+          "www": {
+            "type": "directory",
+            "mode": "0755",
+            "owner": "www-data",
+            "group": "www-data",
+            "children": {
+              "html": {
+                "type": "directory",
+                "mode": "0755",
+                "owner": "www-data",
+                "group": "www-data",
+                "children": {
+                  "backup-site.zip": {
+                    "type": "file",
+                    "mode": "0644",
+                    "owner": "www-data",
+                    "group": "www-data",
+                    "modified": "2024-04-07T10:00:00Z",
+                    "content": "PK\u0003\u0004 placeholder archive content\n"
+                  },
+                  "db-passwords.txt": {
+                    "type": "file",
+                    "mode": "0644",
+                    "owner": "www-data",
+                    "group": "www-data",
+                    "modified": "2024-04-07T10:05:00Z",
+                    "content": "app_user: Summer2024!\nreporting: Q4-2024-finance\nreadonly: dmz-web-01-db\n"
+                  },
+                  "db-credentials.php.bak": {
+                    "type": "file",
+                    "mode": "0644",
+                    "owner": "www-data",
+                    "group": "www-data",
+                    "modified": "2024-04-07T10:06:00Z",
+                    "content": "<?php\n$DB_HOST='127.0.0.1';\n$DB_NAME='finance';\n$DB_USER='reporting';\n$DB_PASS='Q4-2024-finance';\n?>\n"
+                  },
+                  "finance-report-2024.xlsx": {
+                    "type": "file",
+                    "mode": "0644",
+                    "owner": "www-data",
+                    "group": "www-data",
+                    "modified": "2024-04-07T10:12:00Z",
+                    "content": "PK\u0003\u0004 placeholder xlsx content\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "etc": {
+          "type": "directory",
+          "mode": "0755",
+          "owner": "root",
+          "group": "root",
+          "children": {
+            "nginx": {
+              "type": "directory",
+              "mode": "0755",
+              "owner": "root",
+              "group": "root",
+              "children": {
+                "ssl": {
+                  "type": "directory",
+                  "mode": "0755",
+                  "owner": "root",
+                  "group": "root",
+                  "children": {
+                    "server.key.bak": {
+                      "type": "file",
+                      "mode": "0600",
+                      "owner": "root",
+                      "group": "root",
+                      "modified": "2024-04-07T09:50:00Z",
+                      "content": "-----BEGIN PRIVATE KEY-----\nMIIB...placeholder...\n-----END PRIVATE KEY-----\n"
+                    }
+                  }
+                }
               }
             }
           }
@@ -332,5 +436,10 @@
       "modified": "2024-02-18T09:30:00Z",
       "content": "Service escalation steps:\n1. Check systemd unit status.\n2. Review journal logs for errors.\n3. Contact on-call engineer if outage exceeds 15 minutes.\n"
     }
-  }
+  },
+  "notes": [
+    "Kept HTTP/HTTPS ports unchanged and aligned banners with existing templates.",
+    "Added only the lure files referenced by memory under web and SSL paths.",
+    "Preserved a plausible web-root config leak and archive lure for reconnaissance."
+  ]
 }

@@ -21,7 +21,7 @@ class OpenAIClientConfig:
     """Configuration for the OpenAI client."""
 
     api_key_path: Path = Path("secrets/openai_api_key.txt")
-    model: str = "gpt-4o-mini"
+    model: str = "gpt-5.4-mini"
     temperature: float = 0.1
     top_p: float = 0.9
     max_tokens: Optional[int] = None
@@ -72,10 +72,10 @@ class OpenAIClient:
         elif self.config.top_p is not None:
             params["top_p"] = self.config.top_p
 
-        if max_tokens is not None:
-            params["max_tokens"] = max_tokens
-        elif self.config.max_tokens is not None:
-            params["max_tokens"] = self.config.max_tokens
+        resolved_max_tokens = max_tokens if max_tokens is not None else self.config.max_tokens
+        token_param = self._token_param_name(resolved_model)
+        if resolved_max_tokens is not None:
+            params[token_param] = resolved_max_tokens
 
         if response_format is not None:
             params["response_format"] = response_format
@@ -85,7 +85,13 @@ class OpenAIClient:
         try:
             response = client.chat.completions.create(**params)
         except Exception as exc:
-            raise RuntimeError(f"Failed to call OpenAI API: {exc}") from exc
+            fallback_params = self._retry_with_alternate_token_param(params, exc)
+            if fallback_params is None:
+                raise RuntimeError(f"Failed to call OpenAI API: {exc}") from exc
+            try:
+                response = client.chat.completions.create(**fallback_params)
+            except Exception as retry_exc:
+                raise RuntimeError(f"Failed to call OpenAI API: {retry_exc}") from retry_exc
 
         if not response or not getattr(response, "choices", None):
             raise RuntimeError("OpenAI API returned an empty response.")
@@ -97,9 +103,34 @@ class OpenAIClient:
         return {
             "content": content.strip(),
             "model": resolved_model,
-            "usage": getattr(response, "usage", None),
+            "usage": normalize_usage(getattr(response, "usage", None)),
             "raw_response": response,
         }
+
+    @staticmethod
+    def _token_param_name(model: str) -> str:
+        normalized = (model or "").lower()
+        if normalized.startswith("gpt-5"):
+            return "max_completion_tokens"
+        return "max_tokens"
+
+    @staticmethod
+    def _retry_with_alternate_token_param(params: Dict[str, Any], exc: Exception) -> Optional[Dict[str, Any]]:
+        message = str(exc)
+        if "Unsupported parameter" not in message:
+            return None
+
+        if "max_tokens" in params:
+            fallback = dict(params)
+            fallback["max_completion_tokens"] = fallback.pop("max_tokens")
+            return fallback
+
+        if "max_completion_tokens" in params:
+            fallback = dict(params)
+            fallback["max_tokens"] = fallback.pop("max_completion_tokens")
+            return fallback
+
+        return None
 
     def is_available(self) -> bool:
         """Check whether the client can make real API calls."""
@@ -179,15 +210,60 @@ class OpenAIClient:
         return {
             "content": content,
             "model": "mock-openai",
-            "usage": {"total_tokens": 0},
+            "usage": {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0},
             "raw_response": None,
             "mock": True,
         }
 
 
+def normalize_usage(usage: Any) -> Dict[str, int]:
+    if usage is None:
+        return {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
+
+    if hasattr(usage, "model_dump"):
+        usage = usage.model_dump()
+    elif hasattr(usage, "dict"):
+        usage = usage.dict()
+    elif not isinstance(usage, dict):
+        usage = {
+            "prompt_tokens": getattr(usage, "prompt_tokens", None),
+            "completion_tokens": getattr(usage, "completion_tokens", None),
+            "input_tokens": getattr(usage, "input_tokens", None),
+            "output_tokens": getattr(usage, "output_tokens", None),
+            "total_tokens": getattr(usage, "total_tokens", None),
+        }
+
+    prompt_tokens = usage.get("prompt_tokens")
+    completion_tokens = usage.get("completion_tokens")
+
+    if prompt_tokens is None:
+        prompt_tokens = usage.get("input_tokens", 0)
+    if completion_tokens is None:
+        completion_tokens = usage.get("output_tokens", 0)
+
+    total_tokens = usage.get("total_tokens")
+    if total_tokens is None:
+        total_tokens = int(prompt_tokens or 0) + int(completion_tokens or 0)
+
+    return {
+        "prompt_tokens": int(prompt_tokens or 0),
+        "completion_tokens": int(completion_tokens or 0),
+        "total_tokens": int(total_tokens or 0),
+    }
+
+
+def add_usage_totals(total: Optional[Dict[str, int]], usage: Optional[Dict[str, int]]) -> Dict[str, int]:
+    total = dict(total or {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0})
+    usage = usage or {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
+    total["prompt_tokens"] = int(total.get("prompt_tokens", 0)) + int(usage.get("prompt_tokens", 0))
+    total["completion_tokens"] = int(total.get("completion_tokens", 0)) + int(usage.get("completion_tokens", 0))
+    total["total_tokens"] = int(total.get("total_tokens", 0)) + int(usage.get("total_tokens", 0))
+    return total
+
+
 def create_openai_client(
     api_key_path: Optional[Path] = None,
-    model: str = "gpt-4o-mini",
+    model: str = "gpt-5.4-mini",
     temperature: float = 0.1,
     top_p: float = 0.9,
 ) -> OpenAIClient:
@@ -204,7 +280,7 @@ def create_openai_client(
 def chat_completion_simple(
     prompt: str,
     system_message: Optional[str] = None,
-    model: str = "gpt-4o-mini",
+    model: str = "gpt-5.4-mini",
     temperature: float = 0.1,
     api_key_path: Optional[Path] = None,
 ) -> str:
@@ -227,6 +303,8 @@ def chat_completion_simple(
 __all__ = [
     "OpenAIClient",
     "OpenAIClientConfig",
+    "normalize_usage",
+    "add_usage_totals",
     "create_openai_client",
     "chat_completion_simple",
 ]

@@ -1,5 +1,5 @@
 [
-  "Updated http and https service configurations to match the latest templates.",
-  "Added sensitive files with restricted permissions to the filesystem.",
-  "Ensured that the filesystem structure reflects the necessary deception strategy."
+  "Kept HTTPS on 443 with nginx/1.18.0 and TLS 1.2 only to match long-term facts.",
+  "Retained lure routes for the observed leaked files on /opt/api.",
+  "Added only the referenced /opt/api and /srv/api filesystem nodes; no 8443 service update because ownership is inconsistent in long-term facts."
 ]

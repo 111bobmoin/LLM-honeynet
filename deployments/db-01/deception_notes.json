@@ -1,4 +1,6 @@
 [
-  "Updated MySQL service configuration to match the latest template.",
-  "Ensured filesystem reflects the correct structure and permissions for MySQL backup files."
+  "Preserved MySQL on 3306 and PostgreSQL on 5432 to match memory and long-term facts.",
+  "Kept PostgreSQL as metadata-only because no PostgreSQL interactive template fields were provided.",
+  "Strengthened database-host realism with hostname, hosts mapping, DB logs, and admin notes tied to existing leaked artifacts.",
+  "Extended MySQL responses to align with existing weak-credential and production-database decoys without changing core banner defaults."
 ]

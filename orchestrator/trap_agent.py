@@ -7,6 +7,7 @@ from typing import Any, Dict, List, Optional
 
 from .memory import HostNode, ShortTermMemory, TrapAttachment
 from llm import OpenAIClient, OpenAIClientConfig
+from llm.openai_client import add_usage_totals
 
 
 def _read_json(path: Path) -> Optional[Dict[str, Any]]:
@@ -26,7 +27,7 @@ class TrapAgentConfig:
     fallback_topology_path: Path = Path("enterprise/enterprise_topology.json")
     preferences_path: Path = Path("shadow/attacker_preferences.json")
     openai_key_path: Path = Path("secrets/openai_api_key.txt")
-    openai_model: str = "gpt-4o-mini"
+    openai_model: str = "gpt-5.4-mini"
     openai_temperature: float = 0.15
     openai_top_p: float = 0.85
     openai_max_tokens: int = 4096
@@ -39,6 +40,7 @@ class TrapAgent:
         self.config = config or TrapAgentConfig()
         self._openai_client: Optional[OpenAIClient] = None
         self.short_memory = ShortTermMemory(self.config.short_memory_path)
+        self._token_usage: Dict[str, int] = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
 
     # ------------------------------------------------------------------ public API
 
@@ -55,7 +57,7 @@ class TrapAgent:
         data = self._invoke_generation(instructions, context, stage="host trap loop")
         self._apply_host_loops(data)
         self._persist_traps()
-        return {"hosts": [host.to_dict() for host in self.short_memory.hosts]}
+        return {"hosts": [host.to_dict() for host in self.short_memory.hosts], "token_usage": self._token_usage}
 
     def run_interhost_trap_chain(self) -> Dict[str, Any]:
         hosts = self._require_hosts()
@@ -71,7 +73,7 @@ class TrapAgent:
         data = self._invoke_generation(instructions, context, stage="inter-host trap")
         self._apply_credential_chains(data)
         self._persist_traps()
-        return {"hosts": [host.to_dict() for host in self.short_memory.hosts]}
+        return {"hosts": [host.to_dict() for host in self.short_memory.hosts], "token_usage": self._token_usage}
 
     def run_full_pipeline(self) -> Dict[str, Any]:
         self.run_host_trap_chain()
@@ -196,6 +198,7 @@ class TrapAgent:
             raise RuntimeError(f"Failed to generate {stage} via OpenAI: {exc}") from exc
 
         raw = response.get("content", "").strip()
+        self._token_usage = add_usage_totals(self._token_usage, response.get("usage"))
         if not raw:
             raise RuntimeError(f"OpenAI returned empty content for {stage}.")
         try:

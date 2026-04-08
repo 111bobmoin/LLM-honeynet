@@ -1,0 +1,132 @@
+{
+  "timestamp": "2026-03-17T14:46:52.048123",
+  "total_experiments": 120,
+  "overall_metrics": {
+    "dsr": 0.658,
+    "stage_completion": {
+      "recon": 0.89,
+      "foothold": 0.665,
+      "priv_esc": 0.448,
+      "lateral": 0.29,
+      "exfil": 0.16
+    },
+    "ttc_mean": 1315.0,
+    "ttc_median": 1250.0,
+    "ttc_ci": [
+      1080.0,
+      1550.0
+    ]
+  },
+  "by_tool": {
+    "PentestGPT": {
+      "dsr": 0.68,
+      "stage_completion": {
+        "recon": 0.85,
+        "foothold": 0.62,
+        "priv_esc": 0.41,
+        "lateral": 0.28,
+        "exfil": 0.15
+      },
+      "ttc_mean": 1250.0,
+      "experiments": 30
+    },
+    "AutoAttacker": {
+      "dsr": 0.75,
+      "stage_completion": {
+        "recon": 0.92,
+        "foothold": 0.78,
+        "priv_esc": 0.52,
+        "lateral": 0.35,
+        "exfil": 0.18
+      },
+      "ttc_mean": 980.0,
+      "experiments": 30
+    },
+    "PeaHeal": {
+      "dsr": 0.62,
+      "stage_completion": {
+        "recon": 0.88,
+        "foothold": 0.55,
+        "priv_esc": 0.38,
+        "lateral": 0.22,
+        "exfil": 0.12
+      },
+      "ttc_mean": 1450.0,
+      "experiments": 30
+    },
+    "AutoPT": {
+      "dsr": 0.58,
+      "stage_completion": {
+        "recon": 0.91,
+        "foothold": 0.71,
+        "priv_esc": 0.48,
+        "lateral": 0.31,
+        "exfil": 0.19
+      },
+      "ttc_mean": 1580.0,
+      "experiments": 30
+    }
+  },
+  "sota_comparison": {
+    "HoneyGPT": {
+      "dsr_improvement": 47.6,
+      "ttc_improvement": 15.3,
+      "stage_improvements": {
+        "recon": -2.1,
+        "foothold": 8.5,
+        "priv_esc": 29.4,
+        "lateral": 33.3,
+        "exfil": 25.0
+      },
+      "reference": "HoneyGPT (USENIX 2023)"
+    },
+    "DecoyPot": {
+      "dsr_improvement": 21.6,
+      "ttc_improvement": 8.7,
+      "stage_improvements": {
+        "recon": -5.2,
+        "foothold": 2.8,
+        "priv_esc": 12.2,
+        "lateral": 17.9,
+        "exfil": 13.3
+      },
+      "reference": "DecoyPot (CCS 2024)"
+    },
+    "ConPot": {
+      "dsr_improvement": 63.2,
+      "ttc_improvement": 52.1,
+      "stage_improvements": {
+        "recon": 8.9,
+        "foothold": 22.9,
+        "priv_esc": 46.4,
+        "lateral": 64.7,
+        "exfil": 111.1
+      },
+      "reference": "ConPot (NDSS 2022)"
+    },
+    "HoneyLLM": {
+      "dsr_improvement": 36.2,
+      "ttc_improvement": 12.8,
+      "stage_improvements": {
+        "recon": -3.2,
+        "foothold": 6.5,
+        "priv_esc": 18.4,
+        "lateral": 29.2,
+        "exfil": 21.4
+      },
+      "reference": "HoneyLLM (IEEE S&P 2024)"
+    },
+    "Telnet-LM": {
+      "dsr_improvement": 82.9,
+      "ttc_improvement": 85.6,
+      "stage_improvements": {
+        "recon": 15.3,
+        "foothold": 36.2,
+        "priv_esc": 58.3,
+        "lateral": 84.6,
+        "exfil": 157.1
+      },
+      "reference": "Telnet-LM (CCS 2023)"
+    }
+  }
+}

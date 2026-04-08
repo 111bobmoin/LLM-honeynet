@@ -34,6 +34,33 @@
         "Content-Type": "application/json"
       },
       "body": "{\"status\": \"ok\", \"token\": \"3f4dc3e8\", \"role\": \"viewer\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/backup-site.zip",
+      "status": 200,
+      "response_headers": {
+        "Content-Type": "application/zip"
+      },
+      "body_file": "../www/html/backup-site.zip"
+    },
+    {
+      "method": "GET",
+      "path": "/db-credentials.php.bak",
+      "status": 200,
+      "response_headers": {
+        "Content-Type": "application/x-httpd-php"
+      },
+      "body_file": "../www/html/db-credentials.php.bak"
+    },
+    {
+      "method": "GET",
+      "path": "/admin",
+      "status": 403,
+      "response_headers": {
+        "Content-Type": "text/html; charset=utf-8"
+      },
+      "body": "<html><body><h1>403 Forbidden</h1><p>Access denied.</p></body></html>"
     }
   ],
   "not_found": {

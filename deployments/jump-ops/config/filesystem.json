@@ -62,8 +62,8 @@
                 "mode": "0640",
                 "owner": "root",
                 "group": "adm",
-                "modified": "2024-04-12T06:30:00Z",
-                "content": "Apr 12 06:26:44 intranet sshd[2031]: Accepted password for admin from 10.54.17.23 port 52844 ssh2\nApr 12 06:27:18 intranet sshd[2044]: Failed password for root from 203.0.113.41 port 44112 ssh2\nApr 12 06:29:02 intranet vsftpd[2140]: CONNECT: Client \"198.51.100.77\"\n"
+                "modified": "2024-04-12T10:20:00Z",
+                "content": "Apr 12 06:26:44 intranet sshd[2031]: Accepted password for admin from 10.54.17.23 port 52844 ssh2\nApr 12 06:27:18 intranet sshd[2044]: Failed password for root from 203.0.113.41 port 44112 ssh2\nApr 12 06:29:02 intranet vsftpd[2140]: CONNECT: Client \"198.51.100.77\"\nApr 12 09:58:11 jump-ops sshd[3188]: Accepted password for ops from 10.10.40.12 port 51422 ssh2\nApr 12 10:01:47 jump-ops sshd[3221]: Failed password for invalid user backup from 198.51.100.24 port 40218 ssh2\n"
               }
             }
           },
@@ -120,6 +120,78 @@
                     "content": "intranet bastion rsa AAAAB3Nza...\n"
                   }
                 }
+              }
+            }
+          },
+          "operator": {
+            "type": "directory",
+            "mode": "0750",
+            "owner": "operator",
+            "group": "operator",
+            "children": {
+              ".ssh": {
+                "type": "directory",
+                "mode": "0700",
+                "owner": "operator",
+                "group": "operator",
+                "children": {
+                  "id_ed25519.bak": {
+                    "type": "file",
+                    "mode": "0600",
+                    "owner": "operator",
+                    "group": "operator",
+                    "modified": "2024-04-12T10:00:00Z",
+                    "content": "-----BEGIN OPENSSH PRIVATE KEY-----\nplaceholder\n-----END OPENSSH PRIVATE KEY-----\n"
+                  }
+                }
+              }
+            }
+          },
+          "ops": {
+            "type": "directory",
+            "mode": "0750",
+            "owner": "ops",
+            "group": "ops",
+            "children": {
+              ".ssh": {
+                "type": "directory",
+                "mode": "0700",
+                "owner": "ops",
+                "group": "ops",
+                "children": {
+                  "id_ed25519.old": {
+                    "type": "file",
+                    "mode": "0600",
+                    "owner": "ops",
+                    "group": "ops",
+                    "modified": "2024-04-12T10:05:00Z",
+                    "content": "-----BEGIN OPENSSH PRIVATE KEY-----\nplaceholder-old-ops-key\n-----END OPENSSH PRIVATE KEY-----\n"
+                  },
+                  "known_hosts": {
+                    "type": "file",
+                    "mode": "0644",
+                    "owner": "ops",
+                    "group": "ops",
+                    "modified": "2024-04-11T18:20:00Z",
+                    "content": "bastion-01 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBastionPlaceholder\napp-01 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAppPlaceholder\n"
+                  },
+                  "authorized_keys": {
+                    "type": "file",
+                    "mode": "0600",
+                    "owner": "ops",
+                    "group": "ops",
+                    "modified": "2024-04-12T10:06:00Z",
+                    "content": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJumpsOpsPlaceholder ops@bastion-01\n"
+                  }
+                }
+              },
+              "notes.txt": {
+                "type": "file",
+                "mode": "0640",
+                "owner": "ops",
+                "group": "ops",
+                "modified": "2024-04-12T09:40:00Z",
+                "content": "- Restore jump-ops config from /opt/backups/jump-ops-config.tar.gz if SSH policy changes fail.\n- WinRM service accounts tracked separately by opsadmin on Windows side.\n"
               }
             }
           }
@@ -204,6 +276,142 @@
             }
           }
         }
+      },
+      "opt": {
+        "type": "directory",
+        "mode": "0755",
+        "owner": "root",
+        "group": "root",
+        "children": {
+          "ops": {
+            "type": "directory",
+            "mode": "0755",
+            "owner": "root",
+            "group": "root",
+            "children": {
+              "maintenance-passwords.txt": {
+                "type": "file",
+                "mode": "0640",
+                "owner": "root",
+                "group": "root",
+                "modified": "2024-04-12T10:00:00Z",
+                "content": "operator: Spring2024!\nadmin: admin2024\nroot: toor\n"
+              }
+            }
+          },
+          "backups": {
+            "type": "directory",
+            "mode": "0750",
+            "owner": "root",
+            "group": "root",
+            "children": {
+              "jump-ops-config.tar.gz": {
+                "type": "file",
+                "mode": "0640",
+                "owner": "root",
+                "group": "root",
+                "modified": "2024-04-12T08:55:00Z",
+                "content": "placeholder-jump-ops-config-backup\n"
+              }
+            }
+          }
+        }
+      },
+      "C:": {
+        "type": "directory",
+        "mode": "0755",
+        "owner": "root",
+        "group": "root",
+        "children": {
+          "Ops": {
+            "type": "directory",
+            "mode": "0755",
+            "owner": "root",
+            "group": "root",
+            "children": {
+              "Scripts": {
+                "type": "directory",
+                "mode": "0755",
+                "owner": "root",
+                "group": "root",
+                "children": {
+                  "prod-admin-creds.ps1": {
+                    "type": "file",
+                    "mode": "0644",
+                    "owner": "root",
+                    "group": "root",
+                    "modified": "2024-04-12T10:00:00Z",
+                    "content": "$AdminUser = 'prod-admin'\n$AdminPass = 'P@ssw0rd!'\n$WinRMHost = 'jump-ops'\n"
+                  }
+                }
+              },
+              "winrm-service-accounts.txt": {
+                "type": "file",
+                "mode": "0644",
+                "owner": "root",
+                "group": "root",
+                "modified": "2024-04-12T10:10:00Z",
+                "content": "svc-ops-remote\nsvc-patch\nopsadmin\n"
+              }
+            }
+          },
+          "Users": {
+            "type": "directory",
+            "mode": "0755",
+            "owner": "root",
+            "group": "root",
+            "children": {
+              "Public": {
+                "type": "directory",
+                "mode": "0755",
+                "owner": "root",
+                "group": "root",
+                "children": {
+                  "Documents": {
+                    "type": "directory",
+                    "mode": "0755",
+                    "owner": "root",
+                    "group": "root",
+                    "children": {
+                      "server-access-backup.xlsx": {
+                        "type": "file",
+                        "mode": "0644",
+                        "owner": "root",
+                        "group": "root",
+                        "modified": "2024-04-12T10:00:00Z",
+                        "content": "placeholder"
+                      }
+                    }
+                  }
+                }
+              },
+              "opsadmin": {
+                "type": "directory",
+                "mode": "0755",
+                "owner": "root",
+                "group": "root",
+                "children": {
+                  "Documents": {
+                    "type": "directory",
+                    "mode": "0755",
+                    "owner": "root",
+                    "group": "root",
+                    "children": {
+                      "admin-passwords.csv": {
+                        "type": "file",
+                        "mode": "0644",
+                        "owner": "root",
+                        "group": "root",
+                        "modified": "2024-04-12T10:12:00Z",
+                        "content": "system,username,password\njump-ops,opsadmin,P@ssw0rd!\nwinrm,svc-ops-remote,Winter2024!\ndb-01,dbadmin,DBAdmin!2024\n"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     ".bash_history": {
@@ -244,6 +452,14 @@
           "modified": "2024-04-10T08:14:00Z",
           "content": "{\"keys\": [\"key1\", \"key2\"]}"
         }
+      },
+      "secret_keys.json": {
+        "type": "file",
+        "mode": "0640",
+        "owner": "root",
+        "group": "root",
+        "modified": "2024-04-10T08:14:00Z",
+        "content": "{\"keys\": [\"key1\", \"key2\"]}"
       }
     }
   },
@@ -281,6 +497,22 @@
             "modified": "2024-04-10T01:00:00Z",
             "content": "username: admin\npassword: admin2024"
           }
+        },
+        "operations_backup.zip": {
+          "type": "file",
+          "mode": "0644",
+          "owner": "www-data",
+          "group": "www-data",
+          "modified": "2024-04-10T01:00:00Z",
+          "content": "placeholder"
+        },
+        "credentials.txt": {
+          "type": "file",
+          "mode": "0640",
+          "owner": "www-data",
+          "group": "www-data",
+          "modified": "2024-04-10T01:00:00Z",
+          "content": "username: admin\npassword: admin2024"
         }
       }
     }

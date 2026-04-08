@@ -1,5 +1,5 @@
 [
-  "Updated SSH service to include weak credentials for realism.",
-  "Maintained HTTP service on port 80 with existing configurations.",
-  "Added user-specific authorized_keys file under user directory."
+  "Kept SSH on 22 and RDP on 3389 to match observed host exposure.",
+  "Retained realistic Microsoft Terminal Services RDP banner and existing OpenSSH profile.",
+  "Only included filesystem nodes tied to known lure files and existing memory; no unsupported services were added."
 ]

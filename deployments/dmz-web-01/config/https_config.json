@@ -4,10 +4,9 @@
   "certificate": "../certs/honeypot.crt",
   "private_key": "../certs/honeypot.key",
   "tls_versions": [
-    "TLSv1.2",
-    "TLSv1.3"
+    "TLSv1.2"
   ],
-  "server_header": "nginx/1.22.1",
+  "server_header": "nginx/1.18.0",
   "default_headers": {
     "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload"
   },
@@ -29,6 +28,15 @@
         "Content-Type": "application/json"
       },
       "body": "{\"service\": \"metrics\", \"version\": \"1.14.0\", \"build\": \"20240412\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/finance-report-2024.xlsx",
+      "status": 200,
+      "response_headers": {
+        "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      },
+      "body_file": "../www/html/finance-report-2024.xlsx"
     }
   ],
   "not_found": {

@@ -55,8 +55,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--openai-model",
-        default="gpt-4o-mini",
-        help="OpenAI model name (default: gpt-4o-mini)",
+        default="gpt-5.4-mini",
+        help="OpenAI model name (default: gpt-5.4-mini)",
     )
     parser.add_argument(
         "--openai-temperature",

@@ -199,6 +199,9 @@ function updatePipelineStatus(step, status) {
     const statusElement = document.getElementById(`pipeline-${step}`);
     if (!statusElement) return;
 
+    if (status === true) status = 'completed';
+    if (status === false || status == null) status = 'pending';
+
     statusElement.className = 'step-status';
 
     switch (status) {
@@ -239,7 +242,7 @@ function displayRecentActivity(operations) {
 
     container.innerHTML = operations.map(op => `
         <div class="activity-item">
-            <div class="activity-dot" style="background: ${getStatusColor(op.status)}"></div>
+            <div class="activity-dot ${getStatusClass(op.status)}"></div>
             <div class="activity-content">
                 <div class="activity-time">${formatTime(op.created_at)}</div>
                 <div class="activity-text">${getOperationTypeName(op.type)} - ${getStatusText(op.status)}</div>
@@ -258,12 +261,23 @@ function getStatusColor(status) {
     return colors[status] || 'var(--text-muted)';
 }
 
+function getStatusClass(status) {
+    const classes = {
+        'completed': 'is-success',
+        'running': 'is-warning',
+        'failed': 'is-danger',
+        'pending': 'is-muted'
+    };
+    return classes[status] || 'is-muted';
+}
+
 function getOperationTypeName(type) {
     const names = {
         'perception': '感知分析',
         'honey_agent': 'Honey Agent',
         'trap_agent': 'Trap Agent',
-        'deception': '欺骗配置'
+        'deception': '欺骗配置',
+        'full_pipeline': '完整流程'
     };
     return names[type] || type;
 }
@@ -300,67 +314,255 @@ function updateSystemStatus(online) {
 
 // ===== Full Pipeline =====
 async function runFullPipeline() {
-    // Reset orchestration and deception steps to pending
+    const openai = document.getElementById('pipeline-openai')?.checked ?? true;
+    const openaiModel = document.getElementById('pipeline-openai-model')?.value || 'gpt-5.4-mini';
+    const honeyMode = document.getElementById('pipeline-honey-mode')?.value || 'initialization';
+    const trapMode = document.getElementById('pipeline-trap-mode')?.value || 'all';
+    const deceptionMode = document.getElementById('pipeline-deception-mode')?.value || 'full';
+    const skipNetwork = document.getElementById('pipeline-skip-network')?.checked ?? true;
+    const networkNoCli = document.getElementById('pipeline-network-no-cli')?.checked ?? true;
+    const networkDuration = parseFloat(document.getElementById('pipeline-network-duration')?.value || '10');
+    const resultContainer = document.getElementById('full-pipeline-result');
+
+    updatePipelineStatus('perception', 'pending');
     updatePipelineStatus('orchestration', 'pending');
     updatePipelineStatus('deception', 'pending');
+    updatePipelineStatus('network', skipNetwork ? 'pending' : 'pending');
 
-    // Show loading overlay
+    if (resultContainer) {
+        resultContainer.className = 'operation-result show';
+        resultContainer.innerHTML = `
+            <div class="result-message is-pending">
+                <i class="fas fa-spinner fa-spin"></i>
+                <span>正在准备完整流程...</span>
+            </div>
+        `;
+    }
+
     showLoadingOverlay('运行完整流程...');
 
     try {
-        // Step 1: Orchestration (Honey Agent + Trap Agent)
-        updatePipelineStatus('orchestration', 'running');
-        updateLoadingMessage('正在生成诱饵和陷阱...');
-
-        const honeyResult = await apiCall('/orchestrate/honey', {
+        const response = await apiCall('/pipeline/full', {
             method: 'POST',
-            body: JSON.stringify({ mode: 'initialization' })
+            body: JSON.stringify({
+                openai,
+                openai_model: openaiModel,
+                honey_mode: honeyMode,
+                trap_mode: trapMode,
+                deception_mode: deceptionMode,
+                skip_network: skipNetwork,
+                network_no_cli: networkNoCli,
+                network_duration: Number.isFinite(networkDuration) ? networkDuration : 10
+            })
         });
 
-        await waitForOperation(honeyResult.operation_id, 'Honey Agent');
-
-        const trapResult = await apiCall('/orchestrate/trap', {
-            method: 'POST',
-            body: JSON.stringify({ mode: 'all' })
-        });
-
-        await waitForOperation(trapResult.operation_id, 'Trap Agent');
-
-        updatePipelineStatus('orchestration', 'completed');
-
-        // Step 2: Deception
-        updatePipelineStatus('deception', 'running');
-        updateLoadingMessage('正在进行一致性审计和配置生成...');
-
-        const deceptionResult = await apiCall('/deception/run', {
-            method: 'POST',
-            body: JSON.stringify({ mode: 'full' })
-        });
-
-        await waitForOperation(deceptionResult.operation_id, 'Deception');
-
-        updatePipelineStatus('deception', 'completed');
+        await waitForPipelineOperation(response.operation_id, skipNetwork);
 
         hideLoadingOverlay();
+        if (resultContainer) {
+            resultContainer.className = 'operation-result show success';
+            resultContainer.innerHTML = `
+                <div class="result-message is-success">
+                    <i class="fas fa-circle-check"></i>
+                    <span>完整流程执行完成</span>
+                </div>
+            `;
+        }
         showToast('success', '完整流程', '所有步骤已成功完成');
         loadDashboard();
+        loadOrchestrationStatus();
+        loadConsistencyReport();
+        loadDeploymentHosts();
 
     } catch (error) {
-        // Mark current step as failed
         hideLoadingOverlay();
-        showToast('error', '完整流程', `执行失败: ${error.message}`);
-
-        // Check which step failed and mark it
-        const orchestrationEl = document.getElementById('pipeline-orchestration');
-        if (orchestrationEl && !orchestrationEl.classList.contains('active')) {
-            updatePipelineStatus('orchestration', 'failed');
+        if (resultContainer) {
+            resultContainer.className = 'operation-result show error';
+            resultContainer.innerHTML = `
+                <div class="result-message is-error">
+                    <i class="fas fa-circle-xmark"></i>
+                    <span>完整流程失败: ${error.message}</span>
+                </div>
+            `;
         }
+        showToast('error', '完整流程', `执行失败: ${error.message}`);
+    }
+}
 
-        const deceptionEl = document.getElementById('pipeline-deception');
-        if (deceptionEl && !deceptionEl.classList.contains('active')) {
-            updatePipelineStatus('deception', 'failed');
+async function waitForPipelineOperation(operationId, skipNetwork = true) {
+    return new Promise((resolve, reject) => {
+        const maxConsecutiveErrors = 10;
+        let consecutiveErrors = 0;
+
+        const poll = async () => {
+            try {
+                const data = await apiCall(`/operations/${operationId}`);
+                consecutiveErrors = 0;
+                renderFullPipelineProgress(data.result, skipNetwork);
+
+                if (data.status === 'completed') {
+                    resolve(data);
+                    return;
+                }
+
+                if (data.status === 'failed') {
+                    if (data.result?.current_step) {
+                        markPipelineStepFailed(data.result.current_step);
+                    }
+                    reject(new Error(data.error || '操作失败'));
+                    return;
+                }
+
+                setTimeout(poll, 1000);
+            } catch (error) {
+                consecutiveErrors++;
+                if (consecutiveErrors >= maxConsecutiveErrors) {
+                    reject(new Error(`轮询失败次数过多: ${error.message}`));
+                    return;
+                }
+                setTimeout(poll, 1500);
+            }
+        };
+
+        poll();
+    });
+}
+
+function renderFullPipelineProgress(result, skipNetwork = true) {
+    if (!result) return;
+
+    const resultContainer = document.getElementById('full-pipeline-result');
+    const stepMap = {
+        perception: 'perception',
+        honey_agent: 'orchestration',
+        trap_agent: 'orchestration',
+        deception: 'deception',
+        shadow_network: 'network'
+    };
+
+    updatePipelineStatus('perception', 'pending');
+    updatePipelineStatus('orchestration', 'pending');
+    updatePipelineStatus('deception', 'pending');
+    updatePipelineStatus('network', skipNetwork ? 'pending' : 'pending');
+
+    const steps = Array.isArray(result.steps) ? result.steps : [];
+    let currentUiStep = null;
+
+    steps.forEach(step => {
+        const uiStep = stepMap[step.name];
+        if (!uiStep) return;
+        currentUiStep = uiStep;
+
+        if (step.status === 'completed') {
+            updatePipelineStatus(uiStep, 'completed');
+        } else if (step.status === 'running') {
+            updatePipelineStatus(uiStep, 'running');
+        } else if (step.status === 'failed') {
+            updatePipelineStatus(uiStep, 'failed');
+        }
+    });
+
+    if (skipNetwork && !steps.some(step => step.name === 'shadow_network')) {
+        updatePipelineStatus('network', 'pending');
+    }
+
+    const currentStepLabel = getPipelineStepLabel(result.current_step || currentUiStep);
+    const current = steps.find(step => step.name === result.current_step) || steps[steps.length - 1];
+    const substepLabel = getPipelineSubstepLabel(result.current_step, current?.output_tail || '');
+    const loadingLabel = [currentStepLabel, substepLabel].filter(Boolean).join(' · ');
+    updateLoadingMessage(loadingLabel ? `正在执行 ${loadingLabel}...` : '正在执行完整流程...');
+
+    if (resultContainer) {
+        const output = current?.output_tail ? escapeHtml(current.output_tail) : '等待执行输出...';
+        const stepBadge = substepLabel || currentStepLabel || '完整流程';
+        resultContainer.className = 'operation-result show';
+        resultContainer.innerHTML = `
+            <div class="result-block-header">
+                <div class="result-title">
+                    <i class="fas fa-wave-square"></i>
+                    <span>${currentStepLabel || '完整流程'}</span>
+                </div>
+                <span class="info-badge">${stepBadge}</span>
+            </div>
+            <p class="result-meta">已完成 ${steps.filter(step => step.status === 'completed').length}/${skipNetwork ? 4 : 5} 步 · 模型: ${result.openai_model || '-'} · Honey: ${result.honey_mode || '-'} · Trap: ${result.trap_mode || '-'} · Deception: ${result.deception_mode || '-'}</p>
+            <pre class="log-preview">${output}</pre>
+        `;
+    }
+}
+
+function getPipelineStepLabel(stepName) {
+    const labels = {
+        perception: 'Perception',
+        honey_agent: 'Honey Agent',
+        trap_agent: 'Trap Agent',
+        deception: 'Deception',
+        shadow_network: 'Shadow Network'
+    };
+    return labels[stepName] || '';
+}
+
+function getPipelineSubstepLabel(stepName, outputTail) {
+    if (!stepName || !outputTail) return '';
+
+    if (stepName === 'honey_agent') {
+        const match = outputTail.match(/\[HoneyAgent\]\s+step\s+(\d+)\/(\d+):\s*(.+)/g);
+        if (match && match.length > 0) {
+            const latest = match[match.length - 1].match(/\[HoneyAgent\]\s+step\s+(\d+)\/(\d+):\s*(.+)/);
+            if (latest) {
+                return `Honey ${latest[1]}/${latest[2]} · ${latest[3]}`;
+            }
         }
     }
+
+    if (stepName === 'trap_agent') {
+        if (outputTail.includes('host trap')) return 'Trap · Host';
+        if (outputTail.includes('interhost')) return 'Trap · Interhost';
+    }
+
+    return '';
+}
+
+function markPipelineStepFailed(stepName) {
+    const stepMap = {
+        perception: 'perception',
+        honey_agent: 'orchestration',
+        trap_agent: 'orchestration',
+        deception: 'deception',
+        shadow_network: 'network'
+    };
+    const uiStep = stepMap[stepName];
+    if (uiStep) {
+        updatePipelineStatus(uiStep, 'failed');
+    }
+}
+
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function renderTokenUsage(usage) {
+    if (!usage || !usage.total_tokens) return '';
+    return `
+        <div class="token-usage">
+            <div class="token-pill">
+                <span class="token-label">Prompt</span>
+                <strong>${usage.prompt_tokens || 0}</strong>
+            </div>
+            <div class="token-pill">
+                <span class="token-label">Completion</span>
+                <strong>${usage.completion_tokens || 0}</strong>
+            </div>
+            <div class="token-pill">
+                <span class="token-label">Total</span>
+                <strong>${usage.total_tokens || 0}</strong>
+            </div>
+        </div>
+    `;
 }
 
 // Update loading overlay message
@@ -445,7 +647,7 @@ async function loadHosts() {
         }
 
         container.innerHTML = `<div class="hosts-grid">` + data.hosts.map(host => `
-            <div class="host-item" data-host="${host.name}" onclick="toggleHostSelection('${host.name}')">
+            <div class="host-item ${selectedHosts.has(host.name) ? 'selected' : ''}" data-host="${host.name}" onclick="toggleHostSelection('${host.name}')">
                 <input type="checkbox" class="host-checkbox" ${selectedHosts.has(host.name) ? 'checked' : ''}>
                 <div class="host-name">${host.name}</div>
                 <div class="host-info">${host.log_files?.length || 0} 日志文件</div>
@@ -480,6 +682,7 @@ function toggleHostSelection(hostName) {
 
 async function runPerception() {
     const useOpenAI = document.getElementById('perception-openai')?.checked ?? false;
+    const openaiModel = document.getElementById('perception-model')?.value || 'gpt-5.4-mini';
     const hosts = selectedHosts.size > 0 ? Array.from(selectedHosts) : null;
 
     const statusBadge = document.getElementById('perception-status');
@@ -488,12 +691,18 @@ async function runPerception() {
     if (!statusBadge || !resultsContainer) return;
 
     try {
+        statusBadge.classList.remove('active', 'error');
+        resultsContainer.innerHTML = `
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+            </div>
+        `;
         statusBadge.querySelector('.status-text').textContent = '运行中';
         statusBadge.classList.add('running');
 
         const data = await apiCall('/perception/analyze', {
             method: 'POST',
-            body: JSON.stringify({ hosts, use_openai: useOpenAI })
+            body: JSON.stringify({ hosts, use_openai: useOpenAI, openai_model: openaiModel })
         });
 
         statusBadge.querySelector('.status-text').textContent = '处理中';
@@ -503,7 +712,7 @@ async function runPerception() {
         // Poll for results
         pollOperation(data.operation_id, (result) => {
             statusBadge.querySelector('.status-text').textContent = '完成';
-            statusBadge.classList.remove('active');
+            statusBadge.classList.remove('running', 'error');
             statusBadge.classList.add('active');
             displayPerceptionResults(result.result);
             showToast('success', '感知分析', '分析已完成');
@@ -542,31 +751,49 @@ function displayPerceptionResults(result) {
         return;
     }
 
-    let html = `<p class="text-muted" style="margin-bottom: 16px;">共分析 ${result.total_hosts} 个主机</p>`;
+    let html = `
+        <div class="result-summary">
+            <div class="summary-pill">
+                <span class="summary-pill-label">分析主机</span>
+                <strong>${result.total_hosts}</strong>
+            </div>
+            <div class="summary-pill">
+                <span class="summary-pill-label">结果状态</span>
+                <strong>已完成</strong>
+            </div>
+        </div>
+    `;
 
     if (result.openai_summary) {
         html += `
-            <div class="operation-result show">
-                <h4 style="margin-bottom: 8px;">AI 摘要</h4>
-                <p style="font-size: 13px; color: var(--text-secondary);">${result.openai_summary}</p>
+            <div class="operation-result show result-block">
+                <div class="result-block-header">
+                    <h4>AI 摘要</h4>
+                    <span class="info-badge">OpenAI</span>
+                </div>
+                <p class="result-copy">${result.openai_summary}</p>
+                ${renderTokenUsage(result.token_usage)}
             </div>
         `;
     }
 
     result.analyses.forEach(analysis => {
         html += `
-            <div class="operation-result show">
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                    <span style="font-weight: 600;">🖥️ ${analysis.host}</span>
-                    <span class="status-badge">${analysis.stage_label || 'Unknown'}</span>
+            <div class="operation-result show result-block">
+                <div class="result-block-header">
+                    <div class="result-title">
+                        <i class="fas fa-desktop"></i>
+                        <span>${analysis.host}</span>
+                    </div>
+                    <span class="status-badge compact">${analysis.stage_label || 'Unknown'}</span>
                 </div>
-                <p class="text-muted">${analysis.event_count || 0} 个事件</p>
+                <p class="result-meta">${analysis.event_count || 0} 个事件</p>
                 ${analysis.events && analysis.events.length > 0 ? `
-                    <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 4px;">
+                    <div class="event-list">
                         ${analysis.events.slice(0, 5).map(e => `
-                            <div style="padding: 8px; background: var(--bg-tertiary); border-radius: 4px; font-size: 12px;">
-                                <span class="text-muted">${e.timestamp}</span>
-                                <span style="margin-left: 8px;">${e.summary}</span>
+                            <div class="event-item">
+                                <span class="event-time">${e.timestamp}</span>
+                                <span class="event-summary">${e.summary}</span>
                             </div>
                         `).join('')}
                     </div>
@@ -648,7 +875,7 @@ function initSliders() {
 async function runHoneyAgent() {
     const resultDiv = document.getElementById('honey-result');
     const mode = document.getElementById('honey-mode')?.value || 'initialization';
-    const model = document.getElementById('honey-model')?.value || 'gpt-4o-mini';
+    const model = document.getElementById('honey-model')?.value || 'gpt-5.4-mini';
     const temp = parseFloat(document.getElementById('honey-temp')?.value || 0.1);
     const topP = parseFloat(document.getElementById('honey-topp')?.value || 0.9);
 
@@ -656,7 +883,12 @@ async function runHoneyAgent() {
 
     try {
         resultDiv.className = 'agent-result show';
-        resultDiv.innerHTML = '<p>⏳ 正在运行 Honey Agent...</p>';
+        resultDiv.innerHTML = `
+            <div class="result-message is-pending">
+                <i class="fas fa-spinner fa-spin"></i>
+                <span>正在运行 Honey Agent...</span>
+            </div>
+        `;
 
         const data = await apiCall('/orchestrate/honey', {
             method: 'POST',
@@ -672,27 +904,41 @@ async function runHoneyAgent() {
             const r = result.result;
             resultDiv.className = 'agent-result show success';
             resultDiv.innerHTML = `
-                <p style="color: var(--success); font-weight: 600;">✅ 完成！生成 ${r.hosts_generated || 0} 个主机的诱饵配置</p>
-                <p class="text-muted">模式: ${r.mode || mode}</p>
+                <div class="result-message is-success">
+                    <i class="fas fa-circle-check"></i>
+                    <span>完成，生成 ${r.hosts_generated || 0} 个主机的诱饵配置</span>
+                </div>
+                <p class="result-meta">模式: ${r.mode || mode}</p>
+                ${renderTokenUsage(r.token_usage)}
             `;
             loadOrchestrationStatus();
             showToast('success', 'Honey Agent', `已生成 ${r.hosts_generated || 0} 个主机的配置`);
         }, (error) => {
             resultDiv.className = 'agent-result show error';
-            resultDiv.innerHTML = `<p style="color: var(--danger);">❌ 失败: ${error}</p>`;
+            resultDiv.innerHTML = `
+                <div class="result-message is-error">
+                    <i class="fas fa-circle-xmark"></i>
+                    <span>失败: ${error}</span>
+                </div>
+            `;
             showToast('error', 'Honey Agent', `运行失败: ${error}`);
         });
 
     } catch (error) {
         resultDiv.className = 'agent-result show error';
-        resultDiv.innerHTML = `<p style="color: var(--danger);">❌ 启动失败: ${error.message}</p>`;
+        resultDiv.innerHTML = `
+            <div class="result-message is-error">
+                <i class="fas fa-circle-xmark"></i>
+                <span>启动失败: ${error.message}</span>
+            </div>
+        `;
     }
 }
 
 async function runTrapAgent() {
     const resultDiv = document.getElementById('trap-result');
     const mode = document.getElementById('trap-mode')?.value || 'all';
-    const model = document.getElementById('trap-model')?.value || 'gpt-4o-mini';
+    const model = document.getElementById('trap-model')?.value || 'gpt-5.4-mini';
     const temp = parseFloat(document.getElementById('trap-temp')?.value || 0.15);
     const topP = parseFloat(document.getElementById('trap-topp')?.value || 0.85);
 
@@ -700,7 +946,12 @@ async function runTrapAgent() {
 
     try {
         resultDiv.className = 'agent-result show';
-        resultDiv.innerHTML = '<p>⏳ 正在运行 Trap Agent...</p>';
+        resultDiv.innerHTML = `
+            <div class="result-message is-pending">
+                <i class="fas fa-spinner fa-spin"></i>
+                <span>正在运行 Trap Agent...</span>
+            </div>
+        `;
 
         const data = await apiCall('/orchestrate/trap', {
             method: 'POST',
@@ -716,20 +967,34 @@ async function runTrapAgent() {
             const r = result.result;
             resultDiv.className = 'agent-result show success';
             resultDiv.innerHTML = `
-                <p style="color: var(--success); font-weight: 600;">✅ 完成！处理 ${r.hosts?.length || 0} 个主机</p>
-                <p class="text-muted">模式: ${r.mode || mode}</p>
+                <div class="result-message is-success">
+                    <i class="fas fa-circle-check"></i>
+                    <span>完成，处理 ${r.hosts?.length || 0} 个主机</span>
+                </div>
+                <p class="result-meta">模式: ${r.mode || mode}</p>
+                ${renderTokenUsage(r.token_usage)}
             `;
             loadOrchestrationStatus();
             showToast('success', 'Trap Agent', '陷阱链已生成');
         }, (error) => {
             resultDiv.className = 'agent-result show error';
-            resultDiv.innerHTML = `<p style="color: var(--danger);">❌ 失败: ${error}</p>`;
+            resultDiv.innerHTML = `
+                <div class="result-message is-error">
+                    <i class="fas fa-circle-xmark"></i>
+                    <span>失败: ${error}</span>
+                </div>
+            `;
             showToast('error', 'Trap Agent', `运行失败: ${error}`);
         });
 
     } catch (error) {
         resultDiv.className = 'agent-result show error';
-        resultDiv.innerHTML = `<p style="color: var(--danger);">❌ 启动失败: ${error.message}</p>`;
+        resultDiv.innerHTML = `
+            <div class="result-message is-error">
+                <i class="fas fa-circle-xmark"></i>
+                <span>启动失败: ${error.message}</span>
+            </div>
+        `;
     }
 }
 
@@ -829,17 +1094,32 @@ async function loadConsistencyReport() {
         }
 
         let html = `
-            <p class="text-muted" style="margin-bottom: 12px;">生成时间: ${data.modified || '-'}</p>
+            <div class="result-summary">
+                <div class="summary-pill">
+                    <span class="summary-pill-label">生成时间</span>
+                    <strong>${data.modified || '-'}</strong>
+                </div>
+            </div>
         `;
 
         if (data.issues && data.issues.length > 0) {
-            html += '<h4 style="margin-bottom: 8px;">发现问题:</h4><ul style="list-style: none; padding: 0;">';
+            html += '<div class="report-list">';
             data.issues.forEach(issue => {
-                html += `<li style="padding: 8px; background: var(--bg-tertiary); border-radius: 4px; margin-bottom: 4px; color: var(--danger);">${issue}</li>`;
+                html += `
+                    <div class="report-item is-danger">
+                        <i class="fas fa-triangle-exclamation"></i>
+                        <span>${issue}</span>
+                    </div>
+                `;
             });
-            html += '</ul>';
+            html += '</div>';
         } else {
-            html += '<p style="color: var(--success);">✓ 未发现一致性问题</p>';
+            html += `
+                <div class="result-message is-success">
+                    <i class="fas fa-circle-check"></i>
+                    <span>未发现一致性问题</span>
+                </div>
+            `;
         }
 
         container.innerHTML = html;
@@ -869,26 +1149,44 @@ async function runDeception(mode) {
 
     const hostsInput = document.getElementById('deception-hosts');
     const hosts = hostsInput?.value ? hostsInput.value.split(',').map(h => h.trim()) : null;
+    const openaiModel = document.getElementById('deception-model')?.value || 'gpt-5.4-mini';
 
     try {
         resultDiv.className = 'operation-result show';
-        resultDiv.innerHTML = '<p>⏳ 正在运行...</p>';
+        resultDiv.innerHTML = `
+            <div class="result-message is-pending">
+                <i class="fas fa-spinner fa-spin"></i>
+                <span>正在运行...</span>
+            </div>
+        `;
 
         const data = await apiCall('/deception/run', {
             method: 'POST',
-            body: JSON.stringify({ mode, hosts })
+            body: JSON.stringify({ mode, hosts, openai_model: openaiModel })
         });
 
         pollOperation(data.operation_id, (result) => {
             const r = result.result;
-            resultDiv.className = 'operation-result show';
-            resultDiv.innerHTML = '<p style="color: var(--success); font-weight: 600;">✅ 完成</p>';
+            resultDiv.className = 'operation-result show success';
+            resultDiv.innerHTML = `
+                <div class="result-message is-success">
+                    <i class="fas fa-circle-check"></i>
+                    <span>操作已完成</span>
+                </div>
+                ${renderTokenUsage(r.token_usage)}
+            `;
 
             if (mode === 'consistency') {
                 loadConsistencyReport();
             } else if (mode === 'generate-configs') {
                 const count = r.results?.host_configs?.generated || 0;
-                resultDiv.innerHTML = `<p style="color: var(--success); font-weight: 600;">✅ 已生成 ${count} 个主机配置</p>`;
+                resultDiv.innerHTML = `
+                    <div class="result-message is-success">
+                        <i class="fas fa-circle-check"></i>
+                        <span>已生成 ${count} 个主机配置</span>
+                    </div>
+                    ${renderTokenUsage(r.token_usage)}
+                `;
                 loadDeploymentHosts();
             } else {
                 loadConsistencyReport();
@@ -897,14 +1195,24 @@ async function runDeception(mode) {
 
             showToast('success', '欺骗配置', '操作已完成');
         }, (error) => {
-            resultDiv.className = 'operation-result show';
-            resultDiv.innerHTML = `<p style="color: var(--danger);">❌ 失败: ${error}</p>`;
+            resultDiv.className = 'operation-result show error';
+            resultDiv.innerHTML = `
+                <div class="result-message is-error">
+                    <i class="fas fa-circle-xmark"></i>
+                    <span>失败: ${error}</span>
+                </div>
+            `;
             showToast('error', '欺骗配置', `运行失败: ${error}`);
         });
 
     } catch (error) {
-        resultDiv.className = 'operation-result show';
-        resultDiv.innerHTML = `<p style="color: var(--danger);">❌ 启动失败: ${error.message}</p>`;
+        resultDiv.className = 'operation-result show error';
+        resultDiv.innerHTML = `
+            <div class="result-message is-error">
+                <i class="fas fa-circle-xmark"></i>
+                <span>启动失败: ${error.message}</span>
+            </div>
+        `;
     }
 }
 
@@ -1199,7 +1507,12 @@ async function renderPreferencesData() {
         container.innerHTML = html;
 
     } catch (error) {
-        container.innerHTML = `<p style="color: var(--danger);">加载失败: ${error.message}</p>`;
+        container.innerHTML = `
+            <div class="result-message is-error">
+                <i class="fas fa-circle-xmark"></i>
+                <span>加载失败: ${error.message}</span>
+            </div>
+        `;
     }
 }
 

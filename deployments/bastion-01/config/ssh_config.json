@@ -27,6 +27,16 @@
       "motd": [
         "Welcome to the infrastructure bastion host."
       ]
+    },
+    "ops": {
+      "passwords": [
+        "OpsTemp2024!",
+        "Winter2024!"
+      ],
+      "home": "/home/ops",
+      "motd": [
+        "Ops access granted. Review bastion maintenance notes before changes."
+      ]
     }
   },
   "shell_prompt": "root@intranet:~# ",

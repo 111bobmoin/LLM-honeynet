@@ -1,6 +1,6 @@
 [
-  "Updated SSH service to include realistic user credentials.",
-  "Updated HTTP service to reflect the correct server header and routes.",
-  "Added a new directory for ops to store secret keys, addressing the vulnerability.",
-  "Ensured filesystem reflects the current state of files and directories."
+  "Preserved SSH on port 22 to match host memory and long-term OpenSSH facts.",
+  "Kept weak SSH credentials aligned with existing lure files and notes for realism.",
+  "Added only minimal filesystem updates to reinforce the existing SSH narrative around ops access and backup recovery.",
+  "Did not add unsupported WinRM service config because service output is limited to declared template services."
 ]

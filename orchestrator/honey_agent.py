@@ -14,6 +14,7 @@ from .memory import (
     VulnerabilityNode,
     default_long_term)
 from llm import OpenAIClient, OpenAIClientConfig
+from llm.openai_client import add_usage_totals
 
 
 def _read_json(path: Path) -> Optional[Dict[str, Any]]:
@@ -33,7 +34,7 @@ class HoneyAgentConfig:
     fallback_topology_path: Path = Path("enterprise/enterprise_topology.json")
     preferences_path: Path = Path("shadow/attacker_preferences.json")
     openai_key_path: Path = Path("secrets/openai_api_key.txt")
-    openai_model: str = "gpt-4o-mini"
+    openai_model: str = "gpt-5.4-mini"
     openai_temperature: float = 0.1
     openai_top_p: float = 0.9
     openai_max_tokens: int = 4096
@@ -47,6 +48,7 @@ class HoneyAgent:
         self._openai_client: Optional[OpenAIClient] = None
         self.short_memory = ShortTermMemory(self.config.short_memory_path)
         self.long_memory = LongTermMemory(self.config.long_memory_path, builtin=default_long_term())
+        self._token_usage: Dict[str, int] = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
 
     # ------------------------------------------------------------------ public API
 
@@ -59,6 +61,7 @@ class HoneyAgent:
             "topology": topology,
             "preferences": preferences,
             "short_memory": [host.to_dict() for host in hosts],
+            "token_usage": self._token_usage,
         }
 
     def run_finetune(self) -> Dict[str, Any]:
@@ -79,6 +82,7 @@ class HoneyAgent:
             "topology": topology,
             "preferences": preferences,
             "short_memory": [host.to_dict() for host in (hosts or baseline_hosts)],
+            "token_usage": self._token_usage,
         }
 
     # --------------------------------------------------------------- generation
@@ -415,6 +419,7 @@ class HoneyAgent:
             raise RuntimeError(f"Failed to generate {stage} via OpenAI: {exc}") from exc
 
         raw = response.get("content", "").strip()
+        self._token_usage = add_usage_totals(self._token_usage, response.get("usage"))
         if not raw:
             raise RuntimeError(f"OpenAI returned empty content for {stage}.")
         try:
